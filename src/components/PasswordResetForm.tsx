@@ -10,7 +10,11 @@ import {
     Accordion,
     AccordionSummary,
     AccordionDetails,
-    Divider
+    Divider,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle
 } from '@mui/material';
 import { fetchData, Header } from './FetchData';
 import { useNavigate } from 'react-router-dom';
@@ -31,6 +35,8 @@ const PasswordResetForm: React.FC<PasswordResetFormProps> = ({ uidb64, token }) 
     const [error, setError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [formErrors, setFormErrors] = useState<FormErrors>({});
+    const [openModal, setOpenModal] = useState(false);
+    const navigate = useNavigate();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -63,6 +69,7 @@ const PasswordResetForm: React.FC<PasswordResetFormProps> = ({ uidb64, token }) 
                 setSuccessMessage(response.message);
                 setError(null);
                 setFormErrors({});
+                setOpenModal(true);
             } else if (response.errors) {
                 // Handle form validation errors
                 setFormErrors(response.errors);
@@ -76,6 +83,11 @@ const PasswordResetForm: React.FC<PasswordResetFormProps> = ({ uidb64, token }) 
             setFormErrors({});
             console.error('Error:', err);
         }
+    };
+
+    const handleModalClose = () => {
+        setOpenModal(false);
+        window.location.href = 'http://localhost:3000/login';
     };
 
     return (
@@ -128,15 +140,22 @@ const PasswordResetForm: React.FC<PasswordResetFormProps> = ({ uidb64, token }) 
                             <Button type="submit" variant="contained" color="primary">
                                 Set New Password
                             </Button>
-                            {successMessage && (
-                                <Typography color="green" variant="body1">
-                                    {successMessage}
-                                </Typography>
-                            )}
                         </Box>
                     </AccordionDetails>
                 </Accordion>
             </form>
+
+            {/* Success Modal */}
+            <Dialog open={openModal} onClose={() => setOpenModal(false)}>
+                <DialogContent>
+                    <Typography sx={{ color: 'green' }}>{successMessage}</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleModalClose} color="primary">
+                        OK
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 };
