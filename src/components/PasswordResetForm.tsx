@@ -87,7 +87,7 @@ const PasswordResetForm: React.FC<PasswordResetFormProps> = ({ uidb64, token }) 
 
     const handleModalClose = () => {
         setOpenModal(false);
-        window.location.href = 'http://localhost:3000/login';
+        navigate('/login');
     };
 
     return (
