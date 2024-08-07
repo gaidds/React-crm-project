@@ -1,74 +1,143 @@
 import React, { useState } from 'react';
+import {
+    Box,
+    Button,
+    FormControl,
+    FormHelperText,
+    InputLabel,
+    OutlinedInput,
+    Typography,
+    Accordion,
+    AccordionSummary,
+    AccordionDetails,
+    Divider
+} from '@mui/material';
 import { fetchData, Header } from './FetchData';
+import { useNavigate } from 'react-router-dom';
+import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 
 interface PasswordResetFormProps {
     uidb64: string;
     token: string;
 }
 
+interface FormErrors {
+    password?: string[];
+}
+
 const PasswordResetForm: React.FC<PasswordResetFormProps> = ({ uidb64, token }) => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [error, setError] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
+    const [error, setError] = useState<string | null>(null);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+    const [formErrors, setFormErrors] = useState<FormErrors>({});
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        if (name === 'password') {
+            setPassword(value);
+        } else if (name === 'confirmPassword') {
+            setConfirmPassword(value);
+        }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
         if (password !== confirmPassword) {
             setError('Passwords do not match');
             return;
         }
 
-        const requestBody = JSON.stringify({
-            password
-        });
+        const requestBody = JSON.stringify({ password });
 
         try {
-            // `uidb64` and `token` are in the URL, `password` in the request body
-            const response = await fetchData(`auth/reset-password/${uidb64}/${token}/`, 'POST', requestBody, Header);
+            const response = await fetchData(
+                `auth/reset-password/${uidb64}/${token}/`,
+                'POST',
+                requestBody,
+                Header
+            );
 
-            if (!response.ok) {
-                setError('An error occurred while resetting the password.');
-                return;
-            }
-
-            const data = await response.json();
-
-            if (data.message) {
-                setSuccessMessage(data.message);
-                setError('');
-            } else if (data.error) {
-                setError(data.error);
+            if (response.message) {
+                setSuccessMessage(response.message);
+                setError(null);
+                setFormErrors({});
+            } else if (response.errors) {
+                // Handle form validation errors
+                setFormErrors(response.errors);
+                setError(null);
+            } else if (response.error) {
+                setError(response.error);
+                setFormErrors({});
             }
         } catch (err) {
             setError('An error occurred while resetting the password.');
-            console.error('Error details:', err);
+            setFormErrors({});
+            console.error('Error:', err);
         }
     };
 
     return (
-        <div>
-            <h2>Set a New Password</h2>
+        <Box sx={{ mt: '60px' }}>
+            <Typography variant="h4" gutterBottom>
+                Set a New Password
+            </Typography>
             <form onSubmit={handleSubmit}>
-                <input
-                    type="password"
-                    placeholder="New Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
-                <input
-                    type="password"
-                    placeholder="Confirm Password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    required
-                />
-                <button type="submit">Set New Password</button>
-                {error && <p style={{ color: 'red' }}>{error}</p>}
-                {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+                <Accordion defaultExpanded>
+                    <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
+                        <Typography>Password Reset</Typography>
+                    </AccordionSummary>
+                    <Divider />
+                    <AccordionDetails>
+                        <Box component='div' sx={{ width: '100%' }}>
+                            <FormControl fullWidth margin="normal" variant="outlined">
+                                <InputLabel htmlFor="password">New Password</InputLabel>
+                                <OutlinedInput
+                                    id="password"
+                                    name="password"
+                                    type="password"
+                                    value={password}
+                                    onChange={handleChange}
+                                    label="New Password"
+                                    error={!!formErrors.password}
+                                />
+                                {formErrors.password && (
+                                    <FormHelperText error>
+                                        {formErrors.password.join(', ')}
+                                    </FormHelperText>
+                                )}
+                            </FormControl>
+                            <FormControl fullWidth margin="normal" variant="outlined">
+                                <InputLabel htmlFor="confirmPassword">Confirm Password</InputLabel>
+                                <OutlinedInput
+                                    id="confirmPassword"
+                                    name="confirmPassword"
+                                    type="password"
+                                    value={confirmPassword}
+                                    onChange={handleChange}
+                                    label="Confirm Password"
+                                    error={!!error}
+                                />
+                                {error && (
+                                    <FormHelperText error>
+                                        {error}
+                                    </FormHelperText>
+                                )}
+                            </FormControl>
+                            <Button type="submit" variant="contained" color="primary">
+                                Set New Password
+                            </Button>
+                            {successMessage && (
+                                <Typography color="green" variant="body1">
+                                    {successMessage}
+                                </Typography>
+                            )}
+                        </Box>
+                    </AccordionDetails>
+                </Accordion>
             </form>
-        </div>
+        </Box>
     );
 };
 
