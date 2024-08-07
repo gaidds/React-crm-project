@@ -7,7 +7,7 @@ import imgLogo from '../../assets/images/auth/img_logo.png';
 import imgLogin from '../../assets/images/auth/img_login.png';
 import { GoogleButton } from '../../styles/CssStyled';
 import { fetchData } from '../../components/FetchData';
-import { AuthUrl, LoginUrl } from '../../services/ApiUrls';
+import { AuthUrl, LoginUrl, AuthConfigUrl } from '../../services/ApiUrls';
 import '../../styles/style.css';
 
 export default function Login() {
@@ -16,12 +16,34 @@ export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [isGoogleLoginEnabled, setIsGoogleLoginEnabled] = useState(false);
 
     useEffect(() => {
         if (localStorage.getItem('Token')) {
             navigate('/app');
         }
     }, [token]);
+
+    useEffect(() => {
+        // Fetch auth-config to check if Google login is enabled
+        const head = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        };
+    
+        // Fetch auth-config without a body for GET request
+        fetchData(AuthConfigUrl, 'GET', null as any, head) // Pass headers as the fourth argument
+            .then((res) => {
+                if (res.data && typeof res.data.is_google_login === 'boolean') {
+                    setIsGoogleLoginEnabled(res.data.is_google_login); // Set the state based on response
+                } else {
+                    console.error('Invalid response format from auth-config');
+                }
+            })
+            .catch((error) => {
+                console.error('Error fetching auth-config:', error);
+            });
+    }, []);
 
     const loginWithGoogle = useGoogleLogin({
         onSuccess: tokenResponse => {
@@ -113,10 +135,12 @@ export default function Login() {
                                 {error && <Typography color="error">{error}</Typography>}
                             </form>
 
-                            <GoogleButton variant='outlined' onClick={() => loginWithGoogle()} sx={{ fontSize: '12px', fontWeight: 500 }}>
-                                Sign in with Google
-                                <img src={imgGoogle} alt='google' style={{ width: '17px', marginLeft: '5px' }} />
-                            </GoogleButton>
+                            {isGoogleLoginEnabled && ( // Conditionally render the Google button
+                                <GoogleButton variant='outlined' onClick={() => loginWithGoogle()} sx={{ fontSize: '12px', fontWeight: 500 }}>
+                                    Sign in with Google
+                                    <img src={imgGoogle} alt='google' style={{ width: '17px', marginLeft: '5px' }} />
+                                </GoogleButton>
+                            )}
                         </Grid>
                     </Grid>
                 </Grid>
