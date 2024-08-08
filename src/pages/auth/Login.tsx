@@ -63,7 +63,7 @@ export default function Login() {
         },
     });
 
-    const handleLogin = (e) => {
+    const handleLogin = (e: any) => {
         e.preventDefault();
     
         const payload = { email, password }; // Ensure you have these defined in your component
