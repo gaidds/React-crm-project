@@ -134,12 +134,12 @@ export default function Login() {
                                 {error && <Typography color="error">{error}</Typography>}
                             </form>
 
-                            {isGoogleLoginEnabled && ( // Conditionally render the Google button
+                            
                                 <GoogleButton variant='outlined' onClick={() => loginWithGoogle()} sx={{ fontSize: '12px', fontWeight: 500 }}>
                                     Sign in with Google
                                     <img src={imgGoogle} alt='google' style={{ width: '17px', marginLeft: '5px' }} />
                                 </GoogleButton>
-                            )}
+                            
                         </Grid>
                     </Grid>
                 </Grid>
