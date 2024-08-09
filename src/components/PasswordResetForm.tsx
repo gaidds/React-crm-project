@@ -13,7 +13,8 @@ import {
     Divider,
     Dialog,
     DialogActions,
-    DialogContent
+    DialogContent,
+    Grid
 } from '@mui/material';
 import { fetchData, Header } from './FetchData';
 import { useNavigate } from 'react-router-dom';
@@ -227,159 +228,122 @@ const PasswordResetForm: React.FC<PasswordResetFormProps> = ({ uidb64, token }) 
                     <Divider />
                     <AccordionDetails>
                         <Box component='div' sx={{ width: '100%' }}>
-                            <FormControl fullWidth margin="normal" variant="outlined">
-                                <InputLabel htmlFor="email">Email</InputLabel>
-                                <OutlinedInput
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    value={email}
-                                    onChange={handleChange}
-                                    label="Email"
-                                    error={!!formErrors.email}
-                                />
-                                {formErrors.email && (
-                                    <FormHelperText error>
-                                        {formErrors.email.join(', ')}
-                                    </FormHelperText>
-                                )}
-                            </FormControl>
-                            <FormControl fullWidth margin="normal" variant="outlined">
-                                <InputLabel htmlFor="phone">Phone</InputLabel>
-                                <OutlinedInput
-                                    id="phone"
-                                    name="phone"
-                                    type="text"
-                                    value={phone}
-                                    onChange={handleChange}
-                                    label="Phone"
-                                    error={!!formErrors.phone}
-                                />
-                                {formErrors.phone && (
-                                    <FormHelperText error>
-                                        {formErrors.phone.join(', ')}
-                                    </FormHelperText>
-                                )}
-                            </FormControl>
-                            <FormControl fullWidth margin="normal" variant="outlined">
-                                <InputLabel htmlFor="alternate_phone">Alternate Phone</InputLabel>
-                                <OutlinedInput
-                                    id="alternate_phone"
-                                    name="alternate_phone"
-                                    type="text"
-                                    value={alternatePhone}
-                                    onChange={handleChange}
-                                    label="Alternate Phone"
-                                    error={!!formErrors.alternate_phone}
-                                />
-                                {formErrors.alternate_phone && (
-                                    <FormHelperText error>
-                                        {formErrors.alternate_phone.join(', ')}
-                                    </FormHelperText>
-                                )}
-                            </FormControl>
-                            <FormControl fullWidth margin="normal" variant="outlined">
-                                <InputLabel htmlFor="address_line">Address Line</InputLabel>
-                                <OutlinedInput
-                                    id="address_line"
-                                    name="address_line"
-                                    type="text"
-                                    value={addressLine}
-                                    onChange={handleChange}
-                                    label="Address Line"
-                                    error={!!formErrors.address_line}
-                                />
-                                {formErrors.address_line && (
-                                    <FormHelperText error>
-                                        {formErrors.address_line.join(', ')}
-                                    </FormHelperText>
-                                )}
-                            </FormControl>
-                            <FormControl fullWidth margin="normal" variant="outlined">
-                                <InputLabel htmlFor="street">Street</InputLabel>
-                                <OutlinedInput
-                                    id="street"
-                                    name="street"
-                                    type="text"
-                                    value={street}
-                                    onChange={handleChange}
-                                    label="Street"
-                                    error={!!formErrors.street}
-                                />
-                                {formErrors.street && (
-                                    <FormHelperText error>
-                                        {formErrors.street.join(', ')}
-                                    </FormHelperText>
-                                )}
-                            </FormControl>
-                            <FormControl fullWidth margin="normal" variant="outlined">
-                                <InputLabel htmlFor="city">City</InputLabel>
-                                <OutlinedInput
-                                    id="city"
-                                    name="city"
-                                    type="text"
-                                    value={city}
-                                    onChange={handleChange}
-                                    label="City"
-                                    error={!!formErrors.city}
-                                />
-                                {formErrors.city && (
-                                    <FormHelperText error>
-                                        {formErrors.city.join(', ')}
-                                    </FormHelperText>
-                                )}
-                            </FormControl>
-                            <FormControl fullWidth margin="normal" variant="outlined">
-                                <InputLabel htmlFor="state">State</InputLabel>
-                                <OutlinedInput
-                                    id="state"
-                                    name="state"
-                                    type="text"
-                                    value={state}
-                                    onChange={handleChange}
-                                    label="State"
-                                    error={!!formErrors.state}
-                                />
-                                {formErrors.state && (
-                                    <FormHelperText error>
-                                        {formErrors.state.join(', ')}
-                                    </FormHelperText>
-                                )}
-                            </FormControl>
-                            <FormControl fullWidth margin="normal" variant="outlined">
-                                <InputLabel htmlFor="pincode">Pincode</InputLabel>
-                                <OutlinedInput
-                                    id="pincode"
-                                    name="pincode"
-                                    type="text"
-                                    value={pincode}
-                                    onChange={handleChange}
-                                    label="Pincode"
-                                    error={!!formErrors.pincode}
-                                />
-                                {formErrors.pincode && (
-                                    <FormHelperText error>
-                                        {formErrors.pincode.join(', ')}
-                                    </FormHelperText>
-                                )}
-                            </FormControl>
-                            <FormControl fullWidth margin="normal" variant="outlined">
-                                <InputLabel htmlFor="country">Country</InputLabel>
-                                <OutlinedInput
-                                    id="country"
-                                    name="country"
-                                    type="text"
-                                    value={country}
-                                    onChange={handleChange}
-                                    label="Country"
-                                    error={!!formErrors.country}
-                                />
-                                {formErrors.country && (
-                                    <FormHelperText error>
-                                        {formErrors.country.join(', ')}
-                                    </FormHelperText>
-                                )}
-                            </FormControl>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12} md={6}>
+                                    <FormControl fullWidth margin="normal" variant="outlined">
+                                        <InputLabel htmlFor="address_line">Address Line</InputLabel>
+                                        <OutlinedInput
+                                            id="address_line"
+                                            name="address_line"
+                                            type="text"
+                                            value={addressLine}
+                                            onChange={handleChange}
+                                            label="Address Line"
+                                            error={!!formErrors.address_line}
+                                        />
+                                        {formErrors.address_line && (
+                                            <FormHelperText error>
+                                                {formErrors.address_line.join(', ')}
+                                            </FormHelperText>
+                                        )}
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12} md={6}>
+                                    <FormControl fullWidth margin="normal" variant="outlined">
+                                        <InputLabel htmlFor="street">Street</InputLabel>
+                                        <OutlinedInput
+                                            id="street"
+                                            name="street"
+                                            type="text"
+                                            value={street}
+                                            onChange={handleChange}
+                                            label="Street"
+                                            error={!!formErrors.street}
+                                        />
+                                        {formErrors.street && (
+                                            <FormHelperText error>
+                                                {formErrors.street.join(', ')}
+                                            </FormHelperText>
+                                        )}
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12} md={6}>
+                                    <FormControl fullWidth margin="normal" variant="outlined">
+                                        <InputLabel htmlFor="city">City</InputLabel>
+                                        <OutlinedInput
+                                            id="city"
+                                            name="city"
+                                            type="text"
+                                            value={city}
+                                            onChange={handleChange}
+                                            label="City"
+                                            error={!!formErrors.city}
+                                        />
+                                        {formErrors.city && (
+                                            <FormHelperText error>
+                                                {formErrors.city.join(', ')}
+                                            </FormHelperText>
+                                        )}
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12} md={6}>
+                                    <FormControl fullWidth margin="normal" variant="outlined">
+                                        <InputLabel htmlFor="state">State</InputLabel>
+                                        <OutlinedInput
+                                            id="state"
+                                            name="state"
+                                            type="text"
+                                            value={state}
+                                            onChange={handleChange}
+                                            label="State"
+                                            error={!!formErrors.state}
+                                        />
+                                        {formErrors.state && (
+                                            <FormHelperText error>
+                                                {formErrors.state.join(', ')}
+                                            </FormHelperText>
+                                        )}
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12} md={6}>
+                                    <FormControl fullWidth margin="normal" variant="outlined">
+                                        <InputLabel htmlFor="pincode">Pincode</InputLabel>
+                                        <OutlinedInput
+                                            id="pincode"
+                                            name="pincode"
+                                            type="text"
+                                            value={pincode}
+                                            onChange={handleChange}
+                                            label="Pincode"
+                                            error={!!formErrors.pincode}
+                                        />
+                                        {formErrors.pincode && (
+                                            <FormHelperText error>
+                                                {formErrors.pincode.join(', ')}
+                                            </FormHelperText>
+                                        )}
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12} md={6}>
+                                    <FormControl fullWidth margin="normal" variant="outlined">
+                                        <InputLabel htmlFor="country">Country</InputLabel>
+                                        <OutlinedInput
+                                            id="country"
+                                            name="country"
+                                            type="text"
+                                            value={country}
+                                            onChange={handleChange}
+                                            label="Country"
+                                            error={!!formErrors.country}
+                                        />
+                                        {formErrors.country && (
+                                            <FormHelperText error>
+                                                {formErrors.country.join(', ')}
+                                            </FormHelperText>
+                                        )}
+                                    </FormControl>
+                                </Grid>
+                            </Grid>
                         </Box>
                     </AccordionDetails>
                 </Accordion>
