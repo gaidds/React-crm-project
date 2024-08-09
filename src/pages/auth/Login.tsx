@@ -1,92 +1,53 @@
-import { useEffect, useState } from 'react';
-import { Grid, Stack, Typography, TextField, Button } from '@mui/material';
+import { useEffect, useState } from 'react'
+import { Grid, Stack, Typography } from '@mui/material'
 import { useGoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
-import imgGoogle from '../../assets/images/auth/google.svg';
-import imgLogo from '../../assets/images/auth/img_logo.png';
-import imgLogin from '../../assets/images/auth/img_login.png';
+import imgGoogle from '../../assets/images/auth/google.svg'
+import imgLogo from '../../assets/images/auth/img_logo.png'
+import imgLogin from '../../assets/images/auth/img_login.png'
 import { GoogleButton } from '../../styles/CssStyled';
 import { fetchData } from '../../components/FetchData';
-import { AuthUrl, LoginUrl, AuthConfigUrl } from '../../services/ApiUrls';
-import '../../styles/style.css';
+import { AuthUrl } from '../../services/ApiUrls';
+import '../../styles/style.css'
+
+declare global {
+    interface Window {
+        google: any;
+        gapi: any;
+    }
+}
 
 export default function Login() {
-    const navigate = useNavigate();
-    const [token, setToken] = useState(false);
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const [isGoogleLoginEnabled, setIsGoogleLoginEnabled] = useState(false);
+    const navigate = useNavigate()
+    const [token, setToken] = useState(false)
 
     useEffect(() => {
         if (localStorage.getItem('Token')) {
-            navigate('/app');
+            // navigate('/organization')
+            navigate('/app')
         }
-    }, [token]);
+    }, [token])
 
-    useEffect(() => {
-        // Fetch auth-config to check if Google login is enabled
-        const head = {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        };
-    
-        // Fetch auth-config without a body for GET request
-        fetchData(AuthConfigUrl, 'GET', null as any, head) // Pass headers as the fourth argument
-            .then((res) => {
-                if (res.data && typeof res.data.is_google_login === 'boolean') {
-                    setIsGoogleLoginEnabled(res.data.is_google_login); // Set the state based on response
-                } else {
-                    console.error('Invalid response format from auth-config');
-                }
-            })
-            .catch((error) => {
-                console.error('Error fetching auth-config:', error);
-            });
-    }, []);
-
-    const loginWithGoogle = useGoogleLogin({
+    const login = useGoogleLogin({
         onSuccess: tokenResponse => {
-            const apiToken = { token: tokenResponse.access_token };
+            const apiToken = { token: tokenResponse.access_token }
+            // const formData = new FormData()
+            // formData.append('token', tokenResponse.access_token)
             const head = {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
-            };
+            }
             fetchData(`${AuthUrl}/`, 'POST', JSON.stringify(apiToken), head)
-                .then((res) => {
-                    localStorage.setItem('Token', `Bearer ${res.access_token}`);
-                    setToken(true);
+                .then((res: any) => {
+                    localStorage.setItem('Token', `Bearer ${res.access_token}`)
+                    setToken(true)
                 })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
+                .catch((error: any) => {
+                    console.error('Error:', error)
+                })
         },
+
     });
-
-    const handleLogin = (e: any) => {
-        e.preventDefault();
-        const payload = { email, password }; // Ensure you have these defined in your component
-        const head = {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        };
-    
-        fetchData("auth/login/", 'POST', JSON.stringify(payload), head)
-            .then((res) => {
-                if (res && res.access) { // Check if the access token is present
-                    localStorage.setItem('Token', `Bearer ${res.access}`); 
-                    setToken(true);  // Set token state to true (you might want to handle redirect here)
-                    navigate('/app'); // Redirect to your app after successful login
-                } else {
-                    setError('Invalid response format');
-                }
-            })
-            .catch((error) => {
-                setError('Invalid username or password'); // Set error state for UI feedback
-                console.error('Error:', error);
-            });
-    };
-
     return (
         <div>
             <Stack
@@ -110,36 +71,43 @@ export default function Login() {
                         </Grid>
                         <Typography variant='h5' style={{ fontWeight: 'bolder' }}>Sign In</Typography>
                         <Grid item sx={{ mt: 4 }}>
-                            <form onSubmit={handleLogin}>
-                                <TextField
-                                    label="Email"
-                                    variant="outlined"
-                                    fullWidth
-                                    required
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    sx={{ mb: 2 }}
-                                />
-                                <TextField
-                                    label="Password"
-                                    type="password"
-                                    variant="outlined"
-                                    fullWidth
-                                    required
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    sx={{ mb: 2 }}
-                                />
-                                <Button type="submit" variant="contained" color="primary" sx={{ mb: 2 }}>Login</Button>
-                                {error && <Typography color="error">{error}</Typography>}
-                            </form>
+                            {/* <GoogleLogin
+                                onSuccess={credentialResponse => {
+                                    console.log(credentialResponse);
+                                }}
 
-                                <GoogleButton variant='outlined' onClick={() => loginWithGoogle()} sx={{ fontSize: '12px', fontWeight: 500 }}>
-                                    Sign in with Google
-                                    <img src={imgGoogle} alt='google' style={{ width: '17px', marginLeft: '5px' }} />
-                                </GoogleButton>
-                            
+                                onError={() => {
+                                    console.log('Login Failed');
+                                }}
+                            />
+                            <Button onClick={signout}>logout</Button> */}
+
+                            <GoogleButton variant='outlined' onClick={() => login()} sx={{ fontSize: '12px', fontWeight: 500 }}>
+                                Sign in with Google
+                                <img src={imgGoogle} alt='google' style={{ width: '17px', marginLeft: '5px' }} />
+                            </GoogleButton>
+                            {/* <Grid item sx={{ mt: 2, alignItems: 'center', alignContent: 'center' }}>
+                                <Grid item sx={{ mt: 1, ml: 6 }}>
+                                    <div className='authentication_wrapper'>
+                                        <div className='authentication_block'>
+                                            <div className='buttons'>
+                                                <GoogleLogin
+                                                    onSuccess={credentialResponse => {
+                                                        console.log(credentialResponse);
+                                                    }}
+
+                                                    onError={() => {
+                                                        console.log('Login Failed');
+                                                    }}
+
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Grid>
+                            </Grid> */}
                         </Grid>
+
                     </Grid>
                 </Grid>
                 <Grid
@@ -169,5 +137,6 @@ export default function Login() {
                 </Grid>
             </Stack>
         </div>
-    );
+
+    )
 }
