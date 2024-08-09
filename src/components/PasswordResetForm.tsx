@@ -27,28 +27,22 @@ interface PasswordResetFormProps {
 
 interface FormErrors {
     password?: string[];
-    email?: string[];
-    phone?: string[];
-    alternate_phone?: string[];
     address_line?: string[];
     street?: string[];
     city?: string[];
     state?: string[];
-    pincode?: string[];
+    postcode?: string[];
     country?: string[];
 }
 
 const PasswordResetForm: React.FC<PasswordResetFormProps> = ({ uidb64, token }) => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
-    const [alternatePhone, setAlternatePhone] = useState('');
     const [addressLine, setAddressLine] = useState('');
     const [street, setStreet] = useState('');
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
-    const [pincode, setPincode] = useState('');
+    const [postcode, setPostcode] = useState('');
     const [country, setCountry] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -65,15 +59,6 @@ const PasswordResetForm: React.FC<PasswordResetFormProps> = ({ uidb64, token }) 
             case 'confirmPassword':
                 setConfirmPassword(value as string);
                 break;
-            case 'email':
-                setEmail(value as string);
-                break;
-            case 'phone':
-                setPhone(value as string);
-                break;
-            case 'alternate_phone':
-                setAlternatePhone(value as string);
-                break;
             case 'address_line':
                 setAddressLine(value as string);
                 break;
@@ -86,8 +71,8 @@ const PasswordResetForm: React.FC<PasswordResetFormProps> = ({ uidb64, token }) 
             case 'state':
                 setState(value as string);
                 break;
-            case 'pincode':
-                setPincode(value as string);
+            case 'postcode':
+                setPostcode(value as string);
                 break;
             case 'country':
                 setCountry(value as string);
@@ -112,12 +97,14 @@ const PasswordResetForm: React.FC<PasswordResetFormProps> = ({ uidb64, token }) 
                 'POST',
                 JSON.stringify({
                     password,
-                    address_line: addressLine,
-                    street,
-                    city,
-                    state,
-                    pincode,
-                    country
+                    address: {  // Wrap the address fields in an "address" object
+                        address_line: addressLine,
+                        street,
+                        city,
+                        state,
+                        postcode,
+                        country
+                    }
                 }),
                 Header
             );
@@ -130,12 +117,15 @@ const PasswordResetForm: React.FC<PasswordResetFormProps> = ({ uidb64, token }) 
                 setFormErrors({});
             } else {
                 // Handle success if needed, e.g., setting success message
+                setSuccessMessage('Password reset and address saved successfully.');
+                setOpenModal(true); // Open the modal on success
             }
         } catch (err) {
             setError('An error occurred while resetting the password.');
             setFormErrors({});
             console.error('Error:', err);
         }
+
     };
     
     const handleModalClose = () => {
@@ -281,19 +271,19 @@ const PasswordResetForm: React.FC<PasswordResetFormProps> = ({ uidb64, token }) 
                                 </Grid>
                                 <Grid item xs={12} md={6}>
                                     <FormControl fullWidth margin="normal" variant="outlined">
-                                        <InputLabel htmlFor="pincode">Pincode</InputLabel>
+                                        <InputLabel htmlFor="postcode">Postcode</InputLabel>
                                         <OutlinedInput
-                                            id="pincode"
-                                            name="pincode"
+                                            id="postcode"
+                                            name="postcode"
                                             type="text"
-                                            value={pincode}
+                                            value={postcode}
                                             onChange={handleChange}
-                                            label="Pincode"
-                                            error={!!formErrors.pincode}
+                                            label="Postcode"
+                                            error={!!formErrors.postcode}
                                         />
-                                        {formErrors.pincode && (
+                                        {formErrors.postcode && (
                                             <FormHelperText error>
-                                                {formErrors.pincode.join(', ')}
+                                                {formErrors.postcode.join(', ')}
                                             </FormHelperText>
                                         )}
                                     </FormControl>
