@@ -99,64 +99,37 @@ const PasswordResetForm: React.FC<PasswordResetFormProps> = ({ uidb64, token }) 
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
+    
         if (password !== confirmPassword) {
             setError('Passwords do not match');
             return;
         }
-
+    
         // Step 1: Reset Password
         try {
             const passwordResetResponse = await fetchData(
                 `auth/reset-password/${uidb64}/${token}/`,
                 'POST',
-                JSON.stringify({ password }),
+                JSON.stringify({
+                    password,
+                    address_line: addressLine,
+                    street,
+                    city,
+                    state,
+                    pincode,
+                    country
+                }),
                 Header
             );
-
-            if (passwordResetResponse.message) {
-                // Step 2: Update User Details
-                try {
-                    const userDetailsUpdateResponse = await fetchData(
-                        `user/${uidb64}/`, // Ensure this endpoint is correct for updating user details
-                        'PUT',
-                        JSON.stringify({
-                            email,
-                            phone,
-                            alternate_phone: alternatePhone,
-                            address_line: addressLine,
-                            street,
-                            city,
-                            state,
-                            pincode,
-                            country
-                        }),
-                        Header
-                    );
-
-                    if (userDetailsUpdateResponse.message) {
-                        setSuccessMessage('Password and user details have been updated successfully.');
-                        setError(null);
-                        setFormErrors({});
-                        setOpenModal(true);
-                    } else if (userDetailsUpdateResponse.errors) {
-                        setFormErrors(userDetailsUpdateResponse.errors);
-                        setError(null);
-                    } else if (userDetailsUpdateResponse.error) {
-                        setError(userDetailsUpdateResponse.error);
-                        setFormErrors({});
-                    }
-                } catch (err) {
-                    setError('An error occurred while updating user details.');
-                    setFormErrors({});
-                    console.error('Error:', err);
-                }
-            } else if (passwordResetResponse.errors) {
+    
+            if (passwordResetResponse.errors) {
                 setFormErrors(passwordResetResponse.errors);
                 setError(null);
             } else if (passwordResetResponse.error) {
                 setError(passwordResetResponse.error);
                 setFormErrors({});
+            } else {
+                // Handle success if needed, e.g., setting success message
             }
         } catch (err) {
             setError('An error occurred while resetting the password.');
@@ -164,11 +137,12 @@ const PasswordResetForm: React.FC<PasswordResetFormProps> = ({ uidb64, token }) 
             console.error('Error:', err);
         }
     };
-
+    
     const handleModalClose = () => {
         setOpenModal(false);
         navigate('/login');
     };
+    
 
     return (
         <Box sx={{ mt: '60px' }}>
