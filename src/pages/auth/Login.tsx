@@ -110,6 +110,7 @@ export default function Login() {
                         </Grid>
                         <Typography variant='h5' style={{ fontWeight: 'bolder' }}>Sign In</Typography>
                         <Grid item sx={{ mt: 4 }}>
+                           {!isGoogleLoginEnabled && (
                             <form onSubmit={handleLogin}>
                                 <TextField
                                     label="Email"
@@ -132,12 +133,16 @@ export default function Login() {
                                 />
                                 <Button type="submit" variant="contained" color="primary" sx={{ mb: 2 }}>Login</Button>
                                 {error && <Typography color="error">{error}</Typography>}
-                            </form>
+                            </form>)
+                                    }
 
-                                <GoogleButton variant='outlined' onClick={() => loginWithGoogle()} sx={{ fontSize: '12px', fontWeight: 500 }}>
+                            { isGoogleLoginEnabled && (<GoogleButton variant='outlined' onClick={() => loginWithGoogle()} sx={{ fontSize: '12px', fontWeight: 500 }}>
                                     Sign in with Google
                                     <img src={imgGoogle} alt='google' style={{ width: '17px', marginLeft: '5px' }} />
-                                </GoogleButton>
+                                </GoogleButton>)                         
+
+                               
+                                }
                             
                         </Grid>
                     </Grid>
