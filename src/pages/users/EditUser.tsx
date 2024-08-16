@@ -296,7 +296,7 @@ export function EditUser() {
                                                         onChange={handleChange}
                                                         error={!!errors?.role?.[0]}
                                                     >
-                                                        {['ADMIN', 'USER'].map((option) => (
+                                                        {['ADMIN', 'USER', 'SALES REP', 'SALES MANAGER'].map((option) => (
                                                             <MenuItem key={option} value={option}>
                                                                 {option}
                                                             </MenuItem>

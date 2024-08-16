@@ -258,7 +258,7 @@ export function AddUsers() {
                                                         onChange={handleChange}
                                                         error={!!errors?.role?.[0]}
                                                     >
-                                                        {['ADMIN', 'USER'].map((option) => (
+                                                        {['ADMIN', 'SALES REP', 'USER', 'SALES MANAGER'].map((option) => (
                                                             <MenuItem key={option} value={option}>
                                                                 {option}
                                                             </MenuItem>
