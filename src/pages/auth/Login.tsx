@@ -133,11 +133,21 @@ export default function Login() {
                                 <Button type="submit" variant="contained" color="primary" sx={{ mb: 2 }}>Login</Button>
                                 {error && <Typography color="error">{error}</Typography>}
                             </form>
-
-                                <GoogleButton variant='outlined' onClick={() => loginWithGoogle()} sx={{ fontSize: '12px', fontWeight: 500 }}>
+                       
+                            <Grid item sx={{ mt: 2 }}>
+                                <GoogleButton variant='outlined' onClick={() => Login()} sx={{ fontSize: '12px', fontWeight: 500 }}>
                                     Sign in with Google
                                     <img src={imgGoogle} alt='google' style={{ width: '17px', marginLeft: '5px' }} />
                                 </GoogleButton>
+                            </Grid>
+                            <Grid item sx={{ mt: 2 }}>
+                                <Typography variant="body2">
+                                    <a href="/forgot-password" style={{ textDecoration: 'none', color: '#3f51b5' }}>
+                                        Forgot your password?
+                                    </a>
+                                </Typography>
+                            </Grid>
+                            {/* End of New Code Snippet */}
                             
                         </Grid>
                     </Grid>
