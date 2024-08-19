@@ -1,7 +1,14 @@
 import { useEffect, useState } from 'react';
-import { Grid, Stack, Typography, TextField, Button } from '@mui/material';
+import {
+  Grid,
+  Stack,
+  Typography,
+  TextField,
+  Button,
+  Alert,
+} from '@mui/material';
 import { useGoogleLogin } from '@react-oauth/google';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import imgGoogle from '../../assets/images/auth/google.svg';
 import imgLogo from '../../assets/images/auth/app_logo.png';
 import imgLogin from '../../assets/images/auth/img_login.png';
@@ -9,6 +16,7 @@ import { GoogleButton } from '../../styles/CssStyled';
 import { fetchData } from '../../components/FetchData';
 import { AuthUrl, LoginUrl, AuthConfigUrl } from '../../services/ApiUrls';
 import '../../styles/style.css';
+import './styles.css';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -107,17 +115,14 @@ export default function Login() {
           alignItems="center"
           sx={{ height: '100%', overflow: 'hidden' }}
         >
-          <Grid item>
-            <Grid>
+          <Grid item sx={{ padding: '32px' }}>
+            <Grid sx={{ textAlign: 'center' }}>
               <img
                 src={imgLogo}
                 alt="register_logo"
-                className="register-logo"
+                className="login-app-logo"
               />
             </Grid>
-            <Typography variant="h5" style={{ fontWeight: 'bolder' }}>
-              Sign In
-            </Typography>
             <Grid item sx={{ mt: 4 }}>
               <form onSubmit={handleLogin}>
                 <TextField
@@ -139,11 +144,19 @@ export default function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                   sx={{ mb: 2 }}
                 />
+                <Typography sx={{ textAlign: 'end', mb: 2 }}>
+                  <Link
+                    className="forget-password-link"
+                    to={'/forget-password'}
+                  >
+                    Forget password?
+                  </Link>
+                </Typography>
                 <Button
                   type="submit"
                   variant="contained"
                   color="primary"
-                  sx={{ mb: 2 }}
+                  sx={{ mb: 2, width: '100%' }}
                 >
                   Login
                 </Button>
@@ -163,7 +176,7 @@ export default function Login() {
                   />
                 </GoogleButton>
               )}
-              {error && <Typography color="error">{error}</Typography>}
+              {error && <Alert severity="error">{error}</Alert>}
             </Grid>
           </Grid>
         </Grid>
@@ -175,7 +188,12 @@ export default function Login() {
           justifyContent="center"
           alignItems="center"
           className="rightBg"
-          sx={{ height: '100%', overflow: 'hidden', justifyItems: 'center' }}
+          sx={{
+            height: '100%',
+            overflow: 'hidden',
+            justifyItems: 'center',
+            padding: '32px',
+          }}
         >
           <Grid item>
             <Stack sx={{ alignItems: 'center' }}>
