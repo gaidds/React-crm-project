@@ -3,7 +3,7 @@ import { Grid, Stack, Typography, TextField, Button } from '@mui/material';
 import { useGoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
 import imgGoogle from '../../assets/images/auth/google.svg';
-import imgLogo from '../../assets/images/auth/img_logo.png';
+import imgLogo from '../../assets/images/auth/app_logo.png';
 import imgLogin from '../../assets/images/auth/img_login.png';
 import { GoogleButton } from '../../styles/CssStyled';
 import { fetchData } from '../../components/FetchData';
@@ -108,7 +108,7 @@ export default function Login() {
           sx={{ height: '100%', overflow: 'hidden' }}
         >
           <Grid item>
-            <Grid sx={{ mt: 2 }}>
+            <Grid>
               <img
                 src={imgLogo}
                 alt="register_logo"
