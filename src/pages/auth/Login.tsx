@@ -123,7 +123,7 @@ export default function Login() {
                 className="login-app-logo"
               />
             </Grid>
-            <Grid item sx={{ mt: 4 }}>
+            <Grid item sx={{ mt: 4, maxWidth: '400px' }}>
               <form onSubmit={handleLogin}>
                 <TextField
                   label="Email"
@@ -163,20 +163,40 @@ export default function Login() {
               </form>
 
               {isGoogleLoginEnabled && (
-                <GoogleButton
-                  variant="outlined"
-                  onClick={() => loginWithGoogle()}
-                  sx={{ fontSize: '12px', fontWeight: 500 }}
-                >
-                  Sign in with Google
-                  <img
-                    src={imgGoogle}
-                    alt="google"
-                    style={{ width: '17px', marginLeft: '5px' }}
-                  />
-                </GoogleButton>
+                <Grid item sx={{ textAlign: 'center', mt: 2 }}>
+                  <div className="login-option-container">
+                    <div className="login-option-line"></div>
+                    <p className="login-option-text">OR</p>
+                    <div className="login-option-line"></div>
+                  </div>
+                  <GoogleButton
+                    variant="outlined"
+                    onClick={() => loginWithGoogle()}
+                    sx={{
+                      fontSize: '12px',
+                      fontWeight: 500,
+                      mt: 3,
+                    }}
+                  >
+                    Login with Google
+                    <img
+                      src={imgGoogle}
+                      alt="google"
+                      style={{ width: '17px', marginLeft: '5px' }}
+                    />
+                  </GoogleButton>
+                </Grid>
               )}
-              {error && <Alert severity="error">{error}</Alert>}
+              {error && (
+                <div className="login-error-msg-container">
+                  <Alert
+                    sx={{ mt: 2, position: 'absolute', justifyItems: 'center' }}
+                    severity="error"
+                  >
+                    {error}
+                  </Alert>
+                </div>
+              )}
             </Grid>
           </Grid>
         </Grid>
