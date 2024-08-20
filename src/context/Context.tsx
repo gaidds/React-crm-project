@@ -37,11 +37,6 @@ interface UserProfile {
   // Add other profile fields if necessary
 }
 
-// Create the context with a default value
-interface UserContextType {
-  userId: string | null;
-  role: string | null;
-}
 
 // Create the context with default values
 const UserContext = createContext<UserContextType>({ userId: null, role: null, loading: true  });
@@ -66,7 +61,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           const headers = {
             Accept: 'application/json',
             'Content-Type': 'application/json',
-            Authorization: localStorage.getItem('Token'), // Adjust the token format if needed
+            Authorization: token, // Adjust the token format if needed
             org: localStorage.getItem('org') || '',
           };
 
