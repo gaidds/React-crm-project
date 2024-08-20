@@ -47,6 +47,13 @@ export const formatDate = (dateString: any) => {
     return new Date(dateString).toLocaleDateString(undefined, options)
 }
 
+const roleDisplayMap: { [key: string]: string } = {
+    'ADMIN': 'ADMIN',
+    'SALES MANAGER': 'SALES MANAGER',
+    'SALES REP': 'SALES REPRESENTATIVE',
+    'USER': 'USER'
+};
+
 
 export default function UserDetails() {
     const navigate = useNavigate()
@@ -210,7 +217,7 @@ export default function UserDetails() {
                                 <div style={{ width: '32%' }}>
                                     <div className='title2'>Role</div>
                                     <div style={{ fontSize: '16px', color: '#1E90FF', marginTop: '5%' }}>
-                                        {userDetails?.role || '---'}
+                                        {userDetails?.role ? roleDisplayMap[userDetails.role] : '---'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
