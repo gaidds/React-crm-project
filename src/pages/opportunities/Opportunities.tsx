@@ -434,11 +434,12 @@ export default function Opportunities(props: any) {
                               {item?.account ? item?.account?.name : '---'}
                             </TableCell>
                             <TableCell className='tableCell'>
-                              {item?.assigned_to ? <Avatar src={item?.assigned_to} alt={item?.assigned_to} /> : '----'}
-                              {/* <Stack style={{ display: 'flex', flexDirection: 'row', alignItems: "center" }}>
-                                  <Avatar src={item?.lead?.created_by?.profile_pic} alt={item?.lead?.created_by?.email} /><Stack sx={{ ml: 1 }}>{item?.lead?.account_name ? item?.lead?.account_name : '---'}</Stack>
-                                </Stack> */}
-                            </TableCell>
+                                  {item?.assigned_to?.user_details?.profile_pic ? (
+                                  <Avatar src={item?.assigned_to?.user_details?.profile_pic} alt={item?.assigned_to?.user_details?.name} />
+                                  ) : (
+                                  <Typography>{item?.assigned_to?.user__email || '----'}</Typography>
+                                  )}
+                                  </TableCell>
                             <TableCell className='tableCell'>
                               {item?.stage ? item?.stage : '---'}
                             </TableCell>
