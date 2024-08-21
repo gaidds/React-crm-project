@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { useUser } from '../../context/Context'
 import {
     Card,
     Link,
@@ -13,7 +14,7 @@ import {
 } from '@mui/material'
 
 import { fetchData } from '../../components/FetchData'
-import { AccountsUrl } from '../../services/ApiUrls'
+import { AccountsUrl, ProfileUrl } from '../../services/ApiUrls'
 import { Tags } from '../../components/Tags'
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { FaPlus, FaStar } from 'react-icons/fa'
@@ -113,6 +114,10 @@ export const AccountDetails = (props: any) => {
     const [comments, setComments] = useState([])
     const [commentList, setCommentList] = useState('Recent Last')
     const [note, setNote] = useState('')
+    const [showEditButton, setShowEditButton] = useState<boolean>(false); 
+    const { userId, role, loading: contextLoading, profileId } = useUser();
+
+
 
     useEffect(() => {
         getAccountDetails(state.accountId)
@@ -209,6 +214,25 @@ export const AccountDetails = (props: any) => {
     const backbtnHandle = () => {
         navigate('/app/accounts')
     }
+    useEffect(() => {
+        // Check if role is 'SALES MANAGER' or 'ADMIN'
+        // Check if userId matches accountDetails.created_by
+        // Check if profileId is present in accountDetails.assigned_to (assuming it's an array)
+        const assignedToIds: string[] = accountDetails?.assigned_to || [];
+        const isProfileIdIncluded = profileId !== null && assignedToIds.includes(profileId);
+
+        const shouldShowEditButton = 
+        (role === 'SALES MANAGER' || role === 'ADMIN' || role === 'SALES REPRESENTATIVE') &&
+        (userId === accountDetails?.created_by?.id || isProfileIdIncluded);
+
+    // Ensure setShowEditButton only gets a boolean value
+        setShowEditButton(shouldShowEditButton || false);
+}, [role, userId, profileId, accountDetails]);
+
+    useEffect(() => {
+        console.log(showEditButton, "Showedit");
+    }, [showEditButton]);
+
 
     const module = 'Accounts'
     const crntPage = 'Account Details'
@@ -217,7 +241,7 @@ export const AccountDetails = (props: any) => {
     return (
         <Box sx={{ mt: '60px' }}>
             <div>
-                <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} editHandle={editHandle} />
+                <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} editHandle={showEditButton ? editHandle : undefined} />
                 <Box sx={{ mt: '110px', p: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Box sx={{ width: '65%' }}>
                         <Box sx={{ borderRadius: '10px', border: '1px solid #80808038', backgroundColor: 'white' }}>

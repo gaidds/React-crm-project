@@ -3,9 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { AppBar, Avatar, Box, Drawer, IconButton, List, ListItem, ListItemIcon, Popover, Toolbar, Tooltip, Typography } from '@mui/material';
 import { FaAddressBook, FaBars, FaBriefcase, FaBuilding, FaChartLine, FaCog, FaDiceD6, FaHandshake, FaIndustry, FaSignOutAlt, FaTachometerAlt, FaUserFriends, FaUsers } from "react-icons/fa";
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { fetchData } from './FetchData';
+import { fetchData, getHeadersWithoutOrg } from './FetchData';
 import { ProfileUrl } from '../services/ApiUrls';
-import { Header1 } from './FetchData';
+import { Header1 , Header} from './FetchData';
 import OrganizationModal from '../pages/organization/OrganizationModal';
 import Company from '../pages/company/Company';
 import AddCompany from '../pages/company/AddCompany';
@@ -39,6 +39,7 @@ import logo from '../assets/images/auth/img_logo.png';
 import { StyledListItemButton, StyledListItemText } from '../styles/CssStyled';
 // import MyContext, { MyContextData } from '../context/Context';
 import MyContext from '../context/Context';
+import { useUser } from '../context/Context';
 
 // declare global {
 //     interface Window {
@@ -55,6 +56,8 @@ export default function Sidebar(props: any) {
     const [userDetail, setUserDetail] = useState('')
     const [organizationModal, setOrganizationModal] = useState(false)
     const organizationModalClose = () => { setOrganizationModal(false) }
+    const { userId, role, loading: contextLoading } = useUser();
+    const [hasFetchedUserProfile, setHasFetchedUserProfile] = useState(false); // New state to track fetch status
 
     useEffect(() => {
         toggleScreen()
@@ -93,22 +96,33 @@ export default function Sidebar(props: any) {
         }
     }
 
-    // useEffect(() => {
-    //     userProfile()
-    // }, [])
+    useEffect(() => {
+        if (!organizationModal && !hasFetchedUserProfile) {
+            // Call userProfile when the modal is closed and it hasn't been fetched yet
+            userProfile();
+        }
+    }, [organizationModal, hasFetchedUserProfile]); 
 
-    const userProfile = () => {
-        fetchData(`${ProfileUrl}/`, 'GET', null as any, Header1)
-            .then((res: any) => {
-                // console.log(res, 'user')
-                if (res?.user_obj) {
-                    setUserDetail(res?.user_obj)
-                }
-            })
-            .catch((error) => {
-                console.error('Error:', error)
-            })
-    }
+    const headers = getHeadersWithoutOrg();
+
+    const userProfile = async () => {
+        try {
+            console.log(headers, 'Headers');
+    
+            // Perform the fetch request
+            const res: any = await fetchData(`${ProfileUrl}/`, 'GET', null as any, headers);
+    
+            // Check and set the user details
+            if (res?.user_obj) {
+                setUserDetail(res?.user_obj);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        } finally {
+            // Set this after the profile fetch operation
+            setHasFetchedUserProfile(true);
+        }
+    };
 
     const navList = ['leads', 'contacts', 'opportunities', 'accounts', 'companies', 'users', 'cases']
     const navIcons = (text: any, screen: any): React.ReactNode => {
@@ -137,6 +151,7 @@ export default function Sidebar(props: any) {
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        
         userProfile();
         setAnchorEl(event.currentTarget);
     };

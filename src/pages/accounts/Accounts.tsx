@@ -9,7 +9,7 @@ import { CustomTab, CustomToolbar, FabLeft, FabRight } from '../../styles/CssSty
 import { getComparator, stableSort } from '../../components/Sorting';
 import { FaAd, FaEdit, FaTrashAlt } from 'react-icons/fa';
 import { fetchData } from '../../components/FetchData';
-import { AccountsUrl } from '../../services/ApiUrls';
+import { AccountsUrl, ProfileUrl } from '../../services/ApiUrls';
 import { useNavigate } from 'react-router-dom';
 import { DeleteModal } from '../../components/DeleteModal';
 import { Tags } from '../../components/Tags';
@@ -17,6 +17,7 @@ import { Spinner } from '../../components/Spinner';
 import styled from '@emotion/styled';
 import '../../styles/style.css';
 import { EnhancedTableHead } from '../../components/EnchancedTableHead';
+import { useUser } from '../../context/Context';
 
 interface HeadCell {
     disablePadding: boolean;
@@ -183,10 +184,30 @@ export default function Accounts() {
     const [closedRecordsPerPage, setClosedRecordsPerPage] = useState<number>(10);
     const [closedTotalPages, setClosedTotalPages] = useState<number>(0);
     const [closedLoading, setClosedLoading] = useState(true);
+    const { userId, role, loading: contextLoading } = useUser();
+
+    
 
     useEffect(() => {
-        getAccounts()
-    }, [openCurrentPage, openRecordsPerPage, closedCurrentPage, closedRecordsPerPage]);
+        if (!contextLoading) {
+          setLoading(true); // Set local loading to true before fetching data
+          getAccounts();
+        }
+      }, [
+        contextLoading, // Dependency to ensure it runs after context is ready
+        openCurrentPage,
+        openRecordsPerPage,
+        closedCurrentPage,
+        closedRecordsPerPage,
+      ]);
+
+    
+    useEffect(() => {
+        console.log('Component re-rendered due to context change');
+        console.log('Role:', role);
+        console.log('User ID:', userId);
+    }, [role, userId]);
+        
 
     const handleChangeTab = (e: SyntheticEvent, val: any) => {
         setTab(val)
@@ -395,6 +416,7 @@ export default function Accounts() {
         setSelectedId(newSelectedIds);
         setIsSelectedId(newIsSelectedId);
     };
+    
 
     const getAccountDetail = (id: any) => {
         const Header = {
@@ -497,6 +519,7 @@ export default function Accounts() {
                             <FiChevronRight style={{ height: '15px' }} />
                         </FabRight>
                     </Box>
+                    {role === 'SALES MANAGER' || role === 'ADMIN' ? (
                     <Button
                         variant='contained'
                         startIcon={<FiPlus className='plus-icon' />}
@@ -504,7 +527,8 @@ export default function Accounts() {
                         className={'add-button'}
                     >
                         Add Account
-                    </Button>
+                    </Button>): null}
+
                 </Stack>
             </CustomToolbar>
             <Container sx={{ width: '100%', maxWidth: '100%', minWidth: '100%' }}>
@@ -678,11 +702,14 @@ export default function Accounts() {
                                                                             style={{ fill: '#1A3353', cursor: 'pointer', width: '18px' }}
                                                                         />
                                                                     </IconButton> */}
+                                            
+                                                                (role === 'ADMIN' || (role === 'SALES MANAGER' && userId === item?.created_by)) ? (
                                                                 <IconButton>
                                                                     <FaTrashAlt
                                                                         onClick={() => deleteRow(item?.id)}
                                                                         style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }} />
-                                                                </IconButton>
+                                                                </IconButton>) :null
+                                                                
                                                             </TableCell>
                                                         </TableRow>
                                                     )

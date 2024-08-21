@@ -20,3 +20,11 @@ export function fetchData(url: any, method: any, data = '', header: any) {
     body: data
   }).then((response) => response.json())
 }
+
+export const getHeadersWithoutOrg = () => {
+  return {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    Authorization: localStorage.getItem('Token') || ''
+  };
+}
