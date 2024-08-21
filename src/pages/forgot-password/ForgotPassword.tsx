@@ -25,7 +25,7 @@ export default function ForgotPassword() {
       'Content-Type': 'application/json',
     };
 
-    fetchData(`${AuthUrl}/forgot-password`, 'POST', JSON.stringify(data), head)
+    fetchData(`${AuthUrl}/forgot-password/`, 'POST', JSON.stringify(data), head)
       .then((res: any) => {
         setMessage({
           type: 'success',
