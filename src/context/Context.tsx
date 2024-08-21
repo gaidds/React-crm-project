@@ -29,6 +29,7 @@ interface UserContextType {
   userId: string | null;
   role: string | null;
   loading: boolean;
+  profileId: string | null;
 }
 
 interface UserProfile {
@@ -39,7 +40,7 @@ interface UserProfile {
 
 
 // Create the context with default values
-const UserContext = createContext<UserContextType>({ userId: null, role: null, loading: true  });
+const UserContext = createContext<UserContextType>({ userId: null, role: null, loading: true, profileId: null  });
 
 // Define the props type for the provider component
 interface UserProviderProps {
@@ -49,11 +50,13 @@ interface UserProviderProps {
 // Create the provider component
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [userId, setUserId] = useState<string | null>(null);
+  const [profileId, setProfileId] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const token = localStorage.getItem('Token');
+    console.log(token,"Token")
     if (token) {
       try {
         // Define the fetchProfile function
@@ -75,6 +78,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
             if (!response.error) {
               setRole(response.user_obj.role);
               setUserId(response.user_obj.user_details.id)
+              setProfileId(response.user_obj.id)
             } else {
               console.error('Failed to fetch profile:', response.error);
             }
@@ -96,7 +100,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ userId, role, loading }}>
+    <UserContext.Provider value={{ userId, role, loading, profileId }}>
       {children}
     </UserContext.Provider>
   );
