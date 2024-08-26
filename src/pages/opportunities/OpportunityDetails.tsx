@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
     Card,
     Link,
@@ -10,34 +10,35 @@ import {
     Stack,
     Button,
     Chip
-} from '@mui/material'
-import { fetchData } from '../../components/FetchData'
-import { OpportunityUrl } from '../../services/ApiUrls'
-import { Tags } from '../../components/Tags'
-import { CustomAppBar } from '../../components/CustomAppBar'
-import { FaPlus, FaStar } from 'react-icons/fa'
-import FormateTime from '../../components/FormateTime'
-import { Label } from '../../components/Label'
+} from '@mui/material';
+import { fetchData } from '../../components/FetchData';
+import { OpportunityUrl } from '../../services/ApiUrls';
+import { Tags } from '../../components/Tags';
+import { CustomAppBar } from '../../components/CustomAppBar';
+import { FaPlus } from 'react-icons/fa';
+import FormateTime from '../../components/FormateTime';
+import { Label } from '../../components/Label';
 
 export const formatDate = (dateString: any) => {
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' }
-    return new Date(dateString).toLocaleDateString(undefined, options)
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
 }
-type response = {
+
+type Response = {
     created_by: {
         email: string;
         id: string;
-        profile_pic: string;
+        profile_pic: string | null;
     };
     user_details: {
         email: string;
         id: string;
-        profile_pic: string;
+        profile_pic: string | null;
     };
     org: { name: string };
-    lead: { account_name: string };
+    lead: { account_name: string } | null;
     account_attachment: [];
-    assigned_to: [];
+    assigned_to: Array<{ user_details: { email: string; id: string; profile_pic: string | null; } }>;
     billing_address_line: string;
     billing_city: string;
     billing_country: string;
@@ -46,7 +47,6 @@ type response = {
     billing_street: string;
     contact_name: string;
     name: string;
-
     created_at: string;
     created_on: string;
     created_on_arrow: string;
@@ -60,8 +60,8 @@ type response = {
     lead_attachment: string;
     opportunity_amount: string;
     website: string;
-    description: string;
-    contacts: string;
+    description: string | null;
+    contacts: [];
     status: string;
     source: string;
     address_line: string;
@@ -70,123 +70,65 @@ type response = {
     state: string;
     postcode: string;
     country: string;
-    tags: [];
+    tags: Array<any>;
     company: string;
     probability: string;
     industry: string;
     skype_ID: string;
     file: string;
-
     close_date: string;
     organization: string;
     created_from_site: boolean;
     id: string;
-    teams: [];
-    leads: string;
-
+    teams: string[];
+    leads: string[];
     lead_source: string;
     amount: string;
     currency: string;
-    users: string;
+    users: Array<{ user_details: { email: string; id: string; profile_pic: string | null; }; }>;
     stage: string;
     closed_on: string;
-    opportunity_attachment: [];
+    opportunity_attachment: Array<string>;
     account: { id: string; name: string };
-
-
 };
-export const OpportunityDetails = (props: any) => {
-    const { state } = useLocation()
-    const navigate = useNavigate()
 
-    const [opportunityDetails, setOpportunityDetails] = useState<response | null>(null)
-    const [usersDetails, setUsersDetails] = useState<Array<{
-        user_details: {
-            email: string;
-            id: string;
-            profile_pic: string;
-        }
-    }>>([]);
-    const [selectedCountry, setSelectedCountry] = useState([])
-    const [attachments, setAttachments] = useState([])
-    const [tags, setTags] = useState([])
-    const [countries, setCountries] = useState<string[][]>([])
-    const [source, setSource] = useState([])
-    const [status, setStatus] = useState([])
-    const [industries, setIndustries] = useState([])
-    const [contacts, setContacts] = useState([])
-    const [users, setUsers] = useState([])
-    const [teams, setTeams] = useState([])
-    const [leads, setLeads] = useState([])
-    const [comments, setComments] = useState([])
-    const [commentList, setCommentList] = useState('Recent Last')
-    const [note, setNote] = useState('')
+export const OpportunityDetails = (props: any) => {
+    const { state } = useLocation();
+    const navigate = useNavigate();
+
+    const [opportunityDetails, setOpportunityDetails] = useState<Response | null>(null);
+    const [users, setUsers] = useState<Array<{ user_details: { email: string; id: string; profile_pic: string | null; }; }>>([]);
 
     useEffect(() => {
-        getOpportunityDetails(state.opportunityId)
-    }, [state.opportunityId])
+        getOpportunityDetails(state.opportunityId);
+    }, [state.opportunityId]);
 
-    const getOpportunityDetails = (id: any) => {
+    const getOpportunityDetails = (id: string) => {
         const Header = {
             Accept: 'application/json',
             'Content-Type': 'application/json',
             Authorization: localStorage.getItem('Token'),
             org: localStorage.getItem('org')
-          }
+        };
         fetchData(`${OpportunityUrl}/${id}/`, 'GET', null as any, Header)
             .then((res) => {
                 console.log(res, 'edd');
                 if (!res.error) {
-                    setOpportunityDetails(res?.opportunity_obj)
-                    setUsers(res?.users)
-                    // setContacts(res?.contacts)
-                    // setIndustries(res?.industries)
-                    // setUsers(res?.users)
-                    // setStatus(res?.status)
-                    // setCountries(res?.countries)
-                    // setLeads(res?.leads)
-                    // setTags(res?.tags)
-                    // setTeams(res?.teams)
-                    // setAttachments(res?.attachments)
-                    // setTags(res?.tags)
-                    // setCountries(res?.countries)
-                    // setIndustries(res?.industries)
-                    // setStatus(res?.status)
-                    // setSource(res?.source)
-                    // setUsers(res?.users)
-                    // setContacts(res?.contacts)
-                    // setTeams(res?.teams)
-                    // setComments(res?.comments)
+                    setOpportunityDetails(res?.opportunity_obj);
+                    setUsers(res?.users || []);
                 }
             })
             .catch((err) => {
-                // console.error('Error:', err)
-                < Snackbar open={err} autoHideDuration={4000} onClose={() => navigate('/app/opportunities')} >
+                console.error('Error:', err);
+                <Snackbar open={true} autoHideDuration={4000} onClose={() => navigate('/app/opportunities')}>
                     <Alert onClose={() => navigate('/app/opportunities')} severity="error" sx={{ width: '100%' }}>
                         Failed to load!
                     </Alert>
-                </Snackbar >
-            })
-    }
-    const accountCountry = (country: string) => {
-        let countryName: string[] | undefined;
-        for (countryName of countries) {
-            if (Array.isArray(countryName) && countryName.includes(country)) {
-                const ele = countryName;
-                break;
-            }
-        }
-        return countryName?.[1]
-    }
+                </Snackbar>;
+            });
+    };
+
     const editHandle = () => {
-        // navigate('/contacts/edit-contacts', { state: { value: contactDetails, address: newAddress } })
-        let country: string[] | undefined;
-        for (country of countries) {
-            if (Array.isArray(country) && country.includes(opportunityDetails?.country || '')) {
-                const firstElement = country[0];
-                break;
-            }
-        }
         navigate('/app/opportunities/edit-opportunity', {
             state: {
                 value: {
@@ -204,21 +146,28 @@ export const OpportunityDetails = (props: any) => {
                     due_date: opportunityDetails?.closed_on,
                     tags: opportunityDetails?.tags,
                     opportunity_attachment: opportunityDetails?.opportunity_attachment,
-                }, id: state?.opportunityId,
-                contacts: state?.contacts || [], leadSource: state?.leadSource || [], currency: state?.currency || [], tags: state?.tags || [], account: state?.account || [], stage: state?.stage || [], users: state?.users || [], teams: state?.teams || [], countries: state?.countries || []
+                },
+                id: state?.opportunityId,
+                contacts: state?.contacts || [],
+                leadSource: state?.leadSource || [],
+                currency: state?.currency || [],
+                tags: state?.tags || [],
+                account: state?.account || [],
+                stage: state?.stage || [],
+                users: state?.users || [],
+                teams: state?.teams || [],
+                countries: state?.countries || []
             }
-        }
-        )
-    }
+        });
+    };
 
     const backbtnHandle = () => {
-        navigate('/app/opportunities')
-    }
+        navigate('/app/opportunities');
+    };
 
-    const module = 'Opportunities'
-    const crntPage = 'Opportunity Details'
-    const backBtn = 'Back To Opportunities'
-    console.log(state, 'oppdetail');
+    const module = 'Opportunities';
+    const crntPage = 'Opportunity Details';
+    const backBtn = 'Back To Opportunities';
 
     return (
         <Box sx={{ mt: '60px' }}>
@@ -234,44 +183,37 @@ export const OpportunityDetails = (props: any) => {
                                 <div style={{ color: 'gray', fontSize: '16px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginRight: '15px' }}>
                                         created &nbsp;
-                                        {FormateTime(opportunityDetails?.created_at)} &nbsp; by   &nbsp;
+                                        {FormateTime(opportunityDetails?.created_at)} &nbsp; by &nbsp;
                                         <Avatar
-                                            src={opportunityDetails?.created_by?.profile_pic}
+                                            src={opportunityDetails?.created_by?.profile_pic || ''}
                                             alt={opportunityDetails?.created_by?.email}
                                         />
                                         &nbsp;
                                         &nbsp;
                                         {opportunityDetails?.created_by?.email}
-                                        {/* {opportunityDetails?.first_name}&nbsp;
-                                        {opportunityDetails?.last_name} */}
                                     </div>
-
                                 </div>
                             </div>
                             <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', marginTop: '10px' }}>
                                 <div className='title2'>
                                     {opportunityDetails?.name}
                                     <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 1 }}>
-                                        {/* {
-                                            lead.assigned_to && lead.assigned_to.map((assignItem) => (
-                                                assignItem.user_details.profile_pic
-                                                    ? */}
-                                        {users?.length ? users.map((val: any, i: any) =>
+                                        {users.length ? users.map((val) =>
                                             <Avatar
-                                                key={i}
-                                                alt={val?.user_details?.email}
-                                                src={val?.user_details?.profile_pic}
+                                                key={val.user_details.id}
+                                                alt={val.user_details.email}
+                                                src={val.user_details.profile_pic || ''}
                                                 sx={{ mr: 1 }}
                                             />
-                                        ) : ''
-                                        }
+                                        ) : null}
                                     </Stack>
                                 </div>
                                 <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                    {opportunityDetails?.tags?.length ? opportunityDetails?.tags.map((tagData: any) => (
+                                    {opportunityDetails?.tags?.length ? opportunityDetails.tags.map((tagData, i) => (
                                         <Label
+                                            key={i}
                                             tags={tagData}
-                                        />)) : ''}
+                                        />)) : null}
                                 </Stack>
                             </div>
                             <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -294,14 +236,7 @@ export const OpportunityDetails = (props: any) => {
                                     </div>
                                 </div>
                             </div>
-                            <div style={{ padding: '20px', marginTop: '10px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <div style={{ width: '32%' }}>
-                                    <div className='title2'>Probability</div>
-                                    <div className='title3'>
-                                        {/* {lead.pipeline ? lead.pipeline : '------'} */}
-                                        {opportunityDetails?.probability || '----'}
-                                    </div>
-                                </div>
+                            <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ width: '32%' }}>
                                     <div className='title2'>Amount</div>
                                     <div className='title3'>
@@ -309,56 +244,32 @@ export const OpportunityDetails = (props: any) => {
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div className='title2'>Team</div>
-                                    <div className='title3'>
-                                        {opportunityDetails?.teams?.length ? opportunityDetails?.teams.map((team: any) =>
-                                            <Chip label={team} sx={{ height: '20px', borderRadius: '4px' }} />
-                                        ) : '----'}
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div style={{ padding: '20px', marginTop: '10px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <div style={{ width: '32%' }}>
                                     <div className='title2'>Currency</div>
                                     <div className='title3'>
                                         {opportunityDetails?.currency || '----'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div className='title2'>Users</div>
-                                    <div className='title3'>
-                                        {opportunityDetails?.users || '----'}
-                                    </div>
-                                </div>
-                                <div style={{ width: '32%' }}>
-                                    <div className='title2'>Contacts</div>
-                                    <div className='title3'>
-                                        {opportunityDetails?.contact_name || '----'}
-                                    </div>
-                                </div>
-                            </div>
-                            <div style={{ padding: '20px', marginTop: '10px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <div style={{ width: '32%' }}>
                                     <div className='title2'>Stage</div>
                                     <div className='title3'>
                                         {opportunityDetails?.stage || '----'}
                                     </div>
                                 </div>
+                            </div>
+                            <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ width: '32%' }}>
-                                    <div className='title2'>Assigned Users</div>
+                                    <div className='title2'>Probability</div>
                                     <div className='title3'>
-                                        {opportunityDetails?.assigned_to || '----'}
+                                        {opportunityDetails?.probability || '----'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div className='title2'>Closed Date</div>
+                                    <div className='title2'>Close Date</div>
                                     <div className='title3'>
-                                        {opportunityDetails?.closed_on || '----'}
+                                        {formatDate(opportunityDetails?.closed_on) || '----'}
                                     </div>
                                 </div>
                             </div>
-                            {/* </div> */}
                             {/* Description */}
                             <div style={{ marginTop: '2%' }}>
                                 <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -402,5 +313,5 @@ export const OpportunityDetails = (props: any) => {
                 </Box>
             </div>
         </Box>
-    )
-}
+    );
+};

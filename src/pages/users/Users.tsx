@@ -76,6 +76,15 @@ type Item = {
     id: string;
     // Other properties
 };
+
+const roleDisplayMap: { [key: string]: string } = {
+    'ADMIN': 'ADMIN',
+    'SALES MANAGER': 'SALES MANAGER',
+    'SALES REP': 'SALES REPRESENTATIVE',
+    'USER': 'USER'
+};
+
+
 export default function Users() {
     const navigate = useNavigate()
     const [tab, setTab] = useState('active');
@@ -595,7 +604,7 @@ export default function Users() {
                                                                     </div>
                                                                 </TableCell>
                                                                 <TableCell className='tableCell'>
-                                                                    {item?.role ? item.role : '---'}
+                                                                {item?.role ? roleDisplayMap[item.role] : '---'}
                                                                 </TableCell>
                                                                 {/* <TableCell
                                                             align='left'

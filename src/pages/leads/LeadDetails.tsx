@@ -453,11 +453,15 @@ function LeadDetails(props: any) {
                                     </div>
                                     <div style={{ width: '32%' }}>
                                         <div className='title2'>Mobile Number</div>
-                                        <div className='title3'>
-                                            {leadDetails?.phone ? `${leadDetails?.phone}
-                                                <FaStar style={{ fontSize: '16px', fill: 'yellow' }} /><br />` : '---'}
+                                        <div className="title3">
+                                            {leadDetails?.phone ? (
+                                            <div>
+                                                {leadDetails?.phone} <FaStar style={{ fontSize: '16px', fill: 'yellow' }} />
+                                                <br/>
+                                                </div>
+                                                ) : ('---')}
+                                            </div>
                                         </div>
-                                    </div>
                                     <div style={{ width: '32%' }}>
                                         <div style={{ fontSize: '16px', fontWeight: 600 }} />
                                         <div className='title3'>

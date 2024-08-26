@@ -544,7 +544,7 @@ export function EditOpportunity() {
                                                         value={selectedAssignTo}
                                                         limitTags={2}
                                                         options={state.users || []}
-                                                        getOptionLabel={(option: any) => state.users ? option?.user_details?.email : option}
+                                                        getOptionLabel={(option: any) => state.users ? option?.user__email : option}
                                                         onChange={(e: any, value: any) => handleChange2('assigned_to', value)}
                                                         size='small'
                                                         filterSelectedOptions

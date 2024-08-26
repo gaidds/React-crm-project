@@ -458,22 +458,19 @@ export function AddOpportunity() {
                                                         multiple
                                                         value={selectedAssignTo}
                                                         limitTags={2}
-                                                        options={state.users || []}
-                                                        getOptionLabel={(option: any) => state.users ? option?.user__email : option}
+                                                        options={state.users ? state.users.filter((option: any) => !selectedAssignTo.some((selectedOption) => selectedOption.id === option.id)) : []}
+                                                        getOptionLabel={(option: any) => state?.users ? option?.user__email : option}
                                                         onChange={(e: any, value: any) => handleChange2('assigned_to', value)}
                                                         size='small'
                                                         filterSelectedOptions
+                                                        filterOptions={(options) => options.filter(option => !selectedAssignTo.includes(option?.id))}
                                                         renderTags={(value, getTagProps) =>
                                                             value.map((option, index) => (
                                                                 <Chip
                                                                     deleteIcon={<FaTimes style={{ width: '9px' }} />}
-                                                                    sx={{
-                                                                        backgroundColor: 'rgba(0, 0, 0, 0.08)',
-                                                                        height: '18px'
-
-                                                                    }}
+                                                                    sx={{ backgroundColor: 'rgba(0, 0, 0, 0.08)', height: '18px' }}
                                                                     variant='outlined'
-                                                                    label={state.users ? option?.user__email : option}
+                                                                    label={state?.users ? option?.user__email : option}
                                                                     {...getTagProps({ index })}
                                                                 />
                                                             ))
