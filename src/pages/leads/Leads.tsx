@@ -200,6 +200,9 @@ export default function Leads(props: any) {
 
   const handleChangeTab = (e: SyntheticEvent, val: any) => {
     setTab(val)
+    if (val === 'opportunities') {
+      navigate('/app/opportunities');
+    }
   }
   const handleRecordsPerPage = (event: React.ChangeEvent<HTMLSelectElement>) => {
     if (tab == 'open') {
@@ -315,18 +318,24 @@ export default function Leads(props: any) {
 
       <CustomToolbar>
         <Tabs defaultValue={tab} onChange={handleChangeTab} sx={{ mt: '26px' }}>
-          <CustomTab value="open" label="Open"
+          <CustomTab value="open" label="Open leads"
             sx={{
               backgroundColor: tab === 'open' ? '#F0F7FF' : '#284871',
               color: tab === 'open' ? '#3f51b5' : 'white',
             }} />
-          <CustomTab value="closed" label="Closed"
+          <CustomTab value="closed" label="Closed leads"
             sx={{
               backgroundColor: tab === 'closed' ? '#F0F7FF' : '#284871',
               color: tab === 'closed' ? '#3f51b5' : 'white',
               ml: '5px',
+              mr: '5px',
             }}
           />
+          <CustomTab value="opportunities" label="Opportunities"
+              sx={{
+                backgroundColor: tab === 'opportunities' ? '#F0F7FF' : '#284871',
+                color: tab === 'opportunities' ? '#3f51b5' : 'white',
+              }} />
         </Tabs>
 
         <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
