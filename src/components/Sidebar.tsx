@@ -49,7 +49,7 @@ import MyContext from '../context/Context';
 export default function Sidebar(props: any) {
     const navigate = useNavigate()
     const location = useLocation()
-    const [screen, setScreen] = useState('deals')
+    const [screen, setScreen] = useState('contacts')
     const [drawerWidth, setDrawerWidth] = useState(200)
     const [headerWidth, setHeaderWidth] = useState(drawerWidth)
     const [userDetail, setUserDetail] = useState('')
