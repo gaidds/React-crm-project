@@ -49,7 +49,7 @@ import MyContext from '../context/Context';
 export default function Sidebar(props: any) {
     const navigate = useNavigate()
     const location = useLocation()
-    const [screen, setScreen] = useState('contacts')
+    const [screen, setScreen] = useState('deals')
     const [drawerWidth, setDrawerWidth] = useState(200)
     const [headerWidth, setHeaderWidth] = useState(drawerWidth)
     const [userDetail, setUserDetail] = useState('')
@@ -76,12 +76,12 @@ export default function Sidebar(props: any) {
     // }, [])
     const toggleScreen = () => {
         // console.log(location.pathname.split('/'), 'll')
-        if (location.pathname.split('/')[1] === '' || location.pathname.split('/')[1] === undefined || location.pathname.split('/')[2] === 'leads') {
-            setScreen('leads')
+        if (location.pathname.split('/')[1] === '' || location.pathname.split('/')[1] === undefined || location.pathname.split('/')[2] === 'deals') {
+            setScreen('deals')
         } else if (location.pathname.split('/')[2] === 'contacts') {
             setScreen('contacts')
         } else if (location.pathname.split('/')[2] === 'opportunities') {
-            setScreen('opportunities')
+            setScreen('deals')
         } else if (location.pathname.split('/')[2] === 'accounts') {
             setScreen('accounts')
         } else if (location.pathname.split('/')[2] === 'companies') {
@@ -110,10 +110,10 @@ export default function Sidebar(props: any) {
             })
     }
 
-    const navList = ['leads', 'contacts', 'opportunities', 'accounts', 'companies', 'users', 'cases']
+    const navList = ['deals', 'contacts', 'accounts',  'users']
     const navIcons = (text: any, screen: any): React.ReactNode => {
         switch (text) {
-            case 'leads':
+            case 'deals':
                 return screen === 'leads' ? <FaUsers fill='#3e79f7' /> : <FaUsers />
             case 'contacts':
                 return screen === 'contacts' ? <FaAddressBook fill='#3e79f7' /> : <FaAddressBook />
@@ -244,8 +244,12 @@ export default function Sidebar(props: any) {
                                     <StyledListItemButton
                                         sx={{ pt: '6px', pb: '6px' }}
                                         onClick={() => {
-                                            navigate(`/app/${text}`)
-                                            setScreen(text)
+                                            if (text === "deals") {
+                                                navigate(`/app/leads`);
+                                            } else {
+                                                navigate(`/app/${text}`);
+                                            }
+                                            setScreen(text);
                                         }}
                                         selected={screen === text}
                                     >
