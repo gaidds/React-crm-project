@@ -82,7 +82,7 @@ export default function OrganizationModal(props: any) {
         onHandleClose()
         if (localStorage.getItem('org')) {
             // navigate('/app/leads')
-            navigate('/')
+            navigate('/app/users')
         }
         // } 
     }
