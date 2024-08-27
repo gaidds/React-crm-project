@@ -38,7 +38,7 @@ import { CaseDetails } from '../pages/cases/CaseDetails';
 import logo from '../assets/images/auth/img_logo.png';
 import { StyledListItemButton, StyledListItemText } from '../styles/CssStyled';
 // import MyContext, { MyContextData } from '../context/Context';
-import MyContext from '../context/Context';
+import MyContext, { useMyContext } from '../context/Context';
 
 // declare global {
 //     interface Window {
@@ -54,7 +54,10 @@ export default function Sidebar(props: any) {
     const [headerWidth, setHeaderWidth] = useState(drawerWidth)
     const [userDetail, setUserDetail] = useState('')
     const [organizationModal, setOrganizationModal] = useState(false)
+    // const [navList, setNavList] = useState<string[]>(['deals', 'contacts', 'accounts', 'users']);
     const organizationModalClose = () => { setOrganizationModal(false) }
+    const { userRole, setUserRole } = useMyContext();
+    console.log(userRole)
 
     useEffect(() => {
         toggleScreen()
@@ -93,16 +96,26 @@ export default function Sidebar(props: any) {
         }
     }
 
-    // useEffect(() => {
-    //     userProfile()
-    // }, [])
+    useEffect(() => {
+        userProfile()
+    }, [])
+
+    const Header = {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: localStorage.getItem('Token'),
+        org: localStorage.getItem('org')
+      }
 
     const userProfile = () => {
-        fetchData(`${ProfileUrl}/`, 'GET', null as any, Header1)
+        fetchData(`${ProfileUrl}/`, 'GET', null as any, Header)
             .then((res: any) => {
-                // console.log(res, 'user')
+                console.log(res, 'user')
                 if (res?.user_obj) {
                     setUserDetail(res?.user_obj)
+                    setUserRole(res?.user_obj.role)
+                    console.log(userRole)
+                    
                 }
             })
             .catch((error) => {
@@ -110,7 +123,8 @@ export default function Sidebar(props: any) {
             })
     }
 
-    const navList = ['deals', 'contacts', 'accounts',  'users']
+
+    const navList = userRole === 'USER' ? ['contacts', 'users'] : ['deals', 'contacts', 'accounts', 'users'];
     const navIcons = (text: any, screen: any): React.ReactNode => {
         switch (text) {
             case 'deals':
