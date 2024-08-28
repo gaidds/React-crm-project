@@ -97,7 +97,7 @@ export default function Contacts() {
     }, [currentPage, recordsPerPage]);
 
     useEffect(() => {
-        console.log('Component userRole:', userRole);
+        console.log('Current userRole:', userRole);
       }, [userRole]);
 
     // const handleChangeTab = (e: SyntheticEvent, val: any) => {
@@ -240,7 +240,7 @@ export default function Contacts() {
         setSelectedId('')
     }
 
-    const showAddButton = userRole !== 'USER' && userRole !== 'SALES REPRESENTATIVE';
+    const showAddButton = userRole !== 'USER' && userRole !== 'SALES REP';
     const modalDialog = 'Are You Sure you want to delete this contact?'
     const modalTitle = 'Delete Contact'
 
@@ -302,14 +302,16 @@ export default function Contacts() {
                             <FiChevronRight style={{ height: '15px' }} />
                         </FabRight>
                     </Box>
-                    <Button
-                        variant='contained'
-                        startIcon={<FiPlus className='plus-icon' />}
-                        onClick={onAddContact}
-                        className={'add-button'}
-                    >
-                        Add Contact
-                    </Button>
+                    {showAddButton && (
+                        <Button
+                            variant='contained'
+                            startIcon={<FiPlus className='plus-icon' />}
+                            onClick={onAddContact}
+                            className={'add-button'}
+                        >
+                            Add Contact
+                        </Button>
+            )}
                 </Stack>
             </CustomToolbar>
 
