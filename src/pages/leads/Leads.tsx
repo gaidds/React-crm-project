@@ -17,6 +17,7 @@ import { FiChevronLeft } from "@react-icons/all-files/fi/FiChevronLeft";
 import { FiChevronRight } from "@react-icons/all-files/fi/FiChevronRight";
 import { CustomTab, CustomToolbar, FabLeft, FabRight } from '../../styles/CssStyled';
 import '../../styles/style.css'
+import MyContext, { useMyContext } from '../../context/Context'
 
 // import css from './css';
 // import emotionStyled from '@emotion/styled';
@@ -98,6 +99,7 @@ export const ToolbarNew = styled(Toolbar)({
 // }
 export default function Leads(props: any) {
   // const {drawer}=props
+  const { userRole, setUserRole } = useMyContext();
   const navigate = useNavigate()
   const [tab, setTab] = useState('open');
   const [loading, setLoading] = useState(true);
@@ -281,6 +283,7 @@ export default function Leads(props: any) {
       .catch(() => {
       })
   }
+  const showAddButton = userRole !== 'USER' && userRole !== 'SALES REP';
 
   const formatDate = (inputDate: string): string => {
     const currentDate = new Date();
@@ -374,14 +377,16 @@ export default function Leads(props: any) {
               <FiChevronRight style={{ height: '15px' }} />
             </FabRight>
           </Box>
-          <Button
-            variant='contained'
-            startIcon={<FiPlus className='plus-icon' />}
-            onClick={onAddHandle}
-            className={'add-button'}
-          >
-            Add Lead
-          </Button>
+          {showAddButton && (
+                        <Button
+                            variant='contained'
+                            startIcon={<FiPlus className='plus-icon' />}
+                            onClick={onAddHandle}
+                            className={'add-button'}
+                        >
+                            Add Lead
+                        </Button>
+            )}
         </Stack>
       </CustomToolbar>
 
