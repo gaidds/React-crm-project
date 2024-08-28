@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Grid, TextField, Button, Typography, Alert } from '@mui/material';
 import { fetchData } from '../../components/FetchData';
-import { AuthUrl } from '../../services/ApiUrls';
+import { ForgotPasswordEmailUrl } from '../../services/ApiUrls';
 import './styles.css';
 
 export default function ForgotPassword() {
@@ -25,12 +25,19 @@ export default function ForgotPassword() {
       'Content-Type': 'application/json',
     };
 
-    fetchData(`${AuthUrl}/forgot-password/`, 'POST', JSON.stringify(data), head)
+    fetchData(ForgotPasswordEmailUrl, 'POST', JSON.stringify(data), head)
       .then((res: any) => {
-        setMessage({
-          type: 'success',
-          text: 'A password reset link has been sent to your email.',
-        });
+        if (res.error === true) {
+          setMessage({
+            type: 'error',
+            text: res.errors,
+          });
+        } else {
+          setMessage({
+            type: 'success',
+            text: res.message,
+          });
+        }
       })
       .catch((error: any) => {
         console.error('Error:', error);
