@@ -278,7 +278,7 @@ export default function Sidebar(props: any) {
                     </Box>
 
                 </Drawer>
-                <MyContext.Provider value={context}>
+                {/* <MyContext.Provider value={context}> */}
 
                     {/* <Box sx={{ width: drawerWidth === 60 ? '1380px' : '1240px', ml: drawerWidth === 60 ? '60px' : '200px', overflowX: 'hidden' }}> */}
                     <Box sx={{ width: 'auto', ml: drawerWidth === 60 ? '60px' : '200px', overflowX: 'hidden' }}>
@@ -323,7 +323,7 @@ export default function Sidebar(props: any) {
                             <Route path='/app/cases/case-details' element={<CaseDetails />} />
                         </Routes>
                     </Box>
-                </MyContext.Provider>
+                {/* </MyContext.Provider> */}
                 <OrganizationModal
                     open={organizationModal}
                     handleClose={organizationModalClose}
