@@ -115,7 +115,6 @@ export default function Sidebar(props: any) {
                 if (res?.user_obj) {
                     setUserDetail(res?.user_obj)
                     setUserRole(res?.user_obj.role)
-                    console.log(userRole)
                     
                 }
             })
@@ -279,8 +278,8 @@ export default function Sidebar(props: any) {
                     </Box>
 
                 </Drawer>
-                <MyContextProvider>
-                <MyContext.Provider value={context}>
+                {/* <MyContextProvider> */}
+                {/* <MyContext.Provider value={context}> */}
 
                     {/* <Box sx={{ width: drawerWidth === 60 ? '1380px' : '1240px', ml: drawerWidth === 60 ? '60px' : '200px', overflowX: 'hidden' }}> */}
                     <Box sx={{ width: 'auto', ml: drawerWidth === 60 ? '60px' : '200px', overflowX: 'hidden' }}>
@@ -325,8 +324,8 @@ export default function Sidebar(props: any) {
                             <Route path='/app/cases/case-details' element={<CaseDetails />} />
                         </Routes>
                     </Box>
-                </MyContext.Provider>
-                </MyContextProvider>
+                {/* </MyContext.Provider> */}
+                {/* </MyContextProvider> */}
                 <OrganizationModal
                     open={organizationModal}
                     handleClose={organizationModalClose}
