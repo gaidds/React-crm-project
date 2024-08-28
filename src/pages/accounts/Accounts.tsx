@@ -130,8 +130,9 @@ type Item = {
     id: string;
 };
 export default function Accounts() {
-    const { userRole, setUserRole } = useMyContext();
+    const { userRole, setUserRole , userId} = useMyContext();
     const navigate = useNavigate()
+    console.log(userId, 'user id in Accounts')
 
     const [tab, setTab] = useState('open');
     const [loading, setLoading] = useState(true);
@@ -170,6 +171,7 @@ export default function Accounts() {
     const [closedAccountsCount, setClosedAccountsCount] = useState(0)
     const [closedAccountsOffset, setClosedAccountsOffset] = useState(0)
     const [deleteRowModal, setDeleteRowModal] = useState(false)
+    const [accountCreatedBy, setAccountCreatedBy] = useState('')
 
     const [selected, setSelected] = useState<string[]>([]);
     const [selectedId, setSelectedId] = useState<string[]>([]);
@@ -409,6 +411,7 @@ export default function Accounts() {
                 console.log(res, 'resDetail');
                 if (!res.error) {
                     const data = res?.account_obj
+                    setAccountCreatedBy(data.created_by)
                     navigate('/app/accounts/edit-account', {
                         state: {
                             value: {
@@ -557,6 +560,7 @@ export default function Accounts() {
                                                     .map((item: any, index: any) => {
                                                         const labelId = `enhanced-table-checkbox-${index}`
                                                         const rowIndex = selectedId.indexOf(item.id);
+                
                                                         return (
                                                             <TableRow
                                                                 tabIndex={-1}
@@ -604,11 +608,14 @@ export default function Accounts() {
                                                                             style={{ fill: '#1A3353', cursor: 'pointer', width: '18px' }}
                                                                         />
                                                                     </IconButton> */}
-                                                                    <IconButton>
-                                                                        <FaTrashAlt
-                                                                            onClick={() => deleteRow(item?.id)}
-                                                                            style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }} />
-                                                                    </IconButton>
+                                                                    {userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && item.created_by.id === userId) ? (
+                                                                        <IconButton>
+                                                                            <FaTrashAlt
+                                                                            onClick={() => deleteRow(item.id)}
+                                                                            style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }}
+                                                                            />
+                                                                        </IconButton>
+                                                                        ) : null}
                                                                 </TableCell>
                                                             </TableRow>
                                                         )
@@ -682,11 +689,14 @@ export default function Accounts() {
                                                                             style={{ fill: '#1A3353', cursor: 'pointer', width: '18px' }}
                                                                         />
                                                                     </IconButton> */}
-                                                                <IconButton>
-                                                                    <FaTrashAlt
-                                                                        onClick={() => deleteRow(item?.id)}
-                                                                        style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }} />
-                                                                </IconButton>
+                                                                {userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && item.created_by.id === userId) ? (
+                                                                        <IconButton>
+                                                                            <FaTrashAlt
+                                                                            onClick={() => deleteRow(item.id)}
+                                                                            style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }}
+                                                                            />
+                                                                        </IconButton>
+                                                                        ) : null}
                                                             </TableCell>
                                                         </TableRow>
                                                     )
