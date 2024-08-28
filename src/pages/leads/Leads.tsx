@@ -99,7 +99,7 @@ export const ToolbarNew = styled(Toolbar)({
 // }
 export default function Leads(props: any) {
   // const {drawer}=props
-  const { userRole, setUserRole } = useMyContext();
+  const { userRole, setUserRole, userId } = useMyContext();
   const navigate = useNavigate()
   const [tab, setTab] = useState('open');
   const [loading, setLoading] = useState(true);
@@ -404,9 +404,11 @@ export default function Leads(props: any) {
                       <div style={{ color: '#1A3353', fontSize: '1rem', fontWeight: '500', cursor: 'pointer' }} onClick={() => selectLeadList(item?.id)}>
                         {item?.title}
                       </div>
-                      <div onClick={() => deleteLead(item?.id)}>
-                        <FaTrashAlt style={{ cursor: 'pointer', color: 'gray' }} />
-                      </div>
+                      {userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && item.created_by.id === userId) ? (
+                        <div onClick={() => deleteLead(item?.id)}>
+                          <FaTrashAlt style={{ cursor: 'pointer', color: 'gray' }} />
+                        </div>
+                        ) : null}
                     </Stack>
                     <Stack className='lead-row2'>
                       <div className='lead-row2-col1'>
@@ -492,9 +494,11 @@ export default function Leads(props: any) {
                       <div style={{ color: '#1A3353', fontSize: '1rem', fontWeight: '500', cursor: 'pointer' }} onClick={() => selectLeadList(item?.id)}>
                         {item?.title}
                       </div>
-                      <div onClick={() => deleteLead(item)}>
-                        <FaTrashAlt style={{ cursor: 'pointer', color: 'gray' }} />
-                      </div>
+                      {userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && item.created_by.id === userId) ? (
+                        <div onClick={() => deleteLead(item?.id)}>
+                          <FaTrashAlt style={{ cursor: 'pointer', color: 'gray' }} />
+                        </div>
+                        ) : null}
                     </Stack>
                     <Stack className='lead-row2'>
                       <div className='lead-row2-col1'>
