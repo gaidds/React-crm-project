@@ -171,7 +171,6 @@ export default function Accounts() {
     const [closedAccountsCount, setClosedAccountsCount] = useState(0)
     const [closedAccountsOffset, setClosedAccountsOffset] = useState(0)
     const [deleteRowModal, setDeleteRowModal] = useState(false)
-    const [accountCreatedBy, setAccountCreatedBy] = useState('')
 
     const [selected, setSelected] = useState<string[]>([]);
     const [selectedId, setSelectedId] = useState<string[]>([]);
@@ -411,7 +410,6 @@ export default function Accounts() {
                 console.log(res, 'resDetail');
                 if (!res.error) {
                     const data = res?.account_obj
-                    setAccountCreatedBy(data.created_by)
                     navigate('/app/accounts/edit-account', {
                         state: {
                             value: {
