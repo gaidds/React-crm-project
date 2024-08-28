@@ -9,15 +9,21 @@ import { createContext, useContext, useState } from 'react';
 interface MyContextData {
   userRole: string | null;
   setUserRole: (role: string | null) => void;
+  userId: string | null;
+  setUserId: (id: string | null) => void;
+  profileId: string | null;
+  setProfileId: (id: string | null) => void;
 }
 
 const MyContext = createContext<any>(undefined);
 
 export const MyContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [userRole, setUserRole] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [profileId, setProfileId] = useState<string | null>(null);
 
   return (
-      <MyContext.Provider value={{  userRole, setUserRole }}>
+      <MyContext.Provider value={{  userRole, setUserRole, userId, setUserId, profileId, setProfileId}}>
           {children}
       </MyContext.Provider>
   );
