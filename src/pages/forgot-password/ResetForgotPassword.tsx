@@ -13,6 +13,8 @@ import {
   Alert,
 } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
+import { ResetForgotPasswordUrl } from '../../services/ApiUrls';
+import { fetchData } from '../../components/FetchData';
 
 interface FormErrors {
   password?: string[];
@@ -26,26 +28,50 @@ const PasswordResetForm = () => {
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
+  const { uidb64, token } = useParams();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     if (name === 'password') {
-      setPassword(value as string);
-    } else {
-      setConfirmPassword(value as string);
+      setPassword(value);
+    } else if (name === 'confirmPassword') {
+      setConfirmPassword(value);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
     }
 
-    setSuccessMessage('Password reset and address saved successfully.');
-    setOpenModal(true);
+    try {
+      const response = await fetchData(
+        `${ResetForgotPasswordUrl}/${uidb64}/${token}/`,
+        'POST',
+        JSON.stringify({ password }),
+        headers
+      );
+
+      if (response && response.error === false) {
+        setSuccessMessage(
+          'Password reset successfully. You can now log in with your new password.'
+        );
+        setOpenModal(true);
+      } else {
+        setError(response.errors || 'An error occurred. Please try again.');
+        setFormErrors(response.errors || {});
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setError('An unexpected error occurred. Please try again.');
+    }
   };
 
   const handleModalClose = () => {
