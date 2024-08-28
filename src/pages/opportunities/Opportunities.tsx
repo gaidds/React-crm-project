@@ -86,7 +86,7 @@ type Item = {
 };
 
 export default function Opportunities(props: any) {
-  const { userRole, setUserRole } = useMyContext();
+  const { userRole, setUserRole , userId} = useMyContext();
   const navigate = useNavigate()
   const [tab, setTab] = useState('open');
   const [loading, setLoading] = useState(true);
@@ -475,11 +475,14 @@ export default function Opportunities(props: any) {
                                                                             style={{ fill: '#1A3353', cursor: 'pointer', width: '18px' }}
                                                                         />
                                                                     </IconButton> */}
-                              <IconButton>
-                                <FaTrashAlt
-                                  onClick={() => deleteRow(item?.id)}
-                                  style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }} />
-                              </IconButton>
+                              {userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && item.created_by.id === userId) ? (
+                                <IconButton>
+                                    <FaTrashAlt
+                                    onClick={() => deleteRow(item.id)}
+                                    style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }}
+                                    />
+                                </IconButton>
+                              ) : null}
                             </TableCell>
                           </TableRow>
                         )
