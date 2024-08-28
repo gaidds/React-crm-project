@@ -436,7 +436,7 @@ export default function Accounts() {
     const handleDelete = (id: any) => {
         console.log(id, 's;ected')
     }
-    const showAddButton = userRole !== 'USER' && userRole !== 'SALES REPRESENTATIVE';
+    const showAddButton = userRole !== 'USER' && userRole !== 'SALES REP';
     const modalDialog = 'Are You Sure You want to delete this Account?'
     const modalTitle = 'Delete Account'
 
