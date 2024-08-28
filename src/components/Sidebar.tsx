@@ -57,7 +57,7 @@ export default function Sidebar(props: any) {
     const [organizationModal, setOrganizationModal] = useState(false)
     // const [navList, setNavList] = useState<string[]>(['deals', 'contacts', 'accounts', 'users']);
     const organizationModalClose = () => { setOrganizationModal(false) }
-    const { userRole, setUserRole } = useMyContext();
+    const { userRole, setUserRole, setUserId, userId, setProfileId, profileId } = useMyContext();
     console.log(userRole)
 
     useEffect(() => {
@@ -115,7 +115,8 @@ export default function Sidebar(props: any) {
                 if (res?.user_obj) {
                     setUserDetail(res?.user_obj)
                     setUserRole(res?.user_obj.role)
-                    
+                    setUserId(res?.user_obj.user_details.id)
+                    setProfileId(res?.user_obj.id)
                 }
             })
             .catch((error) => {
