@@ -85,8 +85,8 @@ export default function Contacts() {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [recordsPerPage, setRecordsPerPage] = useState<number>(10);
     const [totalPages, setTotalPages] = useState<number>(0);
-    const { userRole, setUserRole } = useMyContext();
-    console.log(userRole, 'Contacts user role')
+    const { userRole, setUserRole, userId} = useMyContext();
+    console.log(userId, 'Contacts user id')
 
     // useEffect(() => {
     //     getContacts()
@@ -96,9 +96,6 @@ export default function Contacts() {
         getContacts();
     }, [currentPage, recordsPerPage]);
 
-    useEffect(() => {
-        console.log('Current userRole:', userRole);
-      }, [userRole]);
 
     // const handleChangeTab = (e: SyntheticEvent, val: any) => {
     //     setValue(val)
@@ -348,6 +345,7 @@ export default function Contacts() {
                                             ? stableSort(contactList, getComparator(order, orderBy))
                                                 // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: any, index: any) => {
                                                 .map((item: any, index: any) => {
+                                                    console.log(item.created_by,'item created by')
                                                     return (
                                                         <TableRow
                                                             tabIndex={-1}
@@ -361,7 +359,14 @@ export default function Contacts() {
                                                             {/* <StyledTableCell align='left'>
                                                 <AntSwitch checked={item.do_not_call} inputProps={{ 'aria-label': 'ant design' }} />
                                             </StyledTableCell> */}
-                                                            <TableCell className='tableCell'><FaTrashAlt style={{ cursor: 'pointer' }} onClick={() => deleteRow(item.id)} /></TableCell>
+                                                            <TableCell className='tableCell'>
+                                                                {userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && item.created_by === userId) ? (
+                                                                    <FaTrashAlt
+                                                                    style={{ cursor: 'pointer' }}
+                                                                    onClick={() => deleteRow(item.id)}
+                                                                    />
+                                                                ) : null}
+                                                            </TableCell>
                                                         </TableRow>
                                                     )
                                                 })

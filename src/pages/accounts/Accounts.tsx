@@ -132,7 +132,6 @@ type Item = {
 export default function Accounts() {
     const { userRole, setUserRole , userId} = useMyContext();
     const navigate = useNavigate()
-    console.log(userId, 'user id in Accounts')
 
     const [tab, setTab] = useState('open');
     const [loading, setLoading] = useState(true);
