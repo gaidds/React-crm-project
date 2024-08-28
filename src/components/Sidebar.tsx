@@ -39,6 +39,7 @@ import logo from '../assets/images/auth/img_logo.png';
 import { StyledListItemButton, StyledListItemText } from '../styles/CssStyled';
 // import MyContext, { MyContextData } from '../context/Context';
 import MyContext, { useMyContext } from '../context/Context';
+import { MyContextProvider } from '../context/Context';
 
 // declare global {
 //     interface Window {
@@ -278,6 +279,7 @@ export default function Sidebar(props: any) {
                     </Box>
 
                 </Drawer>
+                <MyContextProvider>
                 <MyContext.Provider value={context}>
 
                     {/* <Box sx={{ width: drawerWidth === 60 ? '1380px' : '1240px', ml: drawerWidth === 60 ? '60px' : '200px', overflowX: 'hidden' }}> */}
@@ -324,6 +326,7 @@ export default function Sidebar(props: any) {
                         </Routes>
                     </Box>
                 </MyContext.Provider>
+                </MyContextProvider>
                 <OrganizationModal
                     open={organizationModal}
                     handleClose={organizationModalClose}
