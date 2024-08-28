@@ -628,10 +628,11 @@ export default function Users() {
                                                                     style={{ fill: '#1A3353', cursor: 'pointer' }}
                                                                 /> */}
                                                                     </IconButton>
-                                                                    <IconButton>
-                                                                        <FaTrashAlt onClick={() => deleteRow(item?.id)} style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }} />
-                                                                        {/* <FaAd onClick={() => deleteItemBox(item)} style={{ fill: '#1A3353', cursor: 'pointer' }} /> */}
-                                                                    </IconButton>
+                                                                    {userRole === 'ADMIN' && (
+                                                                        <IconButton>
+                                                                        <FaTrashAlt onClick={() => deleteRow(item.id)} style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }} />
+                                                                        </IconButton>
+                                                                    )}
                                                                 </TableCell>
                                                             </TableRow>
                                                         )
