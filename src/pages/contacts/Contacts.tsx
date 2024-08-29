@@ -14,7 +14,7 @@ import { DeleteModal } from '../../components/DeleteModal';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { EnhancedTableHead } from '../../components/EnchancedTableHead';
-import { useMyContext } from '../../context/Context';
+import MyContext, { useMyContext } from '../../context/Context'
 
 interface HeadCell {
     disablePadding: boolean;
@@ -58,7 +58,7 @@ const headCells: readonly HeadCell[] = [
         id: '',
         numeric: true,
         disablePadding: false,
-        label: 'Action'
+        label: 'Actions'
     }
 ]
 
@@ -85,6 +85,8 @@ export default function Contacts() {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [recordsPerPage, setRecordsPerPage] = useState<number>(10);
     const [totalPages, setTotalPages] = useState<number>(0);
+    const { userRole, setUserRole, userId} = useMyContext();
+    console.log(userId, 'Contacts user id')
 
     // useEffect(() => {
     //     getContacts()
@@ -93,6 +95,7 @@ export default function Contacts() {
     useEffect(() => {
         getContacts();
     }, [currentPage, recordsPerPage]);
+
 
     // const handleChangeTab = (e: SyntheticEvent, val: any) => {
     //     setValue(val)
@@ -233,6 +236,8 @@ export default function Contacts() {
         setDeleteRowModal(false)
         setSelectedId('')
     }
+
+    const showAddButton = userRole !== 'USER' && userRole !== 'SALES REP';
     const modalDialog = 'Are You Sure you want to delete this contact?'
     const modalTitle = 'Delete Contact'
 
@@ -294,14 +299,16 @@ export default function Contacts() {
                             <FiChevronRight style={{ height: '15px' }} />
                         </FabRight>
                     </Box>
-                    <Button
-                        variant='contained'
-                        startIcon={<FiPlus className='plus-icon' />}
-                        onClick={onAddContact}
-                        className={'add-button'}
-                    >
-                        Add Contact
-                    </Button>
+                    {showAddButton && (
+                        <Button
+                            variant='contained'
+                            startIcon={<FiPlus className='plus-icon' />}
+                            onClick={onAddContact}
+                            className={'add-button'}
+                        >
+                            Add Contact
+                        </Button>
+            )}
                 </Stack>
             </CustomToolbar>
 
@@ -338,6 +345,7 @@ export default function Contacts() {
                                             ? stableSort(contactList, getComparator(order, orderBy))
                                                 // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: any, index: any) => {
                                                 .map((item: any, index: any) => {
+                                                    console.log(item.created_by,'item created by')
                                                     return (
                                                         <TableRow
                                                             tabIndex={-1}
@@ -351,7 +359,14 @@ export default function Contacts() {
                                                             {/* <StyledTableCell align='left'>
                                                 <AntSwitch checked={item.do_not_call} inputProps={{ 'aria-label': 'ant design' }} />
                                             </StyledTableCell> */}
-                                                            <TableCell className='tableCell'><FaTrashAlt style={{ cursor: 'pointer' }} onClick={() => deleteRow(item.id)} /></TableCell>
+                                                            <TableCell className='tableCell'>
+                                                                {userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && item.created_by === userId) ? (
+                                                                    <FaTrashAlt
+                                                                    style={{ cursor: 'pointer' }}
+                                                                    onClick={() => deleteRow(item.id)}
+                                                                    />
+                                                                ) : null}
+                                                            </TableCell>
                                                         </TableRow>
                                                     )
                                                 })

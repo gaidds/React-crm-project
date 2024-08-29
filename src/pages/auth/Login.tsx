@@ -149,7 +149,7 @@ export default function Login() {
                     className="forget-password-link"
                     to={'/forget-password'}
                   >
-                    Forget password?
+                    Forgot password?
                   </Link>
                 </Typography>
                 <Button

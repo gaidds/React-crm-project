@@ -17,6 +17,7 @@ import { Spinner } from '../../components/Spinner';
 import styled from '@emotion/styled';
 import '../../styles/style.css';
 import { EnhancedTableHead } from '../../components/EnchancedTableHead';
+import MyContext, { useMyContext } from '../../context/Context'
 
 interface HeadCell {
     disablePadding: boolean;
@@ -129,6 +130,7 @@ type Item = {
     id: string;
 };
 export default function Accounts() {
+    const { userRole, setUserRole , userId} = useMyContext();
     const navigate = useNavigate()
 
     const [tab, setTab] = useState('open');
@@ -434,6 +436,7 @@ export default function Accounts() {
     const handleDelete = (id: any) => {
         console.log(id, 's;ected')
     }
+    const showAddButton = userRole !== 'USER' && userRole !== 'SALES REP';
     const modalDialog = 'Are You Sure You want to delete this Account?'
     const modalTitle = 'Delete Account'
 
@@ -496,14 +499,16 @@ export default function Accounts() {
                             <FiChevronRight style={{ height: '15px' }} />
                         </FabRight>
                     </Box>
-                    <Button
-                        variant='contained'
-                        startIcon={<FiPlus className='plus-icon' />}
-                        onClick={onAddAccount}
-                        className={'add-button'}
-                    >
-                        Add Account
-                    </Button>
+                    {showAddButton && (
+                        <Button
+                            variant='contained'
+                            startIcon={<FiPlus className='plus-icon' />}
+                            onClick={onAddAccount}
+                            className={'add-button'}
+                        >
+                            Add Account
+                        </Button>
+            )}
                 </Stack>
             </CustomToolbar>
             <Container sx={{ width: '100%', maxWidth: '100%', minWidth: '100%' }}>
@@ -552,6 +557,7 @@ export default function Accounts() {
                                                     .map((item: any, index: any) => {
                                                         const labelId = `enhanced-table-checkbox-${index}`
                                                         const rowIndex = selectedId.indexOf(item.id);
+                
                                                         return (
                                                             <TableRow
                                                                 tabIndex={-1}
@@ -599,11 +605,14 @@ export default function Accounts() {
                                                                             style={{ fill: '#1A3353', cursor: 'pointer', width: '18px' }}
                                                                         />
                                                                     </IconButton> */}
-                                                                    <IconButton>
-                                                                        <FaTrashAlt
-                                                                            onClick={() => deleteRow(item?.id)}
-                                                                            style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }} />
-                                                                    </IconButton>
+                                                                    {userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && item.created_by.id === userId) ? (
+                                                                        <IconButton>
+                                                                            <FaTrashAlt
+                                                                            onClick={() => deleteRow(item.id)}
+                                                                            style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }}
+                                                                            />
+                                                                        </IconButton>
+                                                                        ) : null}
                                                                 </TableCell>
                                                             </TableRow>
                                                         )
@@ -677,11 +686,14 @@ export default function Accounts() {
                                                                             style={{ fill: '#1A3353', cursor: 'pointer', width: '18px' }}
                                                                         />
                                                                     </IconButton> */}
-                                                                <IconButton>
-                                                                    <FaTrashAlt
-                                                                        onClick={() => deleteRow(item?.id)}
-                                                                        style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }} />
-                                                                </IconButton>
+                                                                {userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && item.created_by.id === userId) ? (
+                                                                        <IconButton>
+                                                                            <FaTrashAlt
+                                                                            onClick={() => deleteRow(item.id)}
+                                                                            style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }}
+                                                                            />
+                                                                        </IconButton>
+                                                                        ) : null}
                                                             </TableCell>
                                                         </TableRow>
                                                     )

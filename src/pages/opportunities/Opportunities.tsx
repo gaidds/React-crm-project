@@ -15,6 +15,7 @@ import { DeleteModal } from '../../components/DeleteModal';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { EnhancedTableHead } from '../../components/EnchancedTableHead';
+import MyContext, { useMyContext } from '../../context/Context'
 
 
 interface HeadCell {
@@ -85,6 +86,7 @@ type Item = {
 };
 
 export default function Opportunities(props: any) {
+  const { userRole, setUserRole , userId} = useMyContext();
   const navigate = useNavigate()
   const [tab, setTab] = useState('open');
   const [loading, setLoading] = useState(true);
@@ -292,6 +294,7 @@ export default function Opportunities(props: any) {
   };
   const modalDialog = 'Are You Sure You want to delete selected Opportunity?'
   const modalTitle = 'Delete Opportunity'
+  const showAddButton = userRole !== 'USER' && userRole !== 'SALES REP';
 
   const recordsList = [[10, '10 Records per page'], [20, '20 Records per page'], [30, '30 Records per page'], [40, '40 Records per page'], [50, '50 Records per page']]
   const tag = ['account', 'leading', 'account', 'leading', 'account', 'leading', 'account', 'account', 'leading', 'account', 'leading', 'account', 'leading', 'leading', 'account', 'account', 'leading', 'account', 'leading', 'account', 'leading', 'account', 'leading', 'account', 'leading', 'account', 'leading']
@@ -360,14 +363,16 @@ export default function Opportunities(props: any) {
                 <FiChevronRight style={{ height: '15px' }} />
               </FabRight>
             </Box>
-            <Button
-              variant='contained'
-              startIcon={<FiPlus className='plus-icon' />}
-              onClick={onAddOpportunity}
-              className={'add-button'}
-            >
-              Add Opportunity
-            </Button>
+            {showAddButton && (
+                        <Button
+                            variant='contained'
+                            startIcon={<FiPlus className='plus-icon' />}
+                            onClick={onAddOpportunity}
+                            className={'add-button'}
+                        >
+                            Add Opportunity
+                        </Button>
+            )}
           </Stack>
       </CustomToolbar>
       <Container sx={{ width: '100%', maxWidth: '100%', minWidth: '100%' }}>
@@ -470,11 +475,14 @@ export default function Opportunities(props: any) {
                                                                             style={{ fill: '#1A3353', cursor: 'pointer', width: '18px' }}
                                                                         />
                                                                     </IconButton> */}
-                              <IconButton>
-                                <FaTrashAlt
-                                  onClick={() => deleteRow(item?.id)}
-                                  style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }} />
-                              </IconButton>
+                              {userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && item.created_by.id === userId) ? (
+                                <IconButton>
+                                    <FaTrashAlt
+                                    onClick={() => deleteRow(item.id)}
+                                    style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }}
+                                    />
+                                </IconButton>
+                              ) : null}
                             </TableCell>
                           </TableRow>
                         )
