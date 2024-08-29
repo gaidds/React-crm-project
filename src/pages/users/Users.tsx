@@ -498,7 +498,7 @@ export default function Users() {
                             onClick={onAddUser}
                             className={'add-button'}
                         >
-                            Add Account
+                            Add User
                         </Button>
             )}
                 </Stack>
