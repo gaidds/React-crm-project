@@ -589,7 +589,7 @@ export default function Accounts() {
                                                                 </TableCell>
                                                                 <TableCell className='tableCell'>
                                                                     <Stack style={{ display: 'flex', flexDirection: 'row', alignItems: "center" }}>
-                                                                        <Avatar src={item?.lead?.created_by?.profile_pic} alt={item?.lead?.created_by?.email} /><Stack sx={{ ml: 1 }}>{item?.lead?.account_name ? item?.lead?.account_name : '---'}</Stack>
+                                                                        <Avatar src={item?.created_by?.profile_pic} alt={item?.created_by?.email} /><Stack sx={{ ml: 1 }}>{item?.created_by?.email ? item?.created_by?.email : '---'}</Stack>
                                                                     </Stack>
                                                                 </TableCell>
                                                                 <TableCell className='tableCell'>

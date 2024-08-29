@@ -38,7 +38,7 @@ type response = {
         profile_pic: string;
     };
     org: { name: string };
-    lead: { account_name: string };
+    lead: { title: string };
     account_attachment: [];
     assigned_to: [];
     billing_address_line: string;
@@ -183,6 +183,7 @@ export const AccountDetails = (props: any) => {
         navigate('/app/accounts/edit-account', {
             state: {
                 value: {
+                    ...accountDetails,
                     name: accountDetails?.name,
                     phone: accountDetails?.phone,
                     email: accountDetails?.email,
@@ -199,8 +200,8 @@ export const AccountDetails = (props: any) => {
                     account_attachment: accountDetails?.account_attachment || null,
                     website: accountDetails?.website,
                     status: accountDetails?.status,
-                    lead: accountDetails?.lead?.account_name,
-                    // contacts: accountDetails?.contacts
+                    lead: accountDetails?.lead?.title || '',
+                    contacts: accountDetails?.contacts || [],
                 }, id: state?.accountId,
                 contacts: state?.contacts || [], status: state?.status || [], tags: state?.tags || [], users: state?.users || [], countries: state?.countries || [], teams: state?.teams || [], leads: state?.leads || []
             }
@@ -308,7 +309,7 @@ export const AccountDetails = (props: any) => {
                                 <div style={{ width: '32%' }}>
                                     <div className='title2'>Leads</div>
                                     <div className='title3'>
-                                        {accountDetails?.lead?.account_name || '----'}
+                                        {accountDetails?.lead?.title || '----'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>

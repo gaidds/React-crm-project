@@ -114,11 +114,18 @@ export function EditAccount() {
     })
 
     useEffect(() => {
-        setFormData(state?.value)
-        if (state?.value?.assign_to) {
-            setSelectedContacts(state?.value?.assign_to);
+        if (state?.value) {
+            setFormData({
+                ...formData, // Include existing form data to avoid overwriting other fields
+                ...state.value,
+                lead: state?.value?.lead || '',
+                contacts: state?.value?.contacts || []
+            });
         }
-    }, [state?.id])
+        if (state?.value?.assign_to) {
+            setSelectedContacts(state.value.assign_to);
+        }
+    }, [state?.id]);
 
     useEffect(() => {
         if (reset) {
