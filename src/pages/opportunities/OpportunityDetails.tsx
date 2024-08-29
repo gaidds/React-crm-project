@@ -18,6 +18,7 @@ import { CustomAppBar } from '../../components/CustomAppBar';
 import { FaPlus } from 'react-icons/fa';
 import FormateTime from '../../components/FormateTime';
 import { Label } from '../../components/Label';
+import MyContext, { useMyContext } from '../../context/Context'
 
 export const formatDate = (dateString: any) => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -95,7 +96,7 @@ type Response = {
 export const OpportunityDetails = (props: any) => {
     const { state } = useLocation();
     const navigate = useNavigate();
-
+    const { userRole , profileId, userId} = useMyContext();
     const [opportunityDetails, setOpportunityDetails] = useState<Response | null>(null);
     const [users, setUsers] = useState<Array<{ user_details: { email: string; id: string; profile_pic: string | null; }; }>>([]);
 
@@ -164,6 +165,13 @@ export const OpportunityDetails = (props: any) => {
     const backbtnHandle = () => {
         navigate('/app/opportunities');
     };
+    interface AssignedToItem {
+        id: string;
+    }
+    const isAssignedToAccount = (opportunityDetails?.assigned_to ?? []).some(item => item.user_details.id === userId);
+    const isSalesManager = userRole === "SALES MANAGER";
+    const isCreatedByUser = opportunityDetails?.created_by.id === userId;
+    const showEditButton = !isSalesManager || isAssignedToAccount || isCreatedByUser;
 
     const module = 'Opportunities';
     const crntPage = 'Opportunity Details';
@@ -172,7 +180,7 @@ export const OpportunityDetails = (props: any) => {
     return (
         <Box sx={{ mt: '60px' }}>
             <div>
-                <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} editHandle={editHandle} />
+                <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} editHandle={showEditButton ? editHandle : null} />
                 <Box sx={{ mt: '110px', p: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Box sx={{ width: '65%' }}>
                         <Box sx={{ borderRadius: '10px', border: '1px solid #80808038', backgroundColor: 'white' }}>
