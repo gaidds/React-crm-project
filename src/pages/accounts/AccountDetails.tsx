@@ -20,6 +20,7 @@ import { FaPlus, FaStar } from 'react-icons/fa'
 import FormateTime from '../../components/FormateTime'
 import { Label } from '../../components/Label'
 import { AntSwitch } from '../../styles/CssStyled'
+import MyContext, { useMyContext } from '../../context/Context'
 
 export const formatDate = (dateString: any) => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' }
@@ -90,6 +91,7 @@ type response = {
 export const AccountDetails = (props: any) => {
     const { state } = useLocation()
     const navigate = useNavigate()
+    const { userRole , profileId, userId} = useMyContext();
 
     const [accountDetails, setAccountDetails] = useState<response | null>(null)
     const [usersDetails, setUsersDetails] = useState<Array<{
@@ -210,6 +212,14 @@ export const AccountDetails = (props: any) => {
         navigate('/app/accounts')
     }
 
+    interface AssignedToItem {
+        id: string;
+    }
+    const isAssignedToAccount = (accountDetails?.assigned_to ?? []).some((item: AssignedToItem) => item.id === profileId);
+    const isSalesManager = userRole === "SALES MANAGER";
+    const isCreatedByUser = accountDetails?.created_by.id === userId;
+    const showEditButton = !isSalesManager || isAssignedToAccount || isCreatedByUser;
+
     const module = 'Accounts'
     const crntPage = 'Account Details'
     const backBtn = 'Back To Accounts'
@@ -217,7 +227,7 @@ export const AccountDetails = (props: any) => {
     return (
         <Box sx={{ mt: '60px' }}>
             <div>
-                <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} editHandle={editHandle} />
+                <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} editHandle={showEditButton ? editHandle : null} />
                 <Box sx={{ mt: '110px', p: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Box sx={{ width: '65%' }}>
                         <Box sx={{ borderRadius: '10px', border: '1px solid #80808038', backgroundColor: 'white' }}>

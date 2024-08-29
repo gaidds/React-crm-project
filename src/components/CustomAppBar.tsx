@@ -62,6 +62,7 @@ export function CustomAppBar(props: any) {
                 {backBtn}
               </Button>
             </div>
+            {editHandle && (
             <div>
               <Button
                 type='submit'
@@ -75,6 +76,7 @@ export function CustomAppBar(props: any) {
                 Edit
               </Button>
             </div>
+            )}
 
           </div> :
           <div className='saveClose'>
