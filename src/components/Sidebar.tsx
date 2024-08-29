@@ -37,9 +37,7 @@ import { EditCase } from '../pages/cases/EditCase';
 import { CaseDetails } from '../pages/cases/CaseDetails';
 import logo from '../assets/images/auth/img_logo.png';
 import { StyledListItemButton, StyledListItemText } from '../styles/CssStyled';
-// import MyContext, { MyContextData } from '../context/Context';
 import MyContext, { useMyContext } from '../context/Context';
-import { MyContextProvider } from '../context/Context';
 
 // declare global {
 //     interface Window {
