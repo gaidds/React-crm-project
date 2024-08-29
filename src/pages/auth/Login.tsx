@@ -146,8 +146,8 @@ export default function Login() {
                 />
                 <Typography sx={{ textAlign: 'end', mb: 2 }}>
                   <Link
-                    className="forget-password-link"
-                    to={'/forget-password'}
+                    className="forgot-password-link"
+                    to={'/forgot-password'}
                   >
                     Forget password?
                   </Link>
