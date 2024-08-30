@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import { fetchData } from '../../components/FetchData';
 import { AuthConfigUrl, AuthUrl, RegisterUrl } from '../../services/ApiUrls';
-import { GoogleButton } from '../../styles/CssStyled';
+import { AuthBackground, GoogleButton } from '../../styles/CssStyled';
 import imgGoogle from '../../assets/images/auth/google.svg';
 import { registerErrorsType, RegisterResponseType } from './types';
 import './styles.css';
@@ -139,100 +139,113 @@ const RegistrationPage = () => {
   }
 
   return (
-    <Container maxWidth="sm">
-      <Box sx={{ mt: 5, textAlign: 'center' }}>
+    <AuthBackground>
+      <Container maxWidth="sm" sx={{ height: '100%', position: 'relative' }}>
         <Typography
           variant="h2"
           gutterBottom
           color="primary"
-          sx={{ fontWeight: 500, mb: 6, textAlign: 'center' }}
+          sx={{ fontWeight: 500, mt: 4, textAlign: 'center' }}
         >
           BottleCRM
         </Typography>
-        <Typography variant="h4" color="textSecondary" paragraph>
-          Register Here
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            fullWidth
-            label="Email"
-            variant="outlined"
-            margin="normal"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            error={!!formErrors.email}
-            helperText={formErrors.email?.join(' ')}
-          />
-          <TextField
-            fullWidth
-            label="Password"
-            type="password"
-            variant="outlined"
-            margin="normal"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            error={!!formErrors.password}
-            helperText={formErrors.password?.join(' ')}
-          />
-          <TextField
-            fullWidth
-            label="Confirm Password"
-            type="password"
-            variant="outlined"
-            margin="normal"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-            error={!!confirmPasswordError}
-            helperText={confirmPasswordError}
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-            sx={{ mt: 2 }}
-          >
-            Register
-          </Button>
-        </form>
-        <Grid item sx={{ textAlign: 'center', mt: 2 }}>
-          <div className="login-option-container">
-            <div className="login-option-line"></div>
-            <p className="login-option-text">OR</p>
-            <div className="login-option-line"></div>
-          </div>
-          <GoogleButton
-            variant="outlined"
-            onClick={() => loginWithGoogle()}
-            sx={{
-              fontSize: '12px',
-              fontWeight: 500,
-              mt: 3,
-            }}
-          >
-            Register with Google
-            <img
-              src={imgGoogle}
-              alt="google"
-              style={{ width: '17px', marginLeft: '5px' }}
+        <Box
+          sx={{
+            textAlign: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+          }}
+        >
+          <form onSubmit={handleSubmit} className="registration-form">
+            <Typography variant="body1" mb={2}>
+              Register Here
+            </Typography>
+            <TextField
+              fullWidth
+              label="Email"
+              variant="outlined"
+              margin="dense"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              error={!!formErrors.email}
+              helperText={formErrors.email?.join(' ')}
             />
-          </GoogleButton>
-        </Grid>
-        {(success || error) && (
-          <div className="registration-msg-container">
-            <Alert
-              className="registration-msg"
-              severity={error ? 'error' : 'success'}
+            <TextField
+              fullWidth
+              label="Password"
+              type="password"
+              variant="outlined"
+              margin="dense"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              error={!!formErrors.password}
+              helperText={formErrors.password?.join(' ')}
+            />
+            <TextField
+              fullWidth
+              label="Confirm Password"
+              type="password"
+              variant="outlined"
+              margin="dense"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              error={!!confirmPasswordError}
+              helperText={confirmPasswordError}
+            />
+            <Button
+              type="submit"
+              sx={{ mt: 2 }}
+              variant="contained"
+              color="primary"
+              fullWidth
             >
-              {success ? success : error}
-            </Alert>
-          </div>
-        )}
-      </Box>
-    </Container>
+              Register
+            </Button>
+            <Grid item sx={{ textAlign: 'center', mt: 1 }}>
+              <div className="login-option-container">
+                <div className="login-option-line"></div>
+                <p className="login-option-text">OR</p>
+                <div className="login-option-line"></div>
+              </div>
+              <GoogleButton
+                variant="outlined"
+                onClick={() => loginWithGoogle()}
+                sx={{
+                  fontSize: '12px',
+                  fontWeight: 500,
+                  mt: 2,
+                }}
+              >
+                Register with Google
+                <img
+                  src={imgGoogle}
+                  alt="google"
+                  style={{ width: '17px', marginLeft: '5px' }}
+                />
+              </GoogleButton>
+            </Grid>
+          </form>
+          {(success || error) && (
+            <div className="registration-msg-container">
+              <Alert
+                className="registration-msg"
+                severity={error ? 'error' : 'success'}
+              >
+                {success ? success : error}
+              </Alert>
+            </div>
+          )}
+        </Box>
+      </Container>
+    </AuthBackground>
   );
 };
 
