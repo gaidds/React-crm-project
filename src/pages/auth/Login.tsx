@@ -41,6 +41,9 @@ export default function Login() {
     fetchData(AuthConfigUrl, 'GET', null as any, head)
       .then((res) => {
         if (res.data && typeof res.data.is_google_login === 'boolean') {
+          if (res.data.is_first_user) {
+            navigate('/auth/register');
+          }
           setIsGoogleLoginEnabled(res.data.is_google_login);
         } else {
           console.error('Invalid response format from auth-config');
@@ -190,7 +193,11 @@ export default function Login() {
               {error && (
                 <div className="login-error-msg-container">
                   <Alert
-                    sx={{ mt: 2, position: 'absolute', justifyItems: 'center' }}
+                    sx={{
+                      mt: 2,
+                      position: 'absolute',
+                      justifyItems: 'center',
+                    }}
                     severity="error"
                   >
                     {error}
