@@ -9,6 +9,7 @@ import {
   Box,
   Alert,
   Grid,
+  CircularProgress,
 } from '@mui/material';
 import { fetchData } from '../../components/FetchData';
 import { AuthConfigUrl, AuthUrl, RegisterUrl } from '../../services/ApiUrls';
@@ -27,6 +28,7 @@ const RegistrationPage = () => {
   >(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState('');
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -54,6 +56,9 @@ const RegistrationPage = () => {
       })
       .catch((error) => {
         console.error('Error fetching auth-config:', error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
@@ -115,6 +120,23 @@ const RegistrationPage = () => {
         });
     },
   });
+
+  if (loading) {
+    return (
+      <Container maxWidth="sm">
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100vh',
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      </Container>
+    );
+  }
 
   return (
     <Container maxWidth="sm">
