@@ -31,6 +31,7 @@ import { AntSwitch, CustomInputBoxWrapper, CustomSelectField, CustomSelectField1
 import FormateTime from '../../components/FormateTime'
 import { formatFileSize } from '../../components/FormatSize'
 import '../../styles/style.css'
+import { useMyContext } from '../../context/Context'
 
 export const formatDate = (dateString: any) => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' }
@@ -88,6 +89,7 @@ type response = {
 function LeadDetails(props: any) {
     const { state } = useLocation()
     const navigate = useNavigate();
+    const { userRole , profileId, userId} = useMyContext();
     const [leadDetails, setLeadDetails] = useState<response | null>(null)
     const [usersDetails, setUsersDetails] = useState<Array<{
         user_details: {
@@ -291,6 +293,12 @@ function LeadDetails(props: any) {
     const id = open ? 'simple-popover' : undefined;
     // console.log(attachedFiles, 'dsfsd', attachmentList, 'aaaaa', attachments);
 
+    const isAssignedToAccount = (leadDetails?.assigned_to ?? []).some(item => item.user_details.id === userId);
+    const isSalesManager = userRole === "SALES MANAGER";
+    const isCreatedByUser = leadDetails?.created_by.id === userId;
+    const showEditButton = !isSalesManager || isAssignedToAccount || isCreatedByUser;
+
+
     const module = 'Leads'
     const crntPage = 'Lead Details'
     const backBtn = 'Back To Leads'
@@ -298,7 +306,7 @@ function LeadDetails(props: any) {
     return (
         <Box sx={{ mt: '60px' }}>
             <div>
-                <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} editHandle={editHandle} />
+                <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} editHandle={showEditButton ? editHandle : null} />
                 <Box sx={{ mt: '110px', p: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Box sx={{ width: '65%' }}>
                         <Box sx={{ borderRadius: '10px', border: '1px solid #80808038', backgroundColor: 'white' }}>
