@@ -29,6 +29,7 @@ import { CustomPopupIcon, RequiredSelect, RequiredTextField } from '../../styles
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown'
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp'
 import '../../styles/style.css'
+import MyContext, { useMyContext } from '../../context/Context'
 
 type FormErrors = {
     name?: string[],
@@ -47,6 +48,7 @@ type FormErrors = {
     opportunity_attachment?: string[],
     file?: string[],
     contact_name?: string[],
+    created_by?: string[],
 };
 interface FormData {
     name: string,
@@ -73,7 +75,7 @@ export function EditOpportunity() {
     const { quill, quillRef } = useQuill();
     const initialContentRef = useRef<string | null>(null);
     const pageContainerRef = useRef<HTMLDivElement | null>(null);
-
+    const { userRole , profileId, userId} = useMyContext();
     const [hasInitialFocus, setHasInitialFocus] = useState(false);
 
     const autocompleteRef = useRef<any>(null);
@@ -281,7 +283,7 @@ export function EditOpportunity() {
             due_date: '',
             tags: [],
             opportunity_attachment: null,
-            file: null
+            file: null, 
         });
         setErrors({})
         setSelectedContacts([]);
@@ -298,6 +300,7 @@ export function EditOpportunity() {
     const module = 'Opportunities'
     const crntPage = 'Add Opportunities'
     const backBtn = state?.edit ? 'Back To Opportunities' : 'Back To OpportunityDetails'
+ 
 
 
     console.log(state, 'opportunityedit')
@@ -537,75 +540,6 @@ export function EditOpportunity() {
                                         </div>
                                         <div className='fieldContainer2'>
                                             <div className='fieldSubContainer'>
-                                                <div className='fieldTitle'>Assign To</div>
-                                                <FormControl error={!!errors?.assigned_to?.[0]} sx={{ width: '70%' }}>
-                                                    <Autocomplete
-                                                        multiple
-                                                        value={selectedAssignTo}
-                                                        limitTags={2}
-                                                        options={state.users || []}
-                                                        getOptionLabel={(option: any) => state.users ? option?.user__email : option}
-                                                        onChange={(e: any, value: any) => handleChange2('assigned_to', value)}
-                                                        size='small'
-                                                        filterSelectedOptions
-                                                        renderTags={(value, getTagProps) =>
-                                                            value.map((option, index) => (
-                                                                <Chip
-                                                                    deleteIcon={<FaTimes style={{ width: '9px' }} />}
-                                                                    sx={{
-                                                                        backgroundColor: 'rgba(0, 0, 0, 0.08)',
-                                                                        height: '18px'
-
-                                                                    }}
-                                                                    variant='outlined'
-                                                                    label={state.users ? option?.user_details?.email : option}
-                                                                    {...getTagProps({ index })}
-                                                                />
-                                                            ))
-                                                        }
-                                                        popupIcon={<CustomPopupIcon><FaPlus className='input-plus-icon' /></CustomPopupIcon>}
-                                                        renderInput={(params) => (
-                                                            <TextField {...params}
-                                                                placeholder='Add Users'
-                                                                InputProps={{
-                                                                    ...params.InputProps,
-                                                                    sx: {
-                                                                        '& .MuiAutocomplete-popupIndicator': { '&:hover': { backgroundColor: 'white' } },
-                                                                        '& .MuiAutocomplete-endAdornment': {
-                                                                            mt: '-8px',
-                                                                            mr: '-8px',
-                                                                        }
-                                                                    }
-                                                                }}
-                                                            />
-                                                        )}
-                                                    />
-                                                    <FormHelperText>{errors?.assigned_to?.[0] || ''}</FormHelperText>
-                                                </FormControl>
-                                            </div>
-                                            <div className='fieldSubContainer'>
-                                                <div className='fieldTitle'>Due Date</div>
-                                                <TextField
-                                                    type={'date'}
-                                                    name='due_date'
-                                                    value={formData.due_date}
-                                                    onChange={handleChange}
-                                                    style={{ width: '70%' }}
-                                                    size='small'
-                                                    helperText={errors?.due_date?.[0] ? errors?.due_date[0] : ''}
-                                                    error={!!errors?.due_date?.[0]}
-                                                    sx={{
-                                                        '& input[type="date"]::-webkit-calendar-picker-indicator': {
-                                                            backgroundColor: 'whitesmoke',
-                                                            padding: '13px',
-                                                            marginRight: '-15px'
-                                                        }
-                                                    }}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className='fieldContainer2'>
-                                            <div className='fieldSubContainer'>
                                                 <div className='fieldTitle'>Tags</div>
                                                 <FormControl error={!!errors?.tags?.[0]} sx={{ width: '70%' }}>
                                                     <Autocomplete
@@ -689,6 +623,79 @@ export function EditOpportunity() {
                                                     helperText={errors?.opportunity_attachment?.[0] ? errors?.opportunity_attachment[0] : ''}
                                                     error={!!errors?.opportunity_attachment?.[0]}
                                                 />
+                                            </div>
+                                        </div>
+                                        <div className='fieldContainer2'>
+                                        <div className='fieldSubContainer'>
+                                                <div className='fieldTitle'>Due Date</div>
+                                                <TextField
+                                                    type={'date'}
+                                                    name='due_date'
+                                                    value={formData.due_date}
+                                                    onChange={handleChange}
+                                                    style={{ width: '70%' }}
+                                                    size='small'
+                                                    helperText={errors?.due_date?.[0] ? errors?.due_date[0] : ''}
+                                                    error={!!errors?.due_date?.[0]}
+                                                    sx={{
+                                                        '& input[type="date"]::-webkit-calendar-picker-indicator': {
+                                                            backgroundColor: 'whitesmoke',
+                                                            padding: '13px',
+                                                            marginRight: '-15px'
+                                                        }
+                                                    }}
+                                                />
+                                            </div>
+                                            <div className='fieldSubContainer'>
+                                                {userRole === 'ADMIN' || state.value.created_by.id === userId && (
+                                                    <>
+                                                        <div className='fieldTitle'>Assign To</div>
+                                                        <FormControl error={!!errors?.assigned_to?.[0]} sx={{ width: '70%' }}>
+                                                            <Autocomplete
+                                                                multiple
+                                                                value={selectedAssignTo}
+                                                                limitTags={2}
+                                                                options={state.users || []}
+                                                                getOptionLabel={(option: any) => state.users ? option?.user__email : option}
+                                                                onChange={(e: any, value: any) => handleChange2('assigned_to', value)}
+                                                                size='small'
+                                                                filterSelectedOptions
+                                                                renderTags={(value, getTagProps) =>
+                                                                    value.map((option, index) => (
+                                                                        <Chip
+                                                                            deleteIcon={<FaTimes style={{ width: '9px' }} />}
+                                                                            sx={{
+                                                                                backgroundColor: 'rgba(0, 0, 0, 0.08)',
+                                                                                height: '18px'
+
+                                                                            }}
+                                                                            variant='outlined'
+                                                                            label={state.users ? option?.user_details?.email : option}
+                                                                            {...getTagProps({ index })}
+                                                                        />
+                                                                    ))
+                                                                }
+                                                                popupIcon={<CustomPopupIcon><FaPlus className='input-plus-icon' /></CustomPopupIcon>}
+                                                                renderInput={(params) => (
+                                                                    <TextField {...params}
+                                                                        placeholder='Add Users'
+                                                                        InputProps={{
+                                                                            ...params.InputProps,
+                                                                            sx: {
+                                                                                '& .MuiAutocomplete-popupIndicator': { '&:hover': { backgroundColor: 'white' } },
+                                                                                '& .MuiAutocomplete-endAdornment': {
+                                                                                    mt: '-8px',
+                                                                                    mr: '-8px',
+                                                                                }
+                                                                            }
+                                                                        }}
+                                                                    />
+                                                                )}
+                                                            />
+                                                            <FormHelperText>{errors?.assigned_to?.[0] || ''}</FormHelperText>
+                                                        </FormControl>
+                                                    </>
+                                                )}
                                             </div>
                                         </div>
                                         <div className='fieldContainer2'>
