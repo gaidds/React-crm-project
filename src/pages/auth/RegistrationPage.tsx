@@ -14,16 +14,14 @@ import { fetchData } from '../../components/FetchData';
 import { AuthUrl, RegisterUrl } from '../../services/ApiUrls';
 import { GoogleButton } from '../../styles/CssStyled';
 import imgGoogle from '../../assets/images/auth/google.svg';
+import { registerErrorsType, RegisterResponseType } from './types';
 import './styles.css';
 
 const RegistrationPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [formErrors, setFormErrors] = useState<{
-    email?: string[];
-    password?: string[];
-  }>({});
+  const [formErrors, setFormErrors] = useState<registerErrorsType>({});
   const [confirmPasswordError, setConfirmPasswordError] = useState<
     string | null
   >(null);
@@ -36,6 +34,12 @@ const RegistrationPage = () => {
     setConfirmPasswordError('');
     setFormErrors({});
     setError(null);
+  };
+
+  const handleSuccessLogein = (res: RegisterResponseType) => {
+    setSuccess(res.message || '');
+    localStorage.setItem('Token', `Bearer ${res.access_token}`);
+    navigate('/app');
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -64,7 +68,7 @@ const RegistrationPage = () => {
         }
         setSuccess('');
       } else {
-        setSuccess(res.message);
+        handleSuccessLogein(res);
       }
     });
   };
@@ -79,8 +83,7 @@ const RegistrationPage = () => {
       fetchData(`${AuthUrl}/`, 'POST', JSON.stringify(apiToken), head)
         .then((res) => {
           if (res.access_token) {
-            localStorage.setItem('Token', `Bearer ${res.access_token}`);
-            navigate('/app');
+            handleSuccessLogein(res);
           } else {
             setError(res.message);
           }
