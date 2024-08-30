@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useGoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -11,7 +11,7 @@ import {
   Grid,
 } from '@mui/material';
 import { fetchData } from '../../components/FetchData';
-import { AuthUrl, RegisterUrl } from '../../services/ApiUrls';
+import { AuthConfigUrl, AuthUrl, RegisterUrl } from '../../services/ApiUrls';
 import { GoogleButton } from '../../styles/CssStyled';
 import imgGoogle from '../../assets/images/auth/google.svg';
 import { registerErrorsType, RegisterResponseType } from './types';
@@ -35,6 +35,27 @@ const RegistrationPage = () => {
     setFormErrors({});
     setError(null);
   };
+
+  useEffect(() => {
+    const head = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    };
+
+    fetchData(AuthConfigUrl, 'GET', null as any, head)
+      .then((res) => {
+        if (res.data && typeof res.data.is_google_login === 'boolean') {
+          if (!res.data.is_first_user) {
+            navigate('/login');
+          }
+        } else {
+          console.error('Invalid response format from auth-config');
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching auth-config:', error);
+      });
+  }, []);
 
   const handleSuccessLogein = (res: RegisterResponseType) => {
     setSuccess(res.message || '');
