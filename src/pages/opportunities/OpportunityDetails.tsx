@@ -90,7 +90,7 @@ type Response = {
     stage: string;
     closed_on: string;
     opportunity_attachment: Array<string>;
-    account: { id: string; name: string };
+    account: { id: string; name: string, contact_name: string };
 };
 
 export const OpportunityDetails = (props: any) => {
@@ -133,6 +133,7 @@ export const OpportunityDetails = (props: any) => {
         navigate('/app/opportunities/edit-opportunity', {
             state: {
                 value: {
+                    ... opportunityDetails,
                     name: opportunityDetails?.name,
                     account: opportunityDetails?.account?.id,
                     amount: opportunityDetails?.amount,
@@ -147,6 +148,7 @@ export const OpportunityDetails = (props: any) => {
                     due_date: opportunityDetails?.closed_on,
                     tags: opportunityDetails?.tags,
                     opportunity_attachment: opportunityDetails?.opportunity_attachment,
+                    created_by: opportunityDetails?.created_by,
                 },
                 id: state?.opportunityId,
                 contacts: state?.contacts || [],
@@ -157,10 +159,12 @@ export const OpportunityDetails = (props: any) => {
                 stage: state?.stage || [],
                 users: state?.users || [],
                 teams: state?.teams || [],
-                countries: state?.countries || []
+                countries: state?.countries || [],
+                created_by: state?.created_by || [],
             }
         });
     };
+    console.log(state,'state')
 
     const backbtnHandle = () => {
         navigate('/app/opportunities');
@@ -272,10 +276,30 @@ export const OpportunityDetails = (props: any) => {
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
+                                    <div className='title2'>Assigned to</div>
+                                    <div className='title3'>
+                                    {opportunityDetails && opportunityDetails.assigned_to?.length > 0 
+                                        ? opportunityDetails.assigned_to.map((user, index) => (
+                                            <div key={index}>
+                                                {user.user_details.email || 'No email available'}
+                                            </div>
+                                        ))
+                                        : '----'}
+                                    </div>
+                                </div>
+                                <div style={{ width: '32%' }}>
                                     <div className='title2'>Close Date</div>
                                     <div className='title3'>
                                         {formatDate(opportunityDetails?.closed_on) || '----'}
                                     </div>
+                                </div>
+                            </div>
+                            <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <div style={{ width: '32%' }}>
+                                        <div className='title2'>Contact person</div>
+                                        <div className='title3'>
+                                            {opportunityDetails?.account?.contact_name || '----'}
+                                        </div>
                                 </div>
                             </div>
                             {/* Description */}

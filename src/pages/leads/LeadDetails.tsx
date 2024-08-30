@@ -63,7 +63,7 @@ type response = {
     website: string;
     description: string | '';
     teams: string;
-    assigned_to: string;
+    assigned_to:  Array<{ user_details: { email: string; id: string; profile_pic: string | null; } }>;
     contacts: string;
     status: string;
     source: string;
@@ -127,6 +127,7 @@ function LeadDetails(props: any) {
         }
         fetchData(`${LeadUrl}/${id}/`, 'GET', null as any, Header)
             .then((res) => {
+                console.log(res,'res')
                 if (!res.error) {
                     setLeadDetails(res?.lead_obj)
                     setUsers(res?.users)
@@ -204,6 +205,7 @@ function LeadDetails(props: any) {
         navigate('/app/leads/edit-lead', {
             state: {
                 value: {
+                    ... leadDetails,
                     title: leadDetails?.title,
                     first_name: leadDetails?.first_name,
                     last_name: leadDetails?.last_name,
@@ -234,7 +236,7 @@ function LeadDetails(props: any) {
                     close_date: leadDetails?.close_date,
                     organization: leadDetails?.organization,
                     created_from_site: leadDetails?.created_from_site,
-                }, id: state?.leadId, tags, countries, source, status, industries, users, contacts, teams, comments
+                }, id: state?.leadId, tags: state?.tags || [], countries: state?.countries || [], source, status, industries, users, contacts, teams, comments
             }
         }
         )
@@ -401,11 +403,15 @@ function LeadDetails(props: any) {
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div className='title2'>SkypeID</div>
+                                    <div className='title2'>Assigned to</div>
                                     <div className='title3'>
-                                        {leadDetails?.skype_ID ? <Link>
-                                            {leadDetails?.skype_ID}
-                                        </Link> : '---'}
+                                    {leadDetails && leadDetails.assigned_to?.length > 0 
+                                        ? leadDetails.assigned_to.map((user, index) => (
+                                            <div key={index}>
+                                                {user.user_details.email || 'No email available'}
+                                            </div>
+                                        ))
+                                        : '----'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
