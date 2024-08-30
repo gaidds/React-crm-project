@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useGoogleLogin } from '@react-oauth/google';
+import { useNavigate } from 'react-router-dom';
 import {
   TextField,
   Button,
@@ -6,9 +8,13 @@ import {
   Container,
   Box,
   Alert,
+  Grid,
 } from '@mui/material';
 import { fetchData } from '../../components/FetchData';
-import { RegisterUrl } from '../../services/ApiUrls';
+import { AuthUrl, RegisterUrl } from '../../services/ApiUrls';
+import { GoogleButton } from '../../styles/CssStyled';
+import imgGoogle from '../../assets/images/auth/google.svg';
+import './styles.css';
 
 const RegistrationPage = () => {
   const [email, setEmail] = useState('');
@@ -23,6 +29,8 @@ const RegistrationPage = () => {
   >(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState('');
+
+  const navigate = useNavigate();
 
   const cleanErrors = () => {
     setConfirmPasswordError('');
@@ -60,6 +68,29 @@ const RegistrationPage = () => {
       }
     });
   };
+
+  const loginWithGoogle = useGoogleLogin({
+    onSuccess: (tokenResponse) => {
+      const apiToken = { token: tokenResponse.access_token };
+      const head = {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      };
+      fetchData(`${AuthUrl}/`, 'POST', JSON.stringify(apiToken), head)
+        .then((res) => {
+          if (res.access_token) {
+            localStorage.setItem('Token', `Bearer ${res.access_token}`);
+            navigate('/app');
+          } else {
+            setError(res.message);
+          }
+        })
+        .catch((error) => {
+          setError('Error logging in with Google.');
+          console.error('Error:', error);
+        });
+    },
+  });
 
   return (
     <Container maxWidth="sm">
@@ -101,7 +132,7 @@ const RegistrationPage = () => {
           />
           <TextField
             fullWidth
-            label="Password"
+            label="Confirm Password"
             type="password"
             variant="outlined"
             margin="normal"
@@ -121,10 +152,38 @@ const RegistrationPage = () => {
             Register
           </Button>
         </form>
+        <Grid item sx={{ textAlign: 'center', mt: 2 }}>
+          <div className="login-option-container">
+            <div className="login-option-line"></div>
+            <p className="login-option-text">OR</p>
+            <div className="login-option-line"></div>
+          </div>
+          <GoogleButton
+            variant="outlined"
+            onClick={() => loginWithGoogle()}
+            sx={{
+              fontSize: '12px',
+              fontWeight: 500,
+              mt: 3,
+            }}
+          >
+            Register with Google
+            <img
+              src={imgGoogle}
+              alt="google"
+              style={{ width: '17px', marginLeft: '5px' }}
+            />
+          </GoogleButton>
+        </Grid>
         {(success || error) && (
-          <Alert severity={error ? 'error' : 'success'}>
-            {success ? success : error}
-          </Alert>
+          <div className="registration-msg-container">
+            <Alert
+              className="registration-msg"
+              severity={error ? 'error' : 'success'}
+            >
+              {success ? success : error}
+            </Alert>
+          </div>
         )}
       </Box>
     </Container>
