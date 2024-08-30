@@ -26,6 +26,7 @@ import { FaFileUpload, FaPlus, FaTimes, FaUpload } from 'react-icons/fa'
 import { CustomPopupIcon, RequiredSelect, RequiredTextField } from '../../styles/CssStyled'
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown'
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp'
+import { stat } from 'fs'
 
 
 
@@ -114,13 +115,16 @@ export function EditAccount() {
     })
 
     useEffect(() => {
+        console.log(state)
         if (state?.value) {
             setFormData({
                 ...formData, // Include existing form data to avoid overwriting other fields
                 ...state.value,
                 lead: state?.value?.lead || '',
-                contacts: state?.value?.contacts || []
+                contacts: state?.value?.contacts || [],
+                assigned_to: state?.value?.assigned_to || [],
             });
+            console.log(state)
         }
         if (state?.value?.assign_to) {
             setSelectedContacts(state.value.assign_to);
@@ -290,6 +294,7 @@ export function EditAccount() {
     const backBtn = state?.edit ? 'Back to Accounts' : 'Back to AccountDetails'
 
     // console.log(state, 'accountform')
+    console.log(formData, 'formdata')
     return (
         <Box sx={{ mt: '60px' }}>
             <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} onCancel={onCancel} onSubmit={handleSubmit} />
