@@ -447,7 +447,8 @@ export function EditLead() {
     const crntPage = 'Edit Lead'
     const backBtn = 'Back To Lead Details'
 
-    // console.log(formData, 'leadsform')
+
+    console.log(state, 'state')
     return (
         <Box sx={{ mt: '60px' }}>
             <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} onCancel={onCancel} onSubmit={handleSubmit} />
@@ -568,7 +569,7 @@ export function EditLead() {
                                                         limitTags={2}
                                                         options={state?.users || []}
                                                         // options={state.contacts ? state.contacts.map((option: any) => option) : ['']}
-                                                        getOptionLabel={(option: any) => state?.users ? option?.user_details?.email : option}
+                                                        getOptionLabel={(option: any) => state?.users ?  option?.user__email : option}
                                                         // getOptionLabel={(option: any) => option?.user__email}
                                                         onChange={(e: any, value: any) => handleChange2('assigned_to', value)}
                                                         size='small'
@@ -583,7 +584,7 @@ export function EditLead() {
 
                                                                     }}
                                                                     variant='outlined'
-                                                                    label={state?.users ? option?.user_details?.email : option}
+                                                                    label={state?.users ? option?.user__email : option}
                                                                     {...getTagProps({ index })}
                                                                 />
                                                             ))

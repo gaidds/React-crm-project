@@ -174,7 +174,7 @@ function LeadDetails(props: any) {
         // fetchData(`${LeadUrl}/comment/${state.leadId}/`, 'PUT', JSON.stringify(data), Header)
         fetchData(`${LeadUrl}/${state.leadId}/`, 'POST', JSON.stringify(data), Header)
             .then((res: any) => {
-                // console.log('Form data:', res);
+                console.log('Form data:', res);
                 if (!res.error) {
                     resetForm()
                     getLeadDetails(state?.leadId)
@@ -238,11 +238,12 @@ function LeadDetails(props: any) {
                     close_date: leadDetails?.close_date,
                     organization: leadDetails?.organization,
                     created_from_site: leadDetails?.created_from_site,
-                }, id: state?.leadId, tags: state?.tags || [], countries: state?.countries || [], source, status, industries, users, contacts, teams, comments
+                }, id: state?.leadId, tags: state?.tags || [], countries: state?.countries || [], source: state?.source || [], status: state?.status || [], industries: state?.industries|| [], users: state?.users || [], contacts: state?.contacts || [], teams: state?.teams || [], comments: state?.comments || []
             }
         }
         )
     }
+    console.log(state,'state')
 
     const handleAttachmentClick = () => {
         const fileInput = document.createElement('input');
