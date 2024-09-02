@@ -12,10 +12,11 @@ import {
 } from '@mui/material'
 import { Fa500Px, FaAccusoft, FaAd, FaAddressCard, FaEnvelope, FaRegAddressCard, FaStar } from 'react-icons/fa'
 import { CustomAppBar } from '../../components/CustomAppBar'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { AntSwitch } from '../../styles/CssStyled'
 import { ContactUrl, UserUrl } from '../../services/ApiUrls'
 import { fetchData, Header } from '../../components/FetchData'
+import MyContext, { useMyContext } from '../../context/Context'
 
 type response = {
     user_details: {
@@ -54,11 +55,12 @@ const roleDisplayMap: { [key: string]: string } = {
     'USER': 'USER'
 };
 
-
 export default function UserDetails() {
+    const { userRole, setUserRole, userId } = useMyContext();
     const navigate = useNavigate()
     const { state } = useLocation()
     const [userDetails, setUserDetails] = useState<response | null>(null)
+
 
     useEffect(() => {
         getUserDetail(state.userId)
@@ -82,6 +84,10 @@ export default function UserDetails() {
                 }
             })
     }
+
+
+
+
 
     //   useEffect(() => {
     // navigate(-1)
@@ -139,7 +145,7 @@ export default function UserDetails() {
     return (
         <Box sx={{ mt: '60px' }}>
             <div>
-                <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} editHandle={editHandle} />
+                <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} editHandle={editHandle} userDetails = {userDetails}/>
                 <Box sx={{ mt: '120px', p: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Box sx={{ width: '100%' }}>
                         <Card sx={{ borderRadius: '7px' }}>

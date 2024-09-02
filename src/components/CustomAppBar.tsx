@@ -9,19 +9,25 @@ import {
 import { useMyContext } from '../context/Context';
 import { FaCheckCircle, FaEdit, FaTimesCircle } from 'react-icons/fa'
 import { FiChevronLeft } from '@react-icons/all-files/fi/FiChevronLeft';
+import Users from '../pages/users/Users';
+import { fetchData } from '../components/FetchData';
+import { UsersUrl, UserUrl } from '../services/ApiUrls';
 
 export function CustomAppBar(props: any) {
   const location = useLocation();
   const sharedData = useMyContext();
   const navigate = useNavigate()
-  const { backbtnHandle, editHandle, module, crntPage, backBtn, onCancel, onSubmit } = props
+  const { backbtnHandle, editHandle, module, crntPage, backBtn, onCancel, onSubmit, userDetails} = props
+  const { userRole, userId } = useMyContext();
+  const { state } = useLocation();
 
   const Module = module.toLowerCase()
-  
+
+  const isAdmin = userRole === 'ADMIN'; // Replace with actual role checking
+
   return (
     <AppBar sx={{
       backgroundColor: '#1A3353', height: '50px', justifyContent: 'center', marginTop: '-3px', boxShadow: 'none',
-      //  position: 'fixed', 
       top: '64px',
       left: sharedData.drawerWidth === 200 ? '200px' : '60px',
       width: '-webkit-fill-available'
@@ -32,7 +38,6 @@ export function CustomAppBar(props: any) {
         <div role='presentation' style={{ marginLeft: '10px' }}>
           <Breadcrumbs aria-label='breadcrumb'
             sx={{ '.MuiBreadcrumbs-separator': { color: 'white' } }}
-          //   className={classes.breadcrumbs}
           >
             <Link underline='hover' color='lightgray' fontSize='15px' href='/' sx={{ ml: '15px', fontWeight: 600 }}>
               Dashboard
@@ -62,20 +67,21 @@ export function CustomAppBar(props: any) {
                 {backBtn}
               </Button>
             </div>
-            <div>
-              <Button
-                type='submit'
-                variant='contained'
-                className='header-button'
-                size='small'
-                onClick={editHandle}
-                startIcon={<FaEdit style={{ fill: 'white', width: '16px' }} />}
-                style={{ textTransform: 'capitalize', fontWeight: 'bold', fontSize: '16px' }}
-              >
-                Edit
-              </Button>
-            </div>
-
+            {(isAdmin || userId === userDetails?.user_details?.id) && (
+              <div>
+                <Button
+                  type='submit'
+                  variant='contained'
+                  className='header-button'
+                  size='small'
+                  onClick={editHandle}
+                  startIcon={<FaEdit style={{ fill: 'white', width: '16px' }} />}
+                  style={{ textTransform: 'capitalize', fontWeight: 'bold', fontSize: '16px' }}
+                >
+                  Edit
+                </Button>
+              </div>
+            )}
           </div> :
           <div className='saveClose'>
             <div style={{ marginRight: '10px' }}>
