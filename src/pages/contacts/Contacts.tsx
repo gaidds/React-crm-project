@@ -154,10 +154,56 @@ export default function Contacts() {
         setOrder(isAsc ? 'desc' : 'asc')
         setOrderBy(property)
     }
+    const getContactDetail = (id: any) => {
+        const Header = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('Token'),
+            org: localStorage.getItem('org')
+          }
+        fetchData(`${ContactUrl}/${id}/`, 'GET', null as any, Header)
+            .then((res) => {
+                // console.log(res, 'res');
+                if (!res.error) {
+                    const contactDetails = res?.contact_obj
+                    const addressDetails = res?.address_obj
+                    navigate('/app/contacts/edit-contact/', { 
+                        state: 
+                        { 
+                            countries,
+                            value: {
+                                salutation: contactDetails?.salutation,
+                                first_name: contactDetails?.first_name,
+                                last_name: contactDetails?.last_name,
+                                primary_email: contactDetails?.primary_email,
+                                secondary_email: contactDetails?.secondary_email,
+                                mobile_number: contactDetails?.mobile_number,
+                                secondary_number: contactDetails?.secondary_number,
+                                date_of_birth: contactDetails?.date_of_birth,
+                                organization: contactDetails?.organization,
+                                title: contactDetails?.title,
+                                language: contactDetails?.language,
+                                do_not_call: contactDetails?.do_not_call,
+                                department: contactDetails?.department,
+                                address: addressDetails?.address_line,
+                                street: addressDetails?.street,
+                                city: addressDetails?.city,
+                                state: addressDetails?.state,
+                                country: addressDetails?.country,
+                                postcode: addressDetails?.postcode,
+                                description: contactDetails?.description,
+                                linked_in_url: contactDetails?.linked_in_url,
+                                facebook_url: contactDetails?.facebook_url,
+                                twitter_username: contactDetails?.twitter_username
+                            } 
+                    }});
+                }
+            })
+    }
 
     const handleEditContact = (contactId: any) => {
         console.log('Navigating to edit contact with countries:', countries);
-        navigate(`/app/contacts/edit-contact/${contactId}`, { state: { countries } });
+        getContactDetail(contactId)
     }
     const DeleteItem = () => {
         const Header = {
