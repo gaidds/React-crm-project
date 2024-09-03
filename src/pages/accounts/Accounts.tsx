@@ -130,7 +130,7 @@ type Item = {
     id: string;
 };
 export default function Accounts() {
-    const { userRole, setUserRole , userId} = useMyContext();
+    const { userRole, setUserRole , userId, profileId} = useMyContext();
     const navigate = useNavigate()
 
     const [tab, setTab] = useState('open');
@@ -408,25 +408,28 @@ export default function Accounts() {
             .then((res) => {
                 console.log(res, 'resDetail');
                 if (!res.error) {
-                    const data = res?.account_obj
+                    const accountDetails = res?.account_obj
                     navigate('/app/accounts/edit-account', {
                         state: {
+                            contacts: contacts || [], status: status || [], tags: tags || [], users: users || [], countries: countries || [], teams: teams || [], leads: leads || [],
                             value: {
-                                // email: data?.email,
-                                // name: data?.name,
-                                // role: data?.role,
-                                // phone: data?.phone,
-                                // alternate_phone: data?.alternate_phone,
-                                // address_line: data?.address?.address_line,
-                                // street: data?.address?.street,
-                                // city: data?.address?.city,
-                                // state: data?.address?.state,
-                                // pincode: data?.address?.postcode,
-                                // country: data?.address?.country,
-                                // profile_pic: data?.user_details?.profile_pic,
-                                // has_sales_access: data?.has_sales_access,
-                                // has_marketing_access: data?.has_marketing_access,
-                                // is_organization_admin: data?.is_organization_admin,
+                                name: accountDetails?.name,
+                                phone: accountDetails?.phone,
+                                email: accountDetails?.email,
+                                billing_address_line: accountDetails?.billing_address_line,
+                                billing_street: accountDetails?.billing_street,
+                                billing_city: accountDetails?.billing_city,
+                                billing_state: accountDetails?.billing_state,
+                                billing_postcode: accountDetails?.billing_postcode,
+                                billing_country: accountDetails?.billing_country,
+                                contact_name: accountDetails?.contact_name,
+                                teams: accountDetails?.teams || [],
+                                assigned_to: accountDetails?.assigned_to || [],
+                                tags: accountDetails?.tags || [],
+                                account_attachment: accountDetails?.account_attachment || null,
+                                website: accountDetails?.website,
+                                status: accountDetails?.status,
+                                lead: accountDetails?.lead?.account_name,
                             }, accountId: id, edit: true
                         }
                     })
@@ -599,20 +602,20 @@ export default function Accounts() {
                                                                     {item?.tags?.length ? item?.tags.map((tag: any, i: any) => <Stack sx={{ mr: 0.5 }}> Tags(tag)</Stack>) : '---'}
                                                                 </TableCell>
                                                                 <TableCell className='tableCell'>
-                                                                    {/* <IconButton>
+                                                                {(userRole === 'ADMIN' || 
+                                                                    item.created_by.id === userId || 
+                                                                    item.assigned_to.some((assignee: any) => assignee.id === profileId)) && (
                                                                         <FaEdit
-                                                                            onClick={() => EditItem(item?.id)}
-                                                                            style={{ fill: '#1A3353', cursor: 'pointer', width: '18px' }}
+                                                                            style={{ cursor: 'pointer', marginRight: '10px' }}
+                                                                            onClick={() => EditItem(item.id)}
                                                                         />
-                                                                    </IconButton> */}
-                                                                    {userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && item.created_by.id === userId) ? (
-                                                                        <IconButton>
-                                                                            <FaTrashAlt
+                                                                    )}
+                                                                    {(userRole === 'ADMIN' || item.created_by.id === userId) && (
+                                                                        <FaTrashAlt
+                                                                            style={{ cursor: 'pointer' }}
                                                                             onClick={() => deleteRow(item.id)}
-                                                                            style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }}
-                                                                            />
-                                                                        </IconButton>
-                                                                        ) : null}
+                                                                        />
+                                                                    )}
                                                                 </TableCell>
                                                             </TableRow>
                                                         )
@@ -680,12 +683,14 @@ export default function Accounts() {
                                                                 {item?.tags?.length ? item?.tags.map((tag: any, i: any) => <Stack sx={{ mr: 0.5 }}> Tags(tag)</Stack>) : '---'}
                                                             </TableCell>
                                                             <TableCell className='tableCell'>
-                                                                {/* <IconButton>
+                                                            {(userRole === 'ADMIN' || 
+                                                                item.created_by.id === userId || 
+                                                                item.assigned_to.some((assignee: any) => assignee.id === profileId)) && (
                                                                         <FaEdit
-                                                                            onClick={() => EditItem(item?.id)}
-                                                                            style={{ fill: '#1A3353', cursor: 'pointer', width: '18px' }}
+                                                                            style={{ cursor: 'pointer', marginRight: '10px' }}
+                                                                            onClick={() => EditItem(item.id)}
                                                                         />
-                                                                    </IconButton> */}
+                                                                    )}
                                                                 {userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && item.created_by.id === userId) ? (
                                                                         <IconButton>
                                                                             <FaTrashAlt

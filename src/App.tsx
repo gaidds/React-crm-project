@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import Login from './pages/auth/Login';
 import { Home } from './pages/home/Home';
 import PasswordResetPage from './pages/auth/PasswordResetPage';
+import EditContacts from './pages/contacts/EditContacts';
 
 
 function App() {
@@ -33,6 +34,8 @@ function App() {
           }
           >
           </Route> */}
+          <Route path="/app/contacts/edit-contact/:contactId" element={<EditContacts />} />
+
         </Routes>
       </Router>
     </>
