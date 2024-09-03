@@ -130,7 +130,7 @@ type Item = {
     id: string;
 };
 export default function Accounts() {
-    const { userRole, setUserRole , userId} = useMyContext();
+    const { userRole, setUserRole , userId, profileId} = useMyContext();
     const navigate = useNavigate()
 
     const [tab, setTab] = useState('open');
@@ -599,18 +599,20 @@ export default function Accounts() {
                                                                     {item?.tags?.length ? item?.tags.map((tag: any, i: any) => <Stack sx={{ mr: 0.5 }}> Tags(tag)</Stack>) : '---'}
                                                                 </TableCell>
                                                                 <TableCell className='tableCell'>
-
-                                                                    {userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && item.created_by.id === userId) ? (
-                                                                        <>
+                                                                {(userRole === 'ADMIN' || 
+                                                                    item.created_by.id === userId || 
+                                                                    item.assigned_to.some((assignee: any) => assignee.id === profileId)) && (
                                                                         <FaEdit
                                                                             style={{ cursor: 'pointer', marginRight: '10px' }}
-                                                                            onClick={() => EditItem(item.id)}/>
+                                                                            onClick={() => EditItem(item.id)}
+                                                                        />
+                                                                    )}
+                                                                    {(userRole === 'ADMIN' || item.created_by.id === userId) && (
                                                                         <FaTrashAlt
                                                                             style={{ cursor: 'pointer' }}
                                                                             onClick={() => deleteRow(item.id)}
                                                                         />
-                                                                    </>
-                                                                        ) : null}
+                                                                    )}
                                                                 </TableCell>
                                                             </TableRow>
                                                         )
@@ -678,13 +680,15 @@ export default function Accounts() {
                                                                 {item?.tags?.length ? item?.tags.map((tag: any, i: any) => <Stack sx={{ mr: 0.5 }}> Tags(tag)</Stack>) : '---'}
                                                             </TableCell>
                                                             <TableCell className='tableCell'>
-                                                                {/* <IconButton>
+                                                            {(userRole === 'ADMIN' || 
+                                                                item.created_by.id === userId || 
+                                                                item.assigned_to.some((assignee: any) => assignee.id === profileId)) && (
                                                                         <FaEdit
-                                                                            onClick={() => EditItem(item?.id)}
-                                                                            style={{ fill: '#1A3353', cursor: 'pointer', width: '18px' }}
+                                                                            style={{ cursor: 'pointer', marginRight: '10px' }}
+                                                                            onClick={() => EditItem(item.id)}
                                                                         />
-                                                                    </IconButton> */}
-                                                                {userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && item.created_by.id === userId) ? (
+                                                                    )}
+                                                                {userRole === 'ADMIN' || (item.created_by.id === userId) ? (
                                                                         <IconButton>
                                                                             <FaTrashAlt
                                                                             onClick={() => deleteRow(item.id)}
