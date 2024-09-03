@@ -599,19 +599,17 @@ export default function Accounts() {
                                                                     {item?.tags?.length ? item?.tags.map((tag: any, i: any) => <Stack sx={{ mr: 0.5 }}> Tags(tag)</Stack>) : '---'}
                                                                 </TableCell>
                                                                 <TableCell className='tableCell'>
-                                                                    {<IconButton>
-                                                                        <FaEdit
-                                                                            onClick={() => EditItem(item?.id)}
-                                                                            style={{ fill: '#1A3353', cursor: 'pointer', width: '18px' }}
-                                                                        />
-                                                                    </IconButton>}
+
                                                                     {userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && item.created_by.id === userId) ? (
-                                                                        <IconButton>
-                                                                            <FaTrashAlt
+                                                                        <>
+                                                                        <FaEdit
+                                                                            style={{ cursor: 'pointer', marginRight: '10px' }}
+                                                                            onClick={() => EditItem(item.id)}/>
+                                                                        <FaTrashAlt
+                                                                            style={{ cursor: 'pointer' }}
                                                                             onClick={() => deleteRow(item.id)}
-                                                                            style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }}
-                                                                            />
-                                                                        </IconButton>
+                                                                        />
+                                                                    </>
                                                                         ) : null}
                                                                 </TableCell>
                                                             </TableRow>
