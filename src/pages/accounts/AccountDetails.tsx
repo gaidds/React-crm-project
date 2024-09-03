@@ -20,6 +20,7 @@ import { FaPlus, FaStar } from 'react-icons/fa'
 import FormateTime from '../../components/FormateTime'
 import { Label } from '../../components/Label'
 import { AntSwitch } from '../../styles/CssStyled'
+import MyContext, { useMyContext } from '../../context/Context'
 
 export const formatDate = (dateString: any) => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' }
@@ -37,9 +38,9 @@ type response = {
         profile_pic: string;
     };
     org: { name: string };
-    lead: { account_name: string };
+    lead: { title: string };
     account_attachment: [];
-    assigned_to: [];
+    assigned_to: Array<{ user_details: { email: string; id: string; profile_pic: string | null; } }>;
     billing_address_line: string;
     billing_city: string;
     billing_country: string;
@@ -89,7 +90,9 @@ type response = {
 };
 export const AccountDetails = (props: any) => {
     const { state } = useLocation()
+    console.log(state)
     const navigate = useNavigate()
+    const { userRole , profileId, userId} = useMyContext();
 
     const [accountDetails, setAccountDetails] = useState<response | null>(null)
     const [usersDetails, setUsersDetails] = useState<Array<{
@@ -181,6 +184,7 @@ export const AccountDetails = (props: any) => {
         navigate('/app/accounts/edit-account', {
             state: {
                 value: {
+                    ...accountDetails,
                     name: accountDetails?.name,
                     phone: accountDetails?.phone,
                     email: accountDetails?.email,
@@ -197,8 +201,9 @@ export const AccountDetails = (props: any) => {
                     account_attachment: accountDetails?.account_attachment || null,
                     website: accountDetails?.website,
                     status: accountDetails?.status,
-                    lead: accountDetails?.lead?.account_name,
-                    // contacts: accountDetails?.contacts
+                    lead: accountDetails?.lead?.title || '',
+                    contacts: accountDetails?.contacts || [],
+        
                 }, id: state?.accountId,
                 contacts: state?.contacts || [], status: state?.status || [], tags: state?.tags || [], users: state?.users || [], countries: state?.countries || [], teams: state?.teams || [], leads: state?.leads || []
             }
@@ -210,6 +215,14 @@ export const AccountDetails = (props: any) => {
         navigate('/app/accounts')
     }
 
+    interface AssignedToItem {
+        id: string;
+    }
+    const isAssignedToAccount = (accountDetails?.assigned_to ?? []).some(item => item.user_details.id === userId);
+    const isSalesManager = userRole === "SALES MANAGER";
+    const isCreatedByUser = accountDetails?.created_by.id === userId;
+    const showEditButton = !isSalesManager || isAssignedToAccount || isCreatedByUser;
+
     const module = 'Accounts'
     const crntPage = 'Account Details'
     const backBtn = 'Back To Accounts'
@@ -217,7 +230,7 @@ export const AccountDetails = (props: any) => {
     return (
         <Box sx={{ mt: '60px' }}>
             <div>
-                <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} editHandle={editHandle} />
+                <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} editHandle={showEditButton ? editHandle : null} />
                 <Box sx={{ mt: '110px', p: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Box sx={{ width: '65%' }}>
                         <Box sx={{ borderRadius: '10px', border: '1px solid #80808038', backgroundColor: 'white' }}>
@@ -298,7 +311,7 @@ export const AccountDetails = (props: any) => {
                                 <div style={{ width: '32%' }}>
                                     <div className='title2'>Leads</div>
                                     <div className='title3'>
-                                        {accountDetails?.lead?.account_name || '----'}
+                                        {accountDetails?.lead?.title || '----'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
@@ -325,11 +338,15 @@ export const AccountDetails = (props: any) => {
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div className='title2'>Skype Id</div>
+                                    <div className='title2'>Assigned to</div>
                                     <div className='title3'>
-                                        {accountDetails?.skype_ID ? <Link>
-                                            {accountDetails?.skype_ID}
-                                        </Link> : '----'}
+                                    {accountDetails && accountDetails.assigned_to?.length > 0 
+                                        ? accountDetails.assigned_to.map((user, index) => (
+                                            <div key={index}>
+                                                {user.user_details.email || 'No email available'}
+                                            </div>
+                                        ))
+                                        : '----'}
                                     </div>
                                 </div>
                             </div>

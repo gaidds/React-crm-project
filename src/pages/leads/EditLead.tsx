@@ -23,7 +23,7 @@ import {
 import { useQuill } from 'react-quilljs';
 import 'quill/dist/quill.snow.css';
 import { LeadUrl } from '../../services/ApiUrls'
-import { fetchData, Header } from '../../components/FetchData'
+import { fetchData } from '../../components/FetchData'
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { FaArrowDown, FaCheckCircle, FaFileUpload, FaPalette, FaPercent, FaPlus, FaTimes, FaTimesCircle, FaUpload } from 'react-icons/fa'
 import { CustomPopupIcon, CustomSelectField, RequiredTextField, StyledSelect } from '../../styles/CssStyled'
@@ -336,6 +336,13 @@ export function EditLead() {
             industry: formData.industry,
             skype_ID: formData.skype_ID
         }
+
+        const Header = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('Token'),
+            org: localStorage.getItem('org')
+          }
         // console.log(data, 'edit')
         fetchData(`${LeadUrl}/${state?.id}/`, 'PUT', JSON.stringify(data), Header)
             .then((res: any) => {

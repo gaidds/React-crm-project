@@ -6,7 +6,12 @@ import { createContext, useContext, useState } from 'react';
   // count: number;
   // updateCount: (newCount: number) => void;
 // }
-interface MyContextData {
+
+interface SidebarContextData {
+  drawerWidth: number;
+  screen: string;
+}
+interface UserContextData {
   userRole: string | null;
   setUserRole: (role: string | null) => void;
   userId: string | null;
@@ -14,16 +19,19 @@ interface MyContextData {
   profileId: string | null;
   setProfileId: (id: string | null) => void;
 }
+interface MyContextData extends SidebarContextData, UserContextData {}
 
-const MyContext = createContext<any>(undefined);
+const MyContext = createContext<MyContextData | undefined>(undefined);
 
 export const MyContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [drawerWidth, setDrawerWidth] = useState(200);
+  const [screen, setScreen] = useState('deals');
   const [userRole, setUserRole] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [profileId, setProfileId] = useState<string | null>(null);
 
   return (
-      <MyContext.Provider value={{  userRole, setUserRole, userId, setUserId, profileId, setProfileId}}>
+      <MyContext.Provider value={{ drawerWidth, screen, userRole, setUserRole, userId, setUserId, profileId, setProfileId}}>
           {children}
       </MyContext.Provider>
   );
