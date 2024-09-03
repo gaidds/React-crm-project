@@ -72,6 +72,7 @@ interface FormData {
 export function EditOpportunity() {
     const navigate = useNavigate()
     const { state } = useLocation()
+    console.log(state, 'state')
     const { quill, quillRef } = useQuill();
     const initialContentRef = useRef<string | null>(null);
     const pageContainerRef = useRef<HTMLDivElement | null>(null);
@@ -647,7 +648,7 @@ export function EditOpportunity() {
                                                 />
                                             </div>
                                             <div className='fieldSubContainer'>
-                                                {userRole === 'ADMIN' || state.value.created_by.id === userId && (
+                                            {(userRole === 'ADMIN' || (state?.value?.created_by?.id === userId)) && (
                                                     <>
                                                         <div className='fieldTitle'>Assign To</div>
                                                         <FormControl error={!!errors?.assigned_to?.[0]} sx={{ width: '70%' }}>
@@ -655,7 +656,7 @@ export function EditOpportunity() {
                                                                 multiple
                                                                 value={selectedAssignTo}
                                                                 limitTags={2}
-                                                                options={state.users || []}
+                                                                options={state.users ? state.users.filter((option: any) => !selectedAssignTo.some((selectedOption) => selectedOption.id === option.id)) : []}
                                                                 getOptionLabel={(option: any) => state.users ? option?.user__email : option}
                                                                 onChange={(e: any, value: any) => handleChange2('assigned_to', value)}
                                                                 size='small'
@@ -670,7 +671,7 @@ export function EditOpportunity() {
 
                                                                             }}
                                                                             variant='outlined'
-                                                                            label={state.users ? option?.user_details?.email : option}
+                                                                            label={state.users ? option?.user__email : option}
                                                                             {...getTagProps({ index })}
                                                                         />
                                                                     ))

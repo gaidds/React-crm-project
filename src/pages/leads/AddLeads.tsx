@@ -355,7 +355,7 @@ export function AddLeads() {
   const crntPage = 'Add Leads'
   const backBtn = 'Back To Leads'
 
-  // console.log(state, 'leadsform')
+  console.log(state, 'leadsform')
   return (
     <Box sx={{ mt: '60px' }}>
       <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} onCancel={onCancel} onSubmit={handleSubmit} />

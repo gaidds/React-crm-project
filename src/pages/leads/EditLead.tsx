@@ -30,6 +30,7 @@ import { CustomPopupIcon, CustomSelectField, RequiredTextField, StyledSelect } f
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown'
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp'
 import '../../styles/style.css'
+import MyContext, { useMyContext } from '../../context/Context'
 
 // const useStyles = makeStyles({
 //   btnIcon: {
@@ -131,6 +132,7 @@ interface FormData {
 export function EditLead() {
     const navigate = useNavigate()
     const location = useLocation();
+    const { userRole , profileId, userId} = useMyContext();
     const { state } = location;
     const { quill, quillRef } = useQuill();
     // const initialContentRef = useRef(null);
@@ -446,8 +448,10 @@ export function EditLead() {
     const module = 'Leads'
     const crntPage = 'Edit Lead'
     const backBtn = 'Back To Lead Details'
+    console.log(state, 'leadsform')
 
-    // console.log(formData, 'leadsform')
+
+    console.log(state, 'state')
     return (
         <Box sx={{ mt: '60px' }}>
             <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} onCancel={onCancel} onSubmit={handleSubmit} />
@@ -558,6 +562,8 @@ export function EditLead() {
                                         </div>
                                         <div className='fieldContainer2'>
                                             <div className='fieldSubContainer'>
+                                            {(userRole === 'ADMIN' || (state?.value?.created_by?.id === userId)) && (
+                                                    <>
                                                 <div className='fieldTitle'>Assign To</div>
                                                 <FormControl error={!!errors?.assigned_to?.[0]} sx={{ width: '70%' }}>
                                                     <Autocomplete
@@ -568,7 +574,7 @@ export function EditLead() {
                                                         limitTags={2}
                                                         options={state?.users || []}
                                                         // options={state.contacts ? state.contacts.map((option: any) => option) : ['']}
-                                                        getOptionLabel={(option: any) => state?.users ? option?.user_details?.email : option}
+                                                        getOptionLabel={(option: any) => state?.users ?  option?.user__email : option}
                                                         // getOptionLabel={(option: any) => option?.user__email}
                                                         onChange={(e: any, value: any) => handleChange2('assigned_to', value)}
                                                         size='small'
@@ -583,7 +589,7 @@ export function EditLead() {
 
                                                                     }}
                                                                     variant='outlined'
-                                                                    label={state?.users ? option?.user_details?.email : option}
+                                                                    label={state?.users ? option?.user__email : option}
                                                                     {...getTagProps({ index })}
                                                                 />
                                                             ))
@@ -607,6 +613,8 @@ export function EditLead() {
                                                     />
                                                     <FormHelperText>{errors?.assigned_to?.[0] || ''}</FormHelperText>
                                                 </FormControl>
+                                                </>
+                                                )}
                                             </div>
                                             <div className='fieldSubContainer'>
                                                 <div className='fieldTitle'>Industry</div>
