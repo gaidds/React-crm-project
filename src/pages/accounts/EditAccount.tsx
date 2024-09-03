@@ -26,7 +26,8 @@ import { FaFileUpload, FaPlus, FaTimes, FaUpload } from 'react-icons/fa'
 import { CustomPopupIcon, RequiredSelect, RequiredTextField } from '../../styles/CssStyled'
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown'
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp'
-
+import { stat } from 'fs'
+import MyContext, { useMyContext } from '../../context/Context'
 
 
 type FormErrors = {
@@ -76,6 +77,7 @@ interface FormData {
 
 export function EditAccount() {
     const navigate = useNavigate()
+    const { userRole , profileId, userId} = useMyContext();
     const { state } = useLocation()
     const autocompleteRef = useRef<any>(null);
     const [error, setError] = useState(false)
@@ -114,11 +116,21 @@ export function EditAccount() {
     })
 
     useEffect(() => {
-        setFormData(state?.value)
-        if (state?.value?.assign_to) {
-            setSelectedContacts(state?.value?.assign_to);
+        console.log(state)
+        if (state?.value) {
+            setFormData({
+                ...formData, // Include existing form data to avoid overwriting other fields
+                ...state.value,
+                lead: state?.value?.lead || '',
+                contacts: state?.value?.contacts || [],
+                assigned_to: state?.value?.assigned_to || [],
+            });
+            console.log(state)
         }
-    }, [state?.id])
+        if (state?.value?.assign_to) {
+            setSelectedContacts(state.value.assign_to);
+        }
+    }, [state?.id]);
 
     useEffect(() => {
         if (reset) {
@@ -283,6 +295,7 @@ export function EditAccount() {
     const backBtn = state?.edit ? 'Back to Accounts' : 'Back to AccountDetails'
 
     // console.log(state, 'accountform')
+    console.log(formData, 'formdata')
     return (
         <Box sx={{ mt: '60px' }}>
             <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} onCancel={onCancel} onSubmit={handleSubmit} />
@@ -478,88 +491,7 @@ export function EditAccount() {
                                             </div>
                                         </div>
                                         <div className='fieldContainer2'>
-                                            <div className='fieldSubContainer'>
-                                                <div className='fieldTitle'>Assign To</div>
-                                                <FormControl error={!!errors?.assigned_to?.[0]} sx={{ width: '70%' }}>
-                                                    <Autocomplete
-                                                        multiple
-                                                        value={selectedAssignTo}
-                                                        limitTags={2}
-                                                        options={state.users ? state.users.filter((option: any) => !selectedAssignTo.some((selectedOption) => selectedOption.id === option.id)) : []}
-                                                        getOptionLabel={(option: any) => state?.users ? option?.user__email : option}
-                                                        onChange={(e: any, value: any) => handleChange2('assigned_to', value)}
-                                                        size='small'
-                                                        filterSelectedOptions
-                                                        filterOptions={(options) => options.filter(option => !selectedAssignTo.includes(option?.id))}
-                                                        renderTags={(value, getTagProps) =>
-                                                            value.map((option, index) => (
-                                                                <Chip
-                                                                    deleteIcon={<FaTimes style={{ width: '9px' }} />}
-                                                                    sx={{ backgroundColor: 'rgba(0, 0, 0, 0.08)', height: '18px' }}
-                                                                    variant='outlined'
-                                                                    label={state?.users ? option?.user__email : option}
-                                                                    {...getTagProps({ index })}
-                                                                />
-                                                            ))
-                                                        }
-                                                        popupIcon={<CustomPopupIcon><FaPlus className='input-plus-icon' /></CustomPopupIcon>}
-                                                        renderInput={(params) => (
-                                                            <TextField {...params}
-                                                                placeholder='Add Users'
-                                                                InputProps={{
-                                                                    ...params.InputProps,
-                                                                    sx: {
-                                                                        '& .MuiAutocomplete-popupIndicator': { '&:hover': { backgroundColor: 'white' } },
-                                                                        '& .MuiAutocomplete-endAdornment': {
-                                                                            mt: '-8px',
-                                                                            mr: '-8px',
-                                                                        }
-                                                                    }
-                                                                }}
-                                                            />
-                                                        )}
-                                                    />
-                                                    <FormHelperText>{errors?.assigned_to?.[0] || ''}</FormHelperText>
-                                                </FormControl>
-                                            </div>
-                                            <div className='fieldSubContainer'>
-                                                <div className='fieldTitle'>account_attachment</div>
-                                                <TextField
-                                                    name='account_attachment'
-                                                    value={formData.account_attachment || ''}
-                                                    InputProps={{
-                                                        endAdornment: (
-                                                            <InputAdornment position='end'>
-                                                                <IconButton disableFocusRipple
-                                                                    disableTouchRipple
-                                                                    sx={{ width: '40px', height: '40px', backgroundColor: 'whitesmoke', borderRadius: '0px', mr: '-13px', cursor: 'pointer' }}
-                                                                >
-                                                                    <label htmlFor='icon-button-file'>
-                                                                        <input
-                                                                            hidden
-                                                                            accept='image/*'
-                                                                            id='icon-button-file'
-                                                                            type='file'
-                                                                            name='account_attachment'
-                                                                            onChange={(e: any) => {
-                                                                                handleFileChange(e)
-                                                                            }}
-                                                                        />
-                                                                        <FaUpload color='primary' style={{ fontSize: '15px', cursor: 'pointer' }} />
-                                                                    </label>
-                                                                </IconButton>
-                                                            </InputAdornment>
-                                                        )
-                                                    }}
-                                                    sx={{ width: '70%' }}
-                                                    size='small'
-                                                    helperText={errors?.account_attachment?.[0] ? errors?.account_attachment[0] : ''}
-                                                    error={!!errors?.account_attachment?.[0]}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className='fieldContainer2'>
-                                            <div className='fieldSubContainer'>
+                                        <div className='fieldSubContainer'>
                                                 <div className='fieldTitle'>Tags</div>
                                                 <FormControl error={!!errors?.tags?.[0]} sx={{ width: '70%' }}>
                                                     <Autocomplete
@@ -602,6 +534,91 @@ export function EditAccount() {
                                                     />
                                                     <FormHelperText>{errors?.tags?.[0] || ''}</FormHelperText>
                                                 </FormControl>
+                                            </div>
+                                            <div className='fieldSubContainer'>
+                                                <div className='fieldTitle'>account_attachment</div>
+                                                <TextField
+                                                    name='account_attachment'
+                                                    value={formData.account_attachment || ''}
+                                                    InputProps={{
+                                                        endAdornment: (
+                                                            <InputAdornment position='end'>
+                                                                <IconButton disableFocusRipple
+                                                                    disableTouchRipple
+                                                                    sx={{ width: '40px', height: '40px', backgroundColor: 'whitesmoke', borderRadius: '0px', mr: '-13px', cursor: 'pointer' }}
+                                                                >
+                                                                    <label htmlFor='icon-button-file'>
+                                                                        <input
+                                                                            hidden
+                                                                            accept='image/*'
+                                                                            id='icon-button-file'
+                                                                            type='file'
+                                                                            name='account_attachment'
+                                                                            onChange={(e: any) => {
+                                                                                handleFileChange(e)
+                                                                            }}
+                                                                        />
+                                                                        <FaUpload color='primary' style={{ fontSize: '15px', cursor: 'pointer' }} />
+                                                                    </label>
+                                                                </IconButton>
+                                                            </InputAdornment>
+                                                        )
+                                                    }}
+                                                    sx={{ width: '70%' }}
+                                                    size='small'
+                                                    helperText={errors?.account_attachment?.[0] ? errors?.account_attachment[0] : ''}
+                                                    error={!!errors?.account_attachment?.[0]}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className='fieldContainer2'>
+                                        <div className='fieldSubContainer'>
+                                        {(userRole === 'ADMIN' || (state?.value?.created_by?.id === userId)) && (
+                                            <>
+                                                <div className='fieldTitle'>Assign To</div>
+                                                <FormControl error={!!errors?.assigned_to?.[0]} sx={{ width: '70%' }}>
+                                                    <Autocomplete
+                                                        multiple
+                                                        value={selectedAssignTo}
+                                                        limitTags={2}
+                                                        options={state.users ? state.users.filter((option: any) => !selectedAssignTo.some((selectedOption) => selectedOption.id === option.id)) : []}
+                                                        getOptionLabel={(option: any) => state?.users ? option?.user__email : option}
+                                                        onChange={(e: any, value: any) => handleChange2('assigned_to', value)}
+                                                        size='small'
+                                                        filterSelectedOptions
+                                                        filterOptions={(options) => options.filter(option => !selectedAssignTo.includes(option?.id))}
+                                                        renderTags={(value, getTagProps) =>
+                                                            value.map((option, index) => (
+                                                                <Chip
+                                                                    deleteIcon={<FaTimes style={{ width: '9px' }} />}
+                                                                    sx={{ backgroundColor: 'rgba(0, 0, 0, 0.08)', height: '18px' }}
+                                                                    variant='outlined'
+                                                                    label={state?.users ? option?.user__email : option}
+                                                                    {...getTagProps({ index })}
+                                                                />
+                                                            ))
+                                                        }
+                                                        popupIcon={<CustomPopupIcon><FaPlus className='input-plus-icon' /></CustomPopupIcon>}
+                                                        renderInput={(params) => (
+                                                            <TextField {...params}
+                                                                placeholder='Add Users'
+                                                                InputProps={{
+                                                                    ...params.InputProps,
+                                                                    sx: {
+                                                                        '& .MuiAutocomplete-popupIndicator': { '&:hover': { backgroundColor: 'white' } },
+                                                                        '& .MuiAutocomplete-endAdornment': {
+                                                                            mt: '-8px',
+                                                                            mr: '-8px',
+                                                                        }
+                                                                    }
+                                                                }}
+                                                            />
+                                                        )}
+                                                    />
+                                                    <FormHelperText>{errors?.assigned_to?.[0] || ''}</FormHelperText>
+                                                </FormControl>
+                                                </>
+                                        )}
                                             </div>
                                             <div className='fieldSubContainer'>
                                                 <div className='fieldTitle'></div>

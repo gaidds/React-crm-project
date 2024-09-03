@@ -24,7 +24,7 @@ import { useQuill } from 'react-quilljs';
 import 'quill/dist/quill.snow.css';
 import '../../styles/style.css'
 import { LeadUrl } from '../../services/ApiUrls'
-import { fetchData, Header } from '../../components/FetchData'
+import { fetchData } from '../../components/FetchData'
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { FaArrowDown, FaCheckCircle, FaFileUpload, FaPalette, FaPercent, FaPlus, FaTimes, FaTimesCircle, FaUpload } from 'react-icons/fa'
 import { useForm } from '../../components/UseForm'
@@ -245,6 +245,7 @@ export function AddLeads() {
     e.preventDefault();
     submitForm();
   }
+  
   const submitForm = () => {
     // console.log('Form data:', formData.lead_attachment,'sfs', formData.file);
     const data = {
@@ -277,8 +278,17 @@ export function AddLeads() {
       skype_ID: formData.skype_ID
     }
 
+    const Header = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: localStorage.getItem('Token'),
+      org: localStorage.getItem('org')
+    }
+
     fetchData(`${LeadUrl}/`, 'POST', JSON.stringify(data), Header)
       .then((res: any) => {
+        console.log('Request URL:',  JSON.stringify(data));
+        console.log('header', Header);
         // console.log('Form data:', res);
         if (!res.error) {
           resetForm()
@@ -345,7 +355,7 @@ export function AddLeads() {
   const crntPage = 'Add Leads'
   const backBtn = 'Back To Leads'
 
-  // console.log(state, 'leadsform')
+  console.log(state, 'leadsform')
   return (
     <Box sx={{ mt: '60px' }}>
       <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} onCancel={onCancel} onSubmit={handleSubmit} />

@@ -78,7 +78,7 @@ export default function Sidebar(props: any) {
     // }, [])
     const toggleScreen = () => {
         // console.log(location.pathname.split('/'), 'll')
-        if (location.pathname.split('/')[1] === '' || location.pathname.split('/')[1] === undefined || location.pathname.split('/')[2] === 'deals') {
+        if (location.pathname.split('/')[1] === '' || location.pathname.split('/')[1] === undefined || location.pathname.split('/')[2] === 'leads') {
             setScreen('deals')
         } else if (location.pathname.split('/')[2] === 'contacts') {
             setScreen('contacts')

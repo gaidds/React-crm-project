@@ -88,7 +88,7 @@ const roleDisplayMap: { [key: string]: string } = {
 
 export default function Users() {
     const navigate = useNavigate()
-    const { userRole, setUserRole } = useMyContext();
+    const { userRole, userId } = useMyContext();
     const [tab, setTab] = useState('active');
     const [loading, setLoading] = useState(true);
     const [order, setOrder] = useState('asc')
@@ -618,7 +618,8 @@ export default function Users() {
                                                             {item.user_type ? item.user_type : '---'}
                                                         </TableCell> */}
                                                                 <TableCell className='tableCell'>
-                                                                    <IconButton>
+                                                                    {(userRole === 'ADMIN' || item?.user_details?.id === userId) && (
+                                                                        <IconButton>
                                                                         <FaEdit
                                                                             onClick={() => EditItem(item.id)}
                                                                             style={{ fill: '#1A3353', cursor: 'pointer', width: '18px' }}
@@ -628,6 +629,7 @@ export default function Users() {
                                                                     style={{ fill: '#1A3353', cursor: 'pointer' }}
                                                                 /> */}
                                                                     </IconButton>
+                                                                    )}
                                                                     {userRole === 'ADMIN' && (
                                                                         <IconButton>
                                                                         <FaTrashAlt onClick={() => deleteRow(item.id)} style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }} />
