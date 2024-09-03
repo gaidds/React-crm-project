@@ -67,7 +67,7 @@ export function CustomAppBar(props: any) {
                 {backBtn}
               </Button>
             </div>
-            {(isAdmin || userId === userDetails?.user_details?.id) && (
+            {editHandle && (
               <div>
                 <Button
                   type='submit'
