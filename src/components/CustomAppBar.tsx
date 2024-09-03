@@ -23,7 +23,6 @@ export function CustomAppBar(props: any) {
 
   const Module = module.toLowerCase()
 
-  const isAdmin = userRole === 'ADMIN'; // Replace with actual role checking
 
   return (
     <AppBar sx={{

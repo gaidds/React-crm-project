@@ -21,6 +21,7 @@ import MyContext, { useMyContext } from '../../context/Context'
 type response = {
     user_details: {
         email: string;
+        id: string;
         is_active: boolean;
         profile_pic: string;
     };
@@ -140,12 +141,15 @@ export default function UserDetails() {
     const module = 'Users'
     const crntPage = 'User Detail'
     const backBtn = 'Back To Users'
-    // console.log(userDetails, 'user');
+    console.log(userDetails, 'user');
+    const isAdmin = userRole === 'ADMIN'; 
+    const isMyself = userId === userDetails?.user_details.id
+    const showEditButton = isAdmin || isMyself;
 
     return (
         <Box sx={{ mt: '60px' }}>
             <div>
-                <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} editHandle={editHandle} userDetails = {userDetails}/>
+                <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} editHandle={showEditButton ? editHandle : null} />
                 <Box sx={{ mt: '120px', p: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Box sx={{ width: '100%' }}>
                         <Card sx={{ borderRadius: '7px' }}>
