@@ -295,7 +295,7 @@ export function EditAccount() {
     const backBtn = state?.edit ? 'Back to Accounts' : 'Back to AccountDetails'
 
     // console.log(state, 'accountform')
-    console.log(formData, 'formdata')
+    console.log(state, 'state')
     return (
         <Box sx={{ mt: '60px' }}>
             <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} onCancel={onCancel} onSubmit={handleSubmit} />
