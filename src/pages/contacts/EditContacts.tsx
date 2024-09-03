@@ -255,7 +255,7 @@ const { state } = location;
     setReset(true)
     // resetForm()
   }
-  // console.log(formData, 'editform')
+  console.log(state, 'state')
   return (
     <Box sx={{ mt: '60px' }}>
       <CustomAppBar backbtnHandle={backbtnHandle} module={module} crntPage={crntPage} backBtn={backBtn} onCancel={onCancel} onSubmit={handleSubmit} />

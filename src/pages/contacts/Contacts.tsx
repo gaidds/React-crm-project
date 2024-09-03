@@ -171,6 +171,7 @@ export default function Contacts() {
                         state: 
                         { 
                             countries,
+                            id: id,
                             value: {
                                 salutation: contactDetails?.salutation,
                                 first_name: contactDetails?.first_name,
@@ -290,6 +291,7 @@ export default function Contacts() {
     const showAddButton = userRole !== 'USER' && userRole !== 'SALES REP';
     const modalDialog = 'Are You Sure you want to delete this contact?'
     const modalTitle = 'Delete Contact'
+    
 
     const recordsList = [[10, '10 Records per page'], [20, '20 Records per page'], [30, '30 Records per page'], [40, '40 Records per page'], [50, '50 Records per page']]
     // console.log(contactList, 'cccc')
