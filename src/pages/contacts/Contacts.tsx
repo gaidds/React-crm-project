@@ -9,7 +9,7 @@ import { fetchData, Header } from '../../components/FetchData';
 import { ContactUrl } from '../../services/ApiUrls';
 import { AntSwitch, CustomTab, CustomToolbar, FabLeft, FabRight, StyledTableCell, StyledTableRow } from '../../styles/CssStyled';
 import { useNavigate } from 'react-router-dom';
-import { FaTrashAlt } from 'react-icons/fa';
+import { FaTrashAlt, FaEdit} from 'react-icons/fa';
 import { DeleteModal } from '../../components/DeleteModal';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
@@ -63,7 +63,7 @@ const headCells: readonly HeadCell[] = [
 ]
 
 export default function Contacts() {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     // const context = useMyContext();
 
     const [value, setValue] = useState('Open');
@@ -155,6 +155,10 @@ export default function Contacts() {
         setOrderBy(property)
     }
 
+    const handleEditContact = (contactId: any) => {
+        console.log('Navigating to edit contact with countries:', countries);
+        navigate(`/app/contacts/edit-contact/${contactId}`, { state: { countries } });
+    }
     const DeleteItem = () => {
         const Header = {
             Accept: 'application/json',
@@ -345,7 +349,7 @@ export default function Contacts() {
                                             ? stableSort(contactList, getComparator(order, orderBy))
                                                 // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: any, index: any) => {
                                                 .map((item: any, index: any) => {
-                                                    console.log(item.created_by,'item created by')
+                                                    
                                                     return (
                                                         <TableRow
                                                             tabIndex={-1}
@@ -361,10 +365,15 @@ export default function Contacts() {
                                             </StyledTableCell> */}
                                                             <TableCell className='tableCell'>
                                                                 {userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && item.created_by === userId) ? (
-                                                                    <FaTrashAlt
-                                                                    style={{ cursor: 'pointer' }}
-                                                                    onClick={() => deleteRow(item.id)}
-                                                                    />
+                                                                    <>
+                                                                        <FaEdit
+                                                                            style={{ cursor: 'pointer', marginRight: '10px' }}
+                                                                            onClick={() => handleEditContact(item.id)}/>
+                                                                        <FaTrashAlt
+                                                                            style={{ cursor: 'pointer' }}
+                                                                            onClick={() => deleteRow(item.id)}
+                                                                        />
+                                                                    </>
                                                                 ) : null}
                                                             </TableCell>
                                                         </TableRow>
