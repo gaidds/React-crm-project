@@ -573,7 +573,7 @@ export function EditAccount() {
                                         </div>
                                         <div className='fieldContainer2'>
                                         <div className='fieldSubContainer'>
-                                        {userRole === 'ADMIN' || state.value.created_by.id === userId && (
+                                        {(userRole === 'ADMIN' || (state?.value?.created_by?.id === userId)) && (
                                             <>
                                                 <div className='fieldTitle'>Assign To</div>
                                                 <FormControl error={!!errors?.assigned_to?.[0]} sx={{ width: '70%' }}>
