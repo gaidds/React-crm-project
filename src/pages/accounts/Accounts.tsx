@@ -430,6 +430,7 @@ export default function Accounts() {
                                 website: accountDetails?.website,
                                 status: accountDetails?.status,
                                 lead: accountDetails?.lead?.account_name,
+                                created_by: accountDetails?.created_by,
                             }, id: id, edit: true
                         }
                     })
