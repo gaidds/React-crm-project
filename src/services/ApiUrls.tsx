@@ -1,7 +1,7 @@
 // authurl
 export const SERVER = process.env.REACT_APP_API_BASE_URL;
 export const LoginUrl = 'auth/login';
-export const RegisterUrl = 'auth/register';
+export const RegisterUrl = 'auth/register/';
 export const AuthConfigUrl = 'auth-config/';
 export const ForgotPasswordEmailUrl = 'auth/send-forgot-password-email/';
 export const ResetForgotPasswordUrl = 'auth/reset-forgot-password';

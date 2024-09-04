@@ -5,6 +5,7 @@ import { Home } from './pages/home/Home';
 import PasswordResetPage from './pages/auth/PasswordResetPage';
 import ForgotPassword from './pages/forgot-password/ForgotPassword'; // Import the ForgotPassword component
 import ResetForgotPassword from './pages/forgot-password/ResetForgotPassword';
+import RegistrationPage from './pages/auth/RegistrationPage';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             path="/reset-forgot-password/:uidb64/:token"
             element={<ResetForgotPassword />}
           />
+          <Route path="/auth/register" element={<RegistrationPage />} />
         </Routes>
       </Router>
     </>
