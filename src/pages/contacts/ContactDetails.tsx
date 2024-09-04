@@ -146,6 +146,7 @@ export default function ContactDetails() {
     const module = 'Contacts'
     const crntPage = 'Contact Detail'
     const backBtn = 'Back To Contacts'
+    console.log(addressDetails, 'address')
     // console.log(state, 'contact');
     interface AssignedToItem {
         id: string;
@@ -299,7 +300,7 @@ export default function ContactDetails() {
                                 </div>
                                 <div style={{ padding: '20px', marginTop: '15px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <div style={{ width: '32%' }}>
-                                        <div className='title2'>Pincode</div>
+                                        <div className='title2'>Postcode</div>
                                         <div className='title3'>
                                             {addressDetails?.postcode || '----'}
                                         </div>

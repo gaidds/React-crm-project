@@ -448,7 +448,7 @@ export function EditLead() {
     const module = 'Leads'
     const crntPage = 'Edit Lead'
     const backBtn = 'Back To Lead Details'
-    console.log(state, 'leadsform')
+    console.log(formData, 'leadsform')
 
 
     console.log(state, 'state')
