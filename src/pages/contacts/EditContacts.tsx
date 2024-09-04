@@ -245,11 +245,13 @@ const { state } = location;
 };
 
   const backbtnHandle = () => {
-    navigate('/app/contacts/contact-details', { state: { contactId: { id: state?.id }, detail: true } })
+    // navigate('/app/contacts/contact-details', { state: { contactId: { id: state?.id }, detail: true } })
+     navigate('/app/contacts')
   }
   const module = 'Contacts'
   const crntPage = 'Edit Contact'
-  const backBtn = 'Back to Contact Detail'
+  // const backBtn = 'Back to Contact Detail'
+  const backBtn = 'Back to Contacts'
 
   const onCancel = () => {
     setReset(true)

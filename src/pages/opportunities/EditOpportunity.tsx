@@ -160,11 +160,11 @@ export function EditOpportunity() {
 
 
     const backbtnHandle = () => {
-        if (state?.edit) {
+        // if (state?.edit) {
             navigate('/app/opportunities')
-        } else {
-            navigate('/app/opportunities/opportunity-details', { state: { opportunityId: state?.id, detail: true } })
-        }
+        // } else {
+        //     navigate('/app/opportunities/opportunity-details', { state: { opportunityId: state?.id, detail: true } })
+        // }
     }
     const handleChange2 = (title: any, val: any) => {
         if (title === 'contacts') {
@@ -300,7 +300,8 @@ export function EditOpportunity() {
 
     const module = 'Opportunities'
     const crntPage = 'Add Opportunities'
-    const backBtn = state?.edit ? 'Back To Opportunities' : 'Back To OpportunityDetails'
+    // const backBtn = state?.edit ? 'Back To Opportunities' : 'Back To OpportunityDetails'
+    const backBtn = 'Back To Opportunities' 
  
 
 

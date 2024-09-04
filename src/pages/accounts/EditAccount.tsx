@@ -142,11 +142,11 @@ export function EditAccount() {
     }, [reset])
 
     const backbtnHandle = () => {
-        if (state?.edit) {
+        // if (state?.edit) {
             navigate('/app/accounts')
-        } else {
-            navigate('/app/accounts/account-details', { state: { accountId: state?.id, detail: true } })
-        }
+        // } else {
+        //     navigate('/app/accounts/account-details', { state: { accountId: state?.id, detail: true } })
+        // }
     }
     const handleChange2 = (title: any, val: any) => {
         if (title === 'contacts') {
@@ -292,7 +292,8 @@ export function EditAccount() {
 
     const module = 'Accounts'
     const crntPage = 'Add Account'
-    const backBtn = state?.edit ? 'Back to Accounts' : 'Back to AccountDetails'
+    // const backBtn = state?.edit ? 'Back to Accounts' : 'Back to AccountDetails'
+    const backBtn =  'Back to Accounts'
 
     // console.log(state, 'accountform')
     console.log(state, 'state')

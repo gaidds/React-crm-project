@@ -441,13 +441,14 @@ export function EditLead() {
     //     }
     // };
     const backbtnHandle = () => {
-        navigate('/app/leads/lead-details', { state: { leadId: state?.id, detail: true } })
-        // navigate('/app/leads')
+        // navigate('/app/leads/lead-details', { state: { leadId: state?.id, detail: true } })
+        navigate('/app/leads')
     }
 
     const module = 'Leads'
     const crntPage = 'Edit Lead'
-    const backBtn = 'Back To Lead Details'
+    // const backBtn = 'Back To Lead Details'
+    const backBtn = 'Back To Leads'
     console.log(formData, 'leadsform')
 
 
