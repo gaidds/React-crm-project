@@ -295,7 +295,7 @@ export function EditAccount() {
     // const backBtn = state?.edit ? 'Back to Accounts' : 'Back to AccountDetails'
     const backBtn =  'Back to Accounts'
 
-    // console.log(state, 'accountform')
+    console.log(formData, 'accountform')
     console.log(state, 'state')
     return (
         <Box sx={{ mt: '60px' }}>
