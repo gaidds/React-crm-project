@@ -18,7 +18,8 @@ import {
     Tooltip,
     Divider,
     Select,
-    Button
+    Button,
+    SelectChangeEvent
 } from '@mui/material'
 import { useQuill } from 'react-quilljs';
 import 'quill/dist/quill.snow.css';
@@ -258,6 +259,16 @@ export function EditLead() {
     //     val.lead_attachment = event.target.files[0]
     //   }
     // }
+    const handleStatusChange = (event: SelectChangeEvent<string>) => {
+        // Extract the selected value
+        const selectedValue = event.target.value;
+    
+        // Update the formData state
+        setFormData({ ...formData, status: selectedValue });
+    };
+    
+    
+
 
     const handleChange2 = (title: any, val: any) => {
         // const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -685,13 +696,13 @@ export function EditLead() {
                                                             </div>
                                                         )}
                                                         className={'select'}
-                                                        onChange={handleChange}
+                                                        onChange={handleStatusChange}
                                                         error={!!errors?.status?.[0]}
                                                     >
-                                                        {state?.status?.length && state?.status.map((option: any) => (
-                                                            <MenuItem key={option[0]} value={option[1]}>
-                                                                {option[1]}
-                                                            </MenuItem>
+                                                        {state?.status?.length && state.status.map(([value, label]: [string, string]) => (
+                    <MenuItem key={value} value={value}>
+                        {label}
+                    </MenuItem>
                                                         ))}
                                                     </Select>
                                                     <FormHelperText>{errors?.status?.[0] ? errors?.status[0] : ''}</FormHelperText>
