@@ -83,7 +83,7 @@ type FormErrors = {
     description?: string[],
     teams?: string[],
     assigned_to?: string[],
-    contacts?: string,
+    contacts?: string[],
     status?: string[],
     source?: string[],
     address_line?: string[],
@@ -112,7 +112,7 @@ interface FormData {
     description: string,
     teams: string,
     assigned_to: string[],
-    contacts: string,
+    contacts: string[],
     status: string,
     source: string,
     address_line: string,
@@ -126,7 +126,7 @@ interface FormData {
     probability: number,
     industry: string,
     skype_ID: string,
-    file: string | null,
+    file: string | null
 }
 
 export function EditLead() {
@@ -144,7 +144,7 @@ export function EditLead() {
     const autocompleteRef = useRef<any>(null);
     const [reset, setReset] = useState(false)
     const [error, setError] = useState(false)
-    const [selectedContacts, setSelectedContacts] = useState<string | null>(null);
+    const [selectedContacts, setSelectedContacts] = useState<any[]>([] || '');
     const [selectedAssignTo, setSelectedAssignTo] = useState<any[]>([] || '');
     const [selectedTags, setSelectedTags] = useState<any[]>([] || '');
     const [selectedCountry, setSelectedCountry] = useState<any[]>([] || '');
@@ -166,7 +166,7 @@ export function EditLead() {
         description: '',
         teams: '',
         assigned_to: [],
-        contacts: '',
+        contacts: [],
         status: 'assigned',
         source: 'call',
         address_line: '',
@@ -180,7 +180,7 @@ export function EditLead() {
         probability: 1,
         industry: 'ADVERTISING',
         skype_ID: '',
-        file: null,
+        file: null
     })
 
     useEffect(() => {
@@ -263,7 +263,7 @@ export function EditLead() {
         // const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         // console.log('nd', val)
         if (title === 'contacts') {
-            setFormData({ ...formData, contacts: val?.id ? val.id : ''});
+            setFormData({ ...formData, contacts: val.length > 0 ? val.map((item: any) => item.id) : [] });
             setSelectedContacts(val);
         } else if (title === 'assigned_to') {
             setFormData({ ...formData, assigned_to: val.length > 0 ? val.map((item: any) => item.id) : [] });
@@ -336,7 +336,7 @@ export function EditLead() {
             company: formData.company || '',
             probability: formData.probability,
             industry: formData.industry,
-            skype_ID: formData.skype_ID,
+            skype_ID: formData.skype_ID
         }
 
         const Header = {
@@ -377,7 +377,7 @@ export function EditLead() {
             description: '',
             teams: '',
             assigned_to: [],
-            contacts: '',
+            contacts: [],
             status: 'assigned',
             source: 'call',
             address_line: '',
@@ -391,10 +391,10 @@ export function EditLead() {
             probability: 1,
             industry: 'ADVERTISING',
             skype_ID: '',
-            file: null,
+            file: null
         });
         setErrors({})
-        setSelectedContacts('');
+        setSelectedContacts([]);
         setSelectedAssignTo([])
         setSelectedTags([])
         // setSelectedCountry([])
@@ -450,7 +450,6 @@ export function EditLead() {
     // const backBtn = 'Back To Lead Details'
     const backBtn = 'Back To Leads'
     console.log(formData, 'leadsform')
-    console.log(state, 'state')
 
 
     console.log(state, 'state')
@@ -519,27 +518,28 @@ export function EditLead() {
                                                 <div className='fieldTitle'>Contact Name</div>
                                                 <FormControl error={!!errors?.contacts?.[0]} sx={{ width: '70%' }}>
                                                     <Autocomplete
-                                                        value={''}
-                                                        // limitTags={2}
+                                                        multiple
+                                                        value={selectedContacts}
+                                                        limitTags={2}
                                                         options={state.contacts || []}
                                                         getOptionLabel={(option: any) => state.contacts ? option?.first_name : option}
                                                         onChange={(e: any, value: any) => handleChange2('contacts', value)}
                                                         size='small'
-                                                        // filterSelectedOptions
-                                                        // renderTags={(value: any, getTagProps: any) =>
-                                                        //     value.map((option: any, index: any) => (
-                                                        //         <Chip
-                                                        //             deleteIcon={<FaTimes style={{ width: '9px' }} />}
-                                                        //             sx={{
-                                                        //                 backgroundColor: 'rgba(0, 0, 0, 0.08)',
-                                                        //                 height: '18px'
-                                                        //             }}
-                                                        //             variant='outlined'
-                                                        //             label={state.contacts ? option?.first_name : option}
-                                                        //             {...getTagProps({ index })}
-                                                        //         />
-                                                        //     ))
-                                                        // }
+                                                        filterSelectedOptions
+                                                        renderTags={(value: any, getTagProps: any) =>
+                                                            value.map((option: any, index: any) => (
+                                                                <Chip
+                                                                    deleteIcon={<FaTimes style={{ width: '9px' }} />}
+                                                                    sx={{
+                                                                        backgroundColor: 'rgba(0, 0, 0, 0.08)',
+                                                                        height: '18px'
+                                                                    }}
+                                                                    variant='outlined'
+                                                                    label={state.contacts ? option?.first_name : option}
+                                                                    {...getTagProps({ index })}
+                                                                />
+                                                            ))
+                                                        }
                                                         popupIcon={<CustomPopupIcon><FaPlus className='input-plus-icon' /></CustomPopupIcon>}
                                                         renderInput={(params: any) => (
                                                             <TextField {...params}
