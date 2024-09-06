@@ -6,6 +6,9 @@ import {
   TextField,
   Button,
   Alert,
+  CircularProgress,
+  Container,
+  Box,
 } from '@mui/material';
 import { useGoogleLogin } from '@react-oauth/google';
 import { Link, useNavigate } from 'react-router-dom';
@@ -20,6 +23,7 @@ import './styles.css';
 
 export default function Login() {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -41,6 +45,9 @@ export default function Login() {
     fetchData(AuthConfigUrl, 'GET', null as any, head)
       .then((res) => {
         if (res.data && typeof res.data.is_google_login === 'boolean') {
+          if (res.data.is_first_user) {
+            navigate('/auth/register');
+          }
           setIsGoogleLoginEnabled(res.data.is_google_login);
         } else {
           console.error('Invalid response format from auth-config');
@@ -48,6 +55,9 @@ export default function Login() {
       })
       .catch((error) => {
         console.error('Error fetching auth-config:', error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
@@ -98,6 +108,23 @@ export default function Login() {
       });
   };
 
+  if (loading) {
+    return (
+      <Container maxWidth="sm">
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100vh',
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      </Container>
+    );
+  }
+
   return (
     <div>
       <Stack
@@ -146,8 +173,8 @@ export default function Login() {
                 />
                 <Typography sx={{ textAlign: 'end', mb: 2 }}>
                   <Link
-                    className="forget-password-link"
-                    to={'/forget-password'}
+                    className="forgot-password-link"
+                    to={'/forgot-password'}
                   >
                     Forgot password?
                   </Link>
@@ -190,7 +217,11 @@ export default function Login() {
               {error && (
                 <div className="login-error-msg-container">
                   <Alert
-                    sx={{ mt: 2, position: 'absolute', justifyItems: 'center' }}
+                    sx={{
+                      mt: 2,
+                      position: 'absolute',
+                      justifyItems: 'center',
+                    }}
                     severity="error"
                   >
                     {error}
