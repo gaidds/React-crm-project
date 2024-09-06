@@ -17,6 +17,7 @@ import { FiChevronLeft } from "@react-icons/all-files/fi/FiChevronLeft";
 import { FiChevronRight } from "@react-icons/all-files/fi/FiChevronRight";
 import { CustomTab, CustomToolbar, FabLeft, FabRight } from '../../styles/CssStyled';
 import '../../styles/style.css'
+import MyContext, { useMyContext } from '../../context/Context'
 
 // import css from './css';
 // import emotionStyled from '@emotion/styled';
@@ -98,6 +99,7 @@ export const ToolbarNew = styled(Toolbar)({
 // }
 export default function Leads(props: any) {
   // const {drawer}=props
+  const { userRole, setUserRole, userId } = useMyContext();
   const navigate = useNavigate()
   const [tab, setTab] = useState('open');
   const [loading, setLoading] = useState(true);
@@ -200,6 +202,9 @@ export default function Leads(props: any) {
 
   const handleChangeTab = (e: SyntheticEvent, val: any) => {
     setTab(val)
+    if (val === 'opportunities') {
+      navigate('/app/opportunities');
+    }
   }
   const handleRecordsPerPage = (event: React.ChangeEvent<HTMLSelectElement>) => {
     if (tab == 'open') {
@@ -278,6 +283,7 @@ export default function Leads(props: any) {
       .catch(() => {
       })
   }
+  const showAddButton = userRole !== 'USER' && userRole !== 'SALES REP';
 
   const formatDate = (inputDate: string): string => {
     const currentDate = new Date();
@@ -315,18 +321,24 @@ export default function Leads(props: any) {
 
       <CustomToolbar>
         <Tabs defaultValue={tab} onChange={handleChangeTab} sx={{ mt: '26px' }}>
-          <CustomTab value="open" label="Open"
+          <CustomTab value="open" label="Open leads"
             sx={{
               backgroundColor: tab === 'open' ? '#F0F7FF' : '#284871',
               color: tab === 'open' ? '#3f51b5' : 'white',
             }} />
-          <CustomTab value="closed" label="Closed"
+          <CustomTab value="closed" label="Closed leads"
             sx={{
               backgroundColor: tab === 'closed' ? '#F0F7FF' : '#284871',
               color: tab === 'closed' ? '#3f51b5' : 'white',
               ml: '5px',
+              mr: '5px',
             }}
           />
+          <CustomTab value="opportunities" label="Opportunities"
+              sx={{
+                backgroundColor: tab === 'opportunities' ? '#F0F7FF' : '#284871',
+                color: tab === 'opportunities' ? '#3f51b5' : 'white',
+              }} />
         </Tabs>
 
         <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
@@ -365,14 +377,16 @@ export default function Leads(props: any) {
               <FiChevronRight style={{ height: '15px' }} />
             </FabRight>
           </Box>
-          <Button
-            variant='contained'
-            startIcon={<FiPlus className='plus-icon' />}
-            onClick={onAddHandle}
-            className={'add-button'}
-          >
-            Add Lead
-          </Button>
+          {showAddButton && (
+                        <Button
+                            variant='contained'
+                            startIcon={<FiPlus className='plus-icon' />}
+                            onClick={onAddHandle}
+                            className={'add-button'}
+                        >
+                            Add Lead
+                        </Button>
+            )}
         </Stack>
       </CustomToolbar>
 
@@ -390,9 +404,11 @@ export default function Leads(props: any) {
                       <div style={{ color: '#1A3353', fontSize: '1rem', fontWeight: '500', cursor: 'pointer' }} onClick={() => selectLeadList(item?.id)}>
                         {item?.title}
                       </div>
-                      <div onClick={() => deleteLead(item?.id)}>
-                        <FaTrashAlt style={{ cursor: 'pointer', color: 'gray' }} />
-                      </div>
+                      {userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && item.created_by.id === userId) ? (
+                        <div onClick={() => deleteLead(item?.id)}>
+                          <FaTrashAlt style={{ cursor: 'pointer', color: 'gray' }} />
+                        </div>
+                        ) : null}
                     </Stack>
                     <Stack className='lead-row2'>
                       <div className='lead-row2-col1'>
@@ -478,9 +494,11 @@ export default function Leads(props: any) {
                       <div style={{ color: '#1A3353', fontSize: '1rem', fontWeight: '500', cursor: 'pointer' }} onClick={() => selectLeadList(item?.id)}>
                         {item?.title}
                       </div>
-                      <div onClick={() => deleteLead(item)}>
-                        <FaTrashAlt style={{ cursor: 'pointer', color: 'gray' }} />
-                      </div>
+                      {userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && item.created_by.id === userId) ? (
+                        <div onClick={() => deleteLead(item?.id)}>
+                          <FaTrashAlt style={{ cursor: 'pointer', color: 'gray' }} />
+                        </div>
+                        ) : null}
                     </Stack>
                     <Stack className='lead-row2'>
                       <div className='lead-row2-col1'>

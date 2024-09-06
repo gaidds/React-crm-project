@@ -31,6 +31,7 @@ import { AntSwitch, CustomInputBoxWrapper, CustomSelectField, CustomSelectField1
 import FormateTime from '../../components/FormateTime'
 import { formatFileSize } from '../../components/FormatSize'
 import '../../styles/style.css'
+import { useMyContext } from '../../context/Context'
 
 export const formatDate = (dateString: any) => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' }
@@ -63,7 +64,7 @@ type response = {
     website: string;
     description: string | '';
     teams: string;
-    assigned_to: string;
+    assigned_to:  Array<{ user_details: { email: string; id: string; profile_pic: string | null; } }>;
     contacts: string;
     status: string;
     source: string;
@@ -88,6 +89,7 @@ type response = {
 function LeadDetails(props: any) {
     const { state } = useLocation()
     const navigate = useNavigate();
+    const { userRole , profileId, userId} = useMyContext();
     const [leadDetails, setLeadDetails] = useState<response | null>(null)
     const [usersDetails, setUsersDetails] = useState<Array<{
         user_details: {
@@ -127,6 +129,7 @@ function LeadDetails(props: any) {
         }
         fetchData(`${LeadUrl}/${id}/`, 'GET', null as any, Header)
             .then((res) => {
+                console.log(res,'res')
                 if (!res.error) {
                     setLeadDetails(res?.lead_obj)
                     setUsers(res?.users)
@@ -171,7 +174,7 @@ function LeadDetails(props: any) {
         // fetchData(`${LeadUrl}/comment/${state.leadId}/`, 'PUT', JSON.stringify(data), Header)
         fetchData(`${LeadUrl}/${state.leadId}/`, 'POST', JSON.stringify(data), Header)
             .then((res: any) => {
-                // console.log('Form data:', res);
+                console.log('Form data:', res);
                 if (!res.error) {
                     resetForm()
                     getLeadDetails(state?.leadId)
@@ -204,6 +207,7 @@ function LeadDetails(props: any) {
         navigate('/app/leads/edit-lead', {
             state: {
                 value: {
+                    ... leadDetails,
                     title: leadDetails?.title,
                     first_name: leadDetails?.first_name,
                     last_name: leadDetails?.last_name,
@@ -234,11 +238,12 @@ function LeadDetails(props: any) {
                     close_date: leadDetails?.close_date,
                     organization: leadDetails?.organization,
                     created_from_site: leadDetails?.created_from_site,
-                }, id: state?.leadId, tags, countries, source, status, industries, users, contacts, teams, comments
+                }, id: state?.leadId, tags: state?.tags || [], countries: state?.countries || [], source: state?.source || [], status: state?.status || [], industries: state?.industries|| [], users: state?.users || [], contacts: state?.contacts || [], teams: state?.teams || [], comments: state?.comments || []
             }
         }
         )
     }
+    console.log(state,'state')
 
     const handleAttachmentClick = () => {
         const fileInput = document.createElement('input');
@@ -289,6 +294,12 @@ function LeadDetails(props: any) {
     const id = open ? 'simple-popover' : undefined;
     // console.log(attachedFiles, 'dsfsd', attachmentList, 'aaaaa', attachments);
 
+    const isAssignedToAccount = (leadDetails?.assigned_to ?? []).some(item => item.user_details.id === userId);
+    const isSalesManager = userRole === "SALES MANAGER";
+    const isCreatedByUser = leadDetails?.created_by.id === userId;
+    const showEditButton = !isSalesManager || isAssignedToAccount || isCreatedByUser;
+
+
     const module = 'Leads'
     const crntPage = 'Lead Details'
     const backBtn = 'Back To Leads'
@@ -296,7 +307,7 @@ function LeadDetails(props: any) {
     return (
         <Box sx={{ mt: '60px' }}>
             <div>
-                <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} editHandle={editHandle} />
+                <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} editHandle={showEditButton ? editHandle : null} />
                 <Box sx={{ mt: '110px', p: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Box sx={{ width: '65%' }}>
                         <Box sx={{ borderRadius: '10px', border: '1px solid #80808038', backgroundColor: 'white' }}>
@@ -401,11 +412,15 @@ function LeadDetails(props: any) {
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div className='title2'>SkypeID</div>
+                                    <div className='title2'>Assigned to</div>
                                     <div className='title3'>
-                                        {leadDetails?.skype_ID ? <Link>
-                                            {leadDetails?.skype_ID}
-                                        </Link> : '---'}
+                                    {leadDetails && leadDetails.assigned_to?.length > 0 
+                                        ? leadDetails.assigned_to.map((user, index) => (
+                                            <div key={index}>
+                                                {user.user_details.email || 'No email available'}
+                                            </div>
+                                        ))
+                                        : '----'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>

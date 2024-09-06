@@ -17,6 +17,7 @@ import { Spinner } from '../../components/Spinner';
 import styled from '@emotion/styled';
 import '../../styles/style.css';
 import { EnhancedTableHead } from '../../components/EnchancedTableHead';
+import MyContext, { useMyContext } from '../../context/Context'
 
 interface HeadCell {
     disablePadding: boolean;
@@ -129,6 +130,7 @@ type Item = {
     id: string;
 };
 export default function Accounts() {
+    const { userRole, setUserRole , userId, profileId} = useMyContext();
     const navigate = useNavigate()
 
     const [tab, setTab] = useState('open');
@@ -406,26 +408,30 @@ export default function Accounts() {
             .then((res) => {
                 console.log(res, 'resDetail');
                 if (!res.error) {
-                    const data = res?.account_obj
+                    const accountDetails = res?.account_obj
                     navigate('/app/accounts/edit-account', {
                         state: {
+                            contacts: contacts || [], status: status || [], tags: tags || [], users: users || [], countries: countries || [], teams: teams || [], leads: leads || [],
                             value: {
-                                // email: data?.email,
-                                // name: data?.name,
-                                // role: data?.role,
-                                // phone: data?.phone,
-                                // alternate_phone: data?.alternate_phone,
-                                // address_line: data?.address?.address_line,
-                                // street: data?.address?.street,
-                                // city: data?.address?.city,
-                                // state: data?.address?.state,
-                                // pincode: data?.address?.postcode,
-                                // country: data?.address?.country,
-                                // profile_pic: data?.user_details?.profile_pic,
-                                // has_sales_access: data?.has_sales_access,
-                                // has_marketing_access: data?.has_marketing_access,
-                                // is_organization_admin: data?.is_organization_admin,
-                            }, accountId: id, edit: true
+                                name: accountDetails?.name,
+                                phone: accountDetails?.phone,
+                                email: accountDetails?.email,
+                                billing_address_line: accountDetails?.billing_address_line,
+                                billing_street: accountDetails?.billing_street,
+                                billing_city: accountDetails?.billing_city,
+                                billing_state: accountDetails?.billing_state,
+                                billing_postcode: accountDetails?.billing_postcode,
+                                billing_country: accountDetails?.billing_country,
+                                contact_name: accountDetails?.contact_name,
+                                teams: accountDetails?.teams || [],
+                                assigned_to: accountDetails?.assigned_to || [],
+                                tags: accountDetails?.tags || [],
+                                account_attachment: accountDetails?.account_attachment || null,
+                                website: accountDetails?.website,
+                                status: accountDetails?.status,
+                                lead: accountDetails?.lead?.account_name,
+                                created_by: accountDetails?.created_by,
+                            }, id: id, edit: true
                         }
                     })
                 }
@@ -434,6 +440,7 @@ export default function Accounts() {
     const handleDelete = (id: any) => {
         console.log(id, 's;ected')
     }
+    const showAddButton = userRole !== 'USER' && userRole !== 'SALES REP';
     const modalDialog = 'Are You Sure You want to delete this Account?'
     const modalTitle = 'Delete Account'
 
@@ -496,14 +503,16 @@ export default function Accounts() {
                             <FiChevronRight style={{ height: '15px' }} />
                         </FabRight>
                     </Box>
-                    <Button
-                        variant='contained'
-                        startIcon={<FiPlus className='plus-icon' />}
-                        onClick={onAddAccount}
-                        className={'add-button'}
-                    >
-                        Add Account
-                    </Button>
+                    {showAddButton && (
+                        <Button
+                            variant='contained'
+                            startIcon={<FiPlus className='plus-icon' />}
+                            onClick={onAddAccount}
+                            className={'add-button'}
+                        >
+                            Add Account
+                        </Button>
+            )}
                 </Stack>
             </CustomToolbar>
             <Container sx={{ width: '100%', maxWidth: '100%', minWidth: '100%' }}>
@@ -552,6 +561,7 @@ export default function Accounts() {
                                                     .map((item: any, index: any) => {
                                                         const labelId = `enhanced-table-checkbox-${index}`
                                                         const rowIndex = selectedId.indexOf(item.id);
+                
                                                         return (
                                                             <TableRow
                                                                 tabIndex={-1}
@@ -583,7 +593,7 @@ export default function Accounts() {
                                                                 </TableCell>
                                                                 <TableCell className='tableCell'>
                                                                     <Stack style={{ display: 'flex', flexDirection: 'row', alignItems: "center" }}>
-                                                                        <Avatar src={item?.lead?.created_by?.profile_pic} alt={item?.lead?.created_by?.email} /><Stack sx={{ ml: 1 }}>{item?.lead?.account_name ? item?.lead?.account_name : '---'}</Stack>
+                                                                        <Avatar src={item?.created_by?.profile_pic} alt={item?.created_by?.email} /><Stack sx={{ ml: 1 }}>{item?.created_by?.email ? item?.created_by?.email : '---'}</Stack>
                                                                     </Stack>
                                                                 </TableCell>
                                                                 <TableCell className='tableCell'>
@@ -593,17 +603,20 @@ export default function Accounts() {
                                                                     {item?.tags?.length ? item?.tags.map((tag: any, i: any) => <Stack sx={{ mr: 0.5 }}> Tags(tag)</Stack>) : '---'}
                                                                 </TableCell>
                                                                 <TableCell className='tableCell'>
-                                                                    {/* <IconButton>
+                                                                {(userRole === 'ADMIN' || 
+                                                                    item.created_by.id === userId || 
+                                                                    item.assigned_to.some((assignee: any) => assignee.id === profileId)) && (
                                                                         <FaEdit
-                                                                            onClick={() => EditItem(item?.id)}
-                                                                            style={{ fill: '#1A3353', cursor: 'pointer', width: '18px' }}
+                                                                            style={{ cursor: 'pointer', marginRight: '10px' }}
+                                                                            onClick={() => EditItem(item.id)}
                                                                         />
-                                                                    </IconButton> */}
-                                                                    <IconButton>
+                                                                    )}
+                                                                    {(userRole === 'ADMIN' || item.created_by.id === userId) && (
                                                                         <FaTrashAlt
-                                                                            onClick={() => deleteRow(item?.id)}
-                                                                            style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }} />
-                                                                    </IconButton>
+                                                                            style={{ cursor: 'pointer' }}
+                                                                            onClick={() => deleteRow(item.id)}
+                                                                        />
+                                                                    )}
                                                                 </TableCell>
                                                             </TableRow>
                                                         )
@@ -671,17 +684,22 @@ export default function Accounts() {
                                                                 {item?.tags?.length ? item?.tags.map((tag: any, i: any) => <Stack sx={{ mr: 0.5 }}> Tags(tag)</Stack>) : '---'}
                                                             </TableCell>
                                                             <TableCell className='tableCell'>
-                                                                {/* <IconButton>
+                                                            {(userRole === 'ADMIN' || 
+                                                                item.created_by.id === userId || 
+                                                                item.assigned_to.some((assignee: any) => assignee.id === profileId)) && (
                                                                         <FaEdit
-                                                                            onClick={() => EditItem(item?.id)}
-                                                                            style={{ fill: '#1A3353', cursor: 'pointer', width: '18px' }}
+                                                                            style={{ cursor: 'pointer', marginRight: '10px' }}
+                                                                            onClick={() => EditItem(item.id)}
                                                                         />
-                                                                    </IconButton> */}
-                                                                <IconButton>
-                                                                    <FaTrashAlt
-                                                                        onClick={() => deleteRow(item?.id)}
-                                                                        style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }} />
-                                                                </IconButton>
+                                                                    )}
+                                                                {userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && item.created_by.id === userId) ? (
+                                                                        <IconButton>
+                                                                            <FaTrashAlt
+                                                                            onClick={() => deleteRow(item.id)}
+                                                                            style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }}
+                                                                            />
+                                                                        </IconButton>
+                                                                        ) : null}
                                                             </TableCell>
                                                         </TableRow>
                                                     )

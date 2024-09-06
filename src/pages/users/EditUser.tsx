@@ -28,6 +28,7 @@ import { AntSwitch, RequiredTextField } from '../../styles/CssStyled'
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown'
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp'
 import '../../styles/style.css'
+import MyContext, { useMyContext } from '../../context/Context'
 
 type FormErrors = {
     email?: string[];
@@ -72,7 +73,7 @@ const roleOptions = [
 export function EditUser() {
     const { state } = useLocation()
     const navigate = useNavigate()
-
+    const { userRole, setUserRole } = useMyContext();
     const [reset, setReset] = useState(false)
     const [error, setError] = useState(false)
     const [errors, setErrors] = useState<FormErrors>({});
@@ -286,6 +287,8 @@ export function EditUser() {
                                                 />
                                             </div>
                                             <div className='fieldSubContainer'>
+                                            {userRole === 'ADMIN' && (
+                                                <>
                                                 <div className='fieldTitle'>Role</div>
                                                 <FormControl sx={{ width: '70%' }}>
                                                 <Select
@@ -309,6 +312,8 @@ export function EditUser() {
                 ))}
             </Select>
         </FormControl>
+        </>
+        )}
                                             </div>
                                         </div>
                                         <div className='fieldContainer2'>

@@ -37,8 +37,7 @@ import { EditCase } from '../pages/cases/EditCase';
 import { CaseDetails } from '../pages/cases/CaseDetails';
 import logo from '../assets/images/auth/img_logo.png';
 import { StyledListItemButton, StyledListItemText } from '../styles/CssStyled';
-// import MyContext, { MyContextData } from '../context/Context';
-import MyContext from '../context/Context';
+import MyContext, { useMyContext } from '../context/Context';
 
 // declare global {
 //     interface Window {
@@ -54,7 +53,10 @@ export default function Sidebar(props: any) {
     const [headerWidth, setHeaderWidth] = useState(drawerWidth)
     const [userDetail, setUserDetail] = useState('')
     const [organizationModal, setOrganizationModal] = useState(false)
+    // const [navList, setNavList] = useState<string[]>(['deals', 'contacts', 'accounts', 'users']);
     const organizationModalClose = () => { setOrganizationModal(false) }
+    const { userRole, setUserRole, setUserId, userId, setProfileId, profileId } = useMyContext();
+    console.log(userRole)
 
     useEffect(() => {
         toggleScreen()
@@ -77,11 +79,11 @@ export default function Sidebar(props: any) {
     const toggleScreen = () => {
         // console.log(location.pathname.split('/'), 'll')
         if (location.pathname.split('/')[1] === '' || location.pathname.split('/')[1] === undefined || location.pathname.split('/')[2] === 'leads') {
-            setScreen('leads')
+            setScreen('deals')
         } else if (location.pathname.split('/')[2] === 'contacts') {
             setScreen('contacts')
         } else if (location.pathname.split('/')[2] === 'opportunities') {
-            setScreen('opportunities')
+            setScreen('deals')
         } else if (location.pathname.split('/')[2] === 'accounts') {
             setScreen('accounts')
         } else if (location.pathname.split('/')[2] === 'companies') {
@@ -93,16 +95,26 @@ export default function Sidebar(props: any) {
         }
     }
 
-    // useEffect(() => {
-    //     userProfile()
-    // }, [])
+    useEffect(() => {
+        userProfile()
+    }, [])
+
+    const Header = {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: localStorage.getItem('Token'),
+        org: localStorage.getItem('org')
+      }
 
     const userProfile = () => {
-        fetchData(`${ProfileUrl}/`, 'GET', null as any, Header1)
+        fetchData(`${ProfileUrl}/`, 'GET', null as any, Header)
             .then((res: any) => {
-                // console.log(res, 'user')
+                console.log(res, 'user')
                 if (res?.user_obj) {
                     setUserDetail(res?.user_obj)
+                    setUserRole(res?.user_obj.role)
+                    setUserId(res?.user_obj.user_details.id)
+                    setProfileId(res?.user_obj.id)
                 }
             })
             .catch((error) => {
@@ -110,10 +122,11 @@ export default function Sidebar(props: any) {
             })
     }
 
-    const navList = ['leads', 'contacts', 'opportunities', 'accounts', 'companies', 'users', 'cases']
+
+    const navList = userRole === 'USER' ? ['contacts', 'users'] : ['deals', 'contacts', 'accounts', 'users'];
     const navIcons = (text: any, screen: any): React.ReactNode => {
         switch (text) {
-            case 'leads':
+            case 'deals':
                 return screen === 'leads' ? <FaUsers fill='#3e79f7' /> : <FaUsers />
             case 'contacts':
                 return screen === 'contacts' ? <FaAddressBook fill='#3e79f7' /> : <FaAddressBook />
@@ -244,8 +257,12 @@ export default function Sidebar(props: any) {
                                     <StyledListItemButton
                                         sx={{ pt: '6px', pb: '6px' }}
                                         onClick={() => {
-                                            navigate(`/app/${text}`)
-                                            setScreen(text)
+                                            if (text === "deals") {
+                                                navigate(`/app/leads`);
+                                            } else {
+                                                navigate(`/app/${text}`);
+                                            }
+                                            setScreen(text);
                                         }}
                                         selected={screen === text}
                                     >
@@ -260,7 +277,7 @@ export default function Sidebar(props: any) {
                     </Box>
 
                 </Drawer>
-                <MyContext.Provider value={context}>
+                {/* <MyContext.Provider value={context}> */}
 
                     {/* <Box sx={{ width: drawerWidth === 60 ? '1380px' : '1240px', ml: drawerWidth === 60 ? '60px' : '200px', overflowX: 'hidden' }}> */}
                     <Box sx={{ width: 'auto', ml: drawerWidth === 60 ? '60px' : '200px', overflowX: 'hidden' }}>
@@ -305,7 +322,7 @@ export default function Sidebar(props: any) {
                             <Route path='/app/cases/case-details' element={<CaseDetails />} />
                         </Routes>
                     </Box>
-                </MyContext.Provider>
+                {/* </MyContext.Provider> */}
                 <OrganizationModal
                     open={organizationModal}
                     handleClose={organizationModalClose}

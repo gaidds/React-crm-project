@@ -5,7 +5,8 @@ import { Home } from './pages/home/Home';
 import PasswordResetPage from './pages/auth/PasswordResetPage';
 import ForgotPassword from './pages/forgot-password/ForgotPassword'; // Import the ForgotPassword component
 import ResetForgotPassword from './pages/forgot-password/ResetForgotPassword';
-import RegistrationPage from './pages/auth/RegistrationPage';
+import RegistrationPage from './pages/auth/RegistrationPage';import EditContacts from './pages/contacts/EditContacts';
+
 
 function App() {
   return (
@@ -29,6 +30,8 @@ function App() {
             element={<ResetForgotPassword />}
           />
           <Route path="/auth/register" element={<RegistrationPage />} />
+          <Route path="/app/contacts/edit-contact/:contactId" element={<EditContacts />} />
+
         </Routes>
       </Router>
     </>

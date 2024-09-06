@@ -15,6 +15,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { AntSwitch } from '../../styles/CssStyled'
 import { ContactUrl } from '../../services/ApiUrls'
 import { fetchData } from '../../components/FetchData'
+import MyContext, { useMyContext } from '../../context/Context'
 
 type response = {
     created_by: string;
@@ -61,6 +62,7 @@ export default function ContactDetails() {
     const [contactDetails, setContactDetails] = useState<response | null>(null)
     const [addressDetails, setAddressDetails] = useState<response | null>(null)
     const [org, setOrg] = useState<response | null>(null)
+    const { userRole,  userId} = useMyContext();
 
     useEffect(() => {
         getContactDetail(state.contactId.id)
@@ -144,12 +146,18 @@ export default function ContactDetails() {
     const module = 'Contacts'
     const crntPage = 'Contact Detail'
     const backBtn = 'Back To Contacts'
+    console.log(addressDetails, 'address')
     // console.log(state, 'contact');
+    interface AssignedToItem {
+        id: string;
+    }
 
+
+    const showEditButton = userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && contactDetails?.created_by === userId)
     return (
         <Box sx={{ mt: '60px' }}>
             <div>
-                <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} editHandle={editHandle} />
+                <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} editHandle={showEditButton ? editHandle : null} />
                 <Box sx={{ mt: '110px', p: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Box sx={{ width: '65%' }}>
                         <Card sx={{ borderRadius: '7px' }}>
@@ -292,7 +300,7 @@ export default function ContactDetails() {
                                 </div>
                                 <div style={{ padding: '20px', marginTop: '15px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <div style={{ width: '32%' }}>
-                                        <div className='title2'>Pincode</div>
+                                        <div className='title2'>Postcode</div>
                                         <div className='title3'>
                                             {addressDetails?.postcode || '----'}
                                         </div>

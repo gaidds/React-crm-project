@@ -14,6 +14,7 @@ import { FaAd, FaEdit, FaTrashAlt } from 'react-icons/fa';
 import { fetchData } from '../../components/FetchData';
 import { UsersUrl, UserUrl } from '../../services/ApiUrls';
 import { CustomTab, CustomToolbar, FabLeft, FabRight } from '../../styles/CssStyled';
+import MyContext, { useMyContext } from '../../context/Context'
 
 interface HeadCell {
     disablePadding: boolean;
@@ -87,6 +88,7 @@ const roleDisplayMap: { [key: string]: string } = {
 
 export default function Users() {
     const navigate = useNavigate()
+    const { userRole, userId } = useMyContext();
     const [tab, setTab] = useState('active');
     const [loading, setLoading] = useState(true);
     const [order, setOrder] = useState('asc')
@@ -428,6 +430,7 @@ export default function Users() {
     const handleDelete = (id: any) => {
         console.log(id, 's;ected')
     }
+    const showAddButton = userRole == 'ADMIN' ;
     const modalDialog = 'Are You Sure You want to delete this User?'
     const modalTitle = 'Delete User'
 
@@ -488,14 +491,16 @@ export default function Users() {
                             <FiChevronRight style={{ height: '15px' }} />
                         </FabRight>
                     </Box>
-                    <Button
-                        variant='contained'
-                        startIcon={<FiPlus className='plus-icon' />}
-                        onClick={onAddUser}
-                        className={'add-button'}
-                    >
-                        Add User
-                    </Button>
+                    {showAddButton && (
+                        <Button
+                            variant='contained'
+                            startIcon={<FiPlus className='plus-icon' />}
+                            onClick={onAddUser}
+                            className={'add-button'}
+                        >
+                            Add User
+                        </Button>
+            )}
                 </Stack>
             </CustomToolbar>
             <Container sx={{ width: '100%', maxWidth: '100%', minWidth: '100%' }}>
@@ -613,7 +618,8 @@ export default function Users() {
                                                             {item.user_type ? item.user_type : '---'}
                                                         </TableCell> */}
                                                                 <TableCell className='tableCell'>
-                                                                    <IconButton>
+                                                                    {(userRole === 'ADMIN' || item?.user_details?.id === userId) && (
+                                                                        <IconButton>
                                                                         <FaEdit
                                                                             onClick={() => EditItem(item.id)}
                                                                             style={{ fill: '#1A3353', cursor: 'pointer', width: '18px' }}
@@ -623,10 +629,12 @@ export default function Users() {
                                                                     style={{ fill: '#1A3353', cursor: 'pointer' }}
                                                                 /> */}
                                                                     </IconButton>
-                                                                    <IconButton>
-                                                                        <FaTrashAlt onClick={() => deleteRow(item?.id)} style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }} />
-                                                                        {/* <FaAd onClick={() => deleteItemBox(item)} style={{ fill: '#1A3353', cursor: 'pointer' }} /> */}
-                                                                    </IconButton>
+                                                                    )}
+                                                                    {userRole === 'ADMIN' && (
+                                                                        <IconButton>
+                                                                        <FaTrashAlt onClick={() => deleteRow(item.id)} style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }} />
+                                                                        </IconButton>
+                                                                    )}
                                                                 </TableCell>
                                                             </TableRow>
                                                         )

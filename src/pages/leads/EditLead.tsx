@@ -18,18 +18,20 @@ import {
     Tooltip,
     Divider,
     Select,
-    Button
+    Button,
+    SelectChangeEvent
 } from '@mui/material'
 import { useQuill } from 'react-quilljs';
 import 'quill/dist/quill.snow.css';
 import { LeadUrl } from '../../services/ApiUrls'
-import { fetchData, Header } from '../../components/FetchData'
+import { fetchData } from '../../components/FetchData'
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { FaArrowDown, FaCheckCircle, FaFileUpload, FaPalette, FaPercent, FaPlus, FaTimes, FaTimesCircle, FaUpload } from 'react-icons/fa'
 import { CustomPopupIcon, CustomSelectField, RequiredTextField, StyledSelect } from '../../styles/CssStyled'
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown'
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp'
 import '../../styles/style.css'
+import MyContext, { useMyContext } from '../../context/Context'
 
 // const useStyles = makeStyles({
 //   btnIcon: {
@@ -131,6 +133,7 @@ interface FormData {
 export function EditLead() {
     const navigate = useNavigate()
     const location = useLocation();
+    const { userRole , profileId, userId} = useMyContext();
     const { state } = location;
     const { quill, quillRef } = useQuill();
     // const initialContentRef = useRef(null);
@@ -256,6 +259,16 @@ export function EditLead() {
     //     val.lead_attachment = event.target.files[0]
     //   }
     // }
+    const handleStatusChange = (event: SelectChangeEvent<string>) => {
+        // Extract the selected value
+        const selectedValue = event.target.value;
+    
+        // Update the formData state
+        setFormData({ ...formData, status: selectedValue });
+    };
+    
+    
+
 
     const handleChange2 = (title: any, val: any) => {
         // const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -336,6 +349,13 @@ export function EditLead() {
             industry: formData.industry,
             skype_ID: formData.skype_ID
         }
+
+        const Header = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('Token'),
+            org: localStorage.getItem('org')
+          }
         // console.log(data, 'edit')
         fetchData(`${LeadUrl}/${state?.id}/`, 'PUT', JSON.stringify(data), Header)
             .then((res: any) => {
@@ -432,15 +452,18 @@ export function EditLead() {
     //     }
     // };
     const backbtnHandle = () => {
-        navigate('/app/leads/lead-details', { state: { leadId: state?.id, detail: true } })
-        // navigate('/app/leads')
+        // navigate('/app/leads/lead-details', { state: { leadId: state?.id, detail: true } })
+        navigate('/app/leads')
     }
 
     const module = 'Leads'
     const crntPage = 'Edit Lead'
-    const backBtn = 'Back To Lead Details'
+    // const backBtn = 'Back To Lead Details'
+    const backBtn = 'Back To Leads'
+    console.log(formData, 'leadsform')
 
-    // console.log(formData, 'leadsform')
+
+    console.log(state, 'state')
     return (
         <Box sx={{ mt: '60px' }}>
             <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} onCancel={onCancel} onSubmit={handleSubmit} />
@@ -551,6 +574,8 @@ export function EditLead() {
                                         </div>
                                         <div className='fieldContainer2'>
                                             <div className='fieldSubContainer'>
+                                            {(userRole === 'ADMIN' || (state?.value?.created_by?.id === userId)) && (
+                                                    <>
                                                 <div className='fieldTitle'>Assign To</div>
                                                 <FormControl error={!!errors?.assigned_to?.[0]} sx={{ width: '70%' }}>
                                                     <Autocomplete
@@ -561,7 +586,7 @@ export function EditLead() {
                                                         limitTags={2}
                                                         options={state?.users || []}
                                                         // options={state.contacts ? state.contacts.map((option: any) => option) : ['']}
-                                                        getOptionLabel={(option: any) => state?.users ? option?.user_details?.email : option}
+                                                        getOptionLabel={(option: any) => state?.users ?  option?.user__email : option}
                                                         // getOptionLabel={(option: any) => option?.user__email}
                                                         onChange={(e: any, value: any) => handleChange2('assigned_to', value)}
                                                         size='small'
@@ -576,7 +601,7 @@ export function EditLead() {
 
                                                                     }}
                                                                     variant='outlined'
-                                                                    label={state?.users ? option?.user_details?.email : option}
+                                                                    label={state?.users ? option?.user__email : option}
                                                                     {...getTagProps({ index })}
                                                                 />
                                                             ))
@@ -600,6 +625,8 @@ export function EditLead() {
                                                     />
                                                     <FormHelperText>{errors?.assigned_to?.[0] || ''}</FormHelperText>
                                                 </FormControl>
+                                                </>
+                                                )}
                                             </div>
                                             <div className='fieldSubContainer'>
                                                 <div className='fieldTitle'>Industry</div>
@@ -669,13 +696,13 @@ export function EditLead() {
                                                             </div>
                                                         )}
                                                         className={'select'}
-                                                        onChange={handleChange}
+                                                        onChange={handleStatusChange}
                                                         error={!!errors?.status?.[0]}
                                                     >
-                                                        {state?.status?.length && state?.status.map((option: any) => (
-                                                            <MenuItem key={option[0]} value={option[1]}>
-                                                                {option[1]}
-                                                            </MenuItem>
+                                                        {state?.status?.length && state.status.map(([value, label]: [string, string]) => (
+                    <MenuItem key={value} value={value}>
+                        {label}
+                    </MenuItem>
                                                         ))}
                                                     </Select>
                                                     <FormHelperText>{errors?.status?.[0] ? errors?.status[0] : ''}</FormHelperText>

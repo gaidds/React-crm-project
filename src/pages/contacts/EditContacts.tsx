@@ -61,7 +61,13 @@ type FormErrors = {
 function EditContact() {
   const navigate = useNavigate()
   const location = useLocation();
-  const { state } = location;
+  const { countries, contact } = location.state || {};
+//   if (!contact) {
+//     console.error('Contact data is missing');
+//     return <div>Loading...</div>;
+// }
+//const description = contact?.description || 'No description available';  
+const { state } = location;
   const { quill, quillRef } = useQuill();
   // const initialContentRef = useRef(null);
   const initialContentRef = useRef<string | null>(null);
@@ -71,31 +77,32 @@ function EditContact() {
 
   const [reset, setReset] = useState(false)
   const [error, setError] = useState(false)
-  const [formData, setFormData] = useState({
-    salutation: '',
-    first_name: '',
-    last_name: '',
-    primary_email: '',
-    secondary_email: '',
-    mobile_number: '',
-    secondary_number: '',
-    date_of_birth: '',
-    organization: '',
-    title: '',
-    language: '',
-    do_not_call: false,
-    department: '',
-    address_line: '',
-    street: '',
-    city: '',
-    state: '',
-    country: '',
-    postcode: '',
-    description: '',
-    linked_in_url: '',
-    facebook_url: '',
-    twitter_username: ''
-  })
+  const [formData, setFormData] = useState(state.value || {});
+  //  salutation: '',
+   // first_name: '',
+    //last_name: '',
+    //primary_email: '',
+    //secondary_email: '',
+    //mobile_number: '',
+    //secondary_number: '',
+    //date_of_birth: '',
+    //organization: '',
+    //title: '',
+    //language: '',
+    //do_not_call: false,
+    //department: '',
+    //address_line: '',
+    //street: '',
+    //city: '',
+    //state: '',
+    //country: '',
+    //postcode: '',
+    //description: '', // Set this to an empty string initially
+    //linked_in_url: '',
+    //facebook_url: '',
+    //twitter_username: ''
+  //});
+  
   const [errors, setErrors] = useState<FormErrors>({});
   const [countrySelectOpen, setCountrySelectOpen] = useState(false)
 
@@ -120,28 +127,32 @@ function EditContact() {
   }, [quill, hasInitialFocus]);
 
   useEffect(() => {
-    setFormData(state?.value)
-  }, [state?.id])
+    if (state) {
+      setFormData(state?.value);
+    }
+  }, [state]);
+  
 
   useEffect(() => {
     if (reset) {
       setFormData(state?.value)
-      if (quill && initialContentRef.current !== null) {
-        quill.clipboard.dangerouslyPasteHTML(initialContentRef.current);
+      if (quill) {
+        quill.clipboard.dangerouslyPasteHTML(state?.value?.description || '');
       }
     }
     return () => {
-      setReset(false)
-    }
-  }, [reset, quill, state?.value])
+      setReset(false);
+    };
+  }, [reset, quill, state?.value]);
+  
 
   useEffect(() => {
-    if (quill && initialContentRef.current === null) {
-      // Save the initial state (HTML content) of the Quill editor only if not already saved
+    if (quill && initialContentRef.current === null && formData.description) {
       initialContentRef.current = formData.description;
       quill.clipboard.dangerouslyPasteHTML(formData.description);
     }
-  }, [quill, formData.description]);
+  }, [quill]);
+  
 
   const handleChange = (e: any) => {
     const { name, value, files, type, checked } = e.target;
@@ -152,7 +163,6 @@ function EditContact() {
       setFormData({ ...formData, [name]: value });
     }
   };
-
   // const emptyDescription = () => {
   //   // Reset the Quill editor to its initial state
   //   setFormData({ ...formData, description: '' })
@@ -169,9 +179,11 @@ function EditContact() {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
+    // Update formData's description field with the Quill editor's current content
+    setFormData({ ...formData, description: quill.root.innerHTML });
     submitForm();
   };
-
+  
   const isValidEmail = (email: any) => {
     return /^\S+@\S+\.\S+$/.test(email);
   };
@@ -181,11 +193,18 @@ function EditContact() {
   };
 
   const submitForm = () => {
-    const Header = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: localStorage.getItem('Token'),
-      org: localStorage.getItem('org')
+    let validationErrors = {};
+    if (!isValidEmail(formData.primary_email)) {
+      validationErrors = { ...validationErrors, primary_email: ['Invalid email format.'] };
+    }
+  
+    if (!isValidPhoneNumber(formData.mobile_number)) {
+      validationErrors = { ...validationErrors, mobile_number: ['Invalid phone number format.'] };
+    }
+  
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
     }
     // console.log('Form data:', data);
     const data = {
@@ -213,35 +232,32 @@ function EditContact() {
     }
     // console.log(data, 'edit')
     fetchData(`${ContactUrl}/${state?.id}/`, 'PUT', JSON.stringify(data), Header)
-      .then((res: any) => {
-        console.log('Form data:', res);
-        if (!res.error) {
-          backbtnHandle()
-          // setResponceError(data.error)
-          // navigate('/contacts')
-          // resetForm()
-        }
-        if (res.error) {
-          setError(true)
-          setErrors(res?.errors?.contact_errors)
-        }
-      })
-      .catch(() => {
-      })
-  };
+    .then((res) => {
+      if (!res.error) {
+        backbtnHandle();
+      } else {
+        setErrors(res?.errors?.contact_errors);
+      }
+    })
+    .catch(() => {
+      console.error('Error submitting form');
+    });
+};
 
   const backbtnHandle = () => {
-    navigate('/app/contacts/contact-details', { state: { contactId: { id: state?.id }, detail: true } })
+    // navigate('/app/contacts/contact-details', { state: { contactId: { id: state?.id }, detail: true } })
+     navigate('/app/contacts')
   }
   const module = 'Contacts'
   const crntPage = 'Edit Contact'
-  const backBtn = 'Back to Contact Detail'
+  // const backBtn = 'Back to Contact Detail'
+  const backBtn = 'Back to Contacts'
 
   const onCancel = () => {
     setReset(true)
     // resetForm()
   }
-  // console.log(formData, 'editform')
+  console.log(state, 'state')
   return (
     <Box sx={{ mt: '60px' }}>
       <CustomAppBar backbtnHandle={backbtnHandle} module={module} crntPage={crntPage} backBtn={backBtn} onCancel={onCancel} onSubmit={handleSubmit} />
@@ -552,7 +568,7 @@ function EditContact() {
                             ))}
 
                           </Select>
-                          <FormHelperText>{errors?.country?.[0] ? errors?.country[0] : ''}</FormHelperText>
+                          
                         </FormControl>
                       </div>
                     </div>

@@ -15,6 +15,7 @@ import { DeleteModal } from '../../components/DeleteModal';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { EnhancedTableHead } from '../../components/EnchancedTableHead';
+import MyContext, { useMyContext } from '../../context/Context'
 
 
 interface HeadCell {
@@ -85,6 +86,7 @@ type Item = {
 };
 
 export default function Opportunities(props: any) {
+  const { userRole, setUserRole , userId} = useMyContext();
   const navigate = useNavigate()
   const [tab, setTab] = useState('open');
   const [loading, setLoading] = useState(true);
@@ -292,72 +294,86 @@ export default function Opportunities(props: any) {
   };
   const modalDialog = 'Are You Sure You want to delete selected Opportunity?'
   const modalTitle = 'Delete Opportunity'
+  const showAddButton = userRole !== 'USER' && userRole !== 'SALES REP';
 
   const recordsList = [[10, '10 Records per page'], [20, '20 Records per page'], [30, '30 Records per page'], [40, '40 Records per page'], [50, '50 Records per page']]
   const tag = ['account', 'leading', 'account', 'leading', 'account', 'leading', 'account', 'account', 'leading', 'account', 'leading', 'account', 'leading', 'leading', 'account', 'account', 'leading', 'account', 'leading', 'account', 'leading', 'account', 'leading', 'account', 'leading', 'account', 'leading']
   return (
     <Box sx={{ mt: '60px' }}>
-      <CustomToolbar sx={{ flexDirection: 'row-reverse' }}>
-        {/* <Tabs defaultValue={tab} onChange={handleChangeTab} sx={{ mt: '26px' }}>
-          <CustomTab value="open" label="Open"
-            sx={{
-              backgroundColor: tab === 'open' ? '#F0F7FF' : '#284871',
-              color: tab === 'open' ? '#3f51b5' : 'white',
-            }} />
-          <CustomTab value="closed" label="Closed"
-            sx={{
-              backgroundColor: tab === 'closed' ? '#F0F7FF' : '#284871',
-              color: tab === 'closed' ? '#3f51b5' : 'white',
-              ml: '5px',
-            }}
-          />
-        </Tabs> */}
-
-        <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-          <Select
-            value={recordsPerPage}
-            onChange={(e: any) => handleRecordsPerPage(e)}
-            open={selectOpen}
-            onOpen={() => setSelectOpen(true)}
-            onClose={() => setSelectOpen(false)}
-            className={`custom-select`}
-            onClick={() => setSelectOpen(!selectOpen)}
-            IconComponent={() => (
-              <div onClick={() => setSelectOpen(!selectOpen)} className="custom-select-icon">
-                {selectOpen ? <FiChevronUp style={{ marginTop: '12px' }} /> : <FiChevronDown style={{ marginTop: '12px' }} />}
-              </div>
-            )}
-            sx={{
-              '& .MuiSelect-select': { overflow: 'visible !important' }
-            }}
-          >
-            {recordsList?.length && recordsList.map((item: any, i: any) => (
-              <MenuItem key={i} value={item[0]}>
-                {item[1]}
-              </MenuItem>
-            ))}
-          </Select>
-          <Box sx={{ borderRadius: '7px', backgroundColor: 'white', height: '40px', minHeight: '40px', maxHeight: '40px', display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 1, p: '0px' }}>
-            <FabLeft onClick={handlePreviousPage} disabled={currentPage === 1}>
-              <FiChevronLeft style={{ height: '15px' }} />
-            </FabLeft>
-            <Typography sx={{ mt: 0, textTransform: 'lowercase', fontSize: '15px', color: '#1A3353', textAlign: 'center' }}>
-              {currentPage} to {totalPages}
-              {/* {renderPageNumbers()} */}
-            </Typography>
-            <FabRight onClick={handleNextPage} disabled={currentPage === totalPages}>
-              <FiChevronRight style={{ height: '15px' }} />
-            </FabRight>
-          </Box>
-          <Button
+      <CustomToolbar sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        
+        {/* "Leads" Button on the left */}
+        
+        <Button
             variant='contained'
-            startIcon={<FiPlus className='plus-icon' />}
-            onClick={onAddOpportunity}
+            onClick={() => navigate('/app/leads')}
             className={'add-button'}
           >
-            Add Opportunity
-          </Button>
-        </Stack>
+         Back to leads
+        </Button>
+
+          {/* <Tabs defaultValue={tab} onChange={handleChangeTab} sx={{ mt: '26px' }}>
+            <CustomTab value="open" label="Open"
+              sx={{
+                backgroundColor: tab === 'open' ? '#F0F7FF' : '#284871',
+                color: tab === 'open' ? '#3f51b5' : 'white',
+              }} />
+            <CustomTab value="closed" label="Closed"
+              sx={{
+                backgroundColor: tab === 'closed' ? '#F0F7FF' : '#284871',
+                color: tab === 'closed' ? '#3f51b5' : 'white',
+                ml: '5px',
+              }}
+            />
+          </Tabs> */}
+
+          <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+            <Select
+              value={recordsPerPage}
+              onChange={(e: any) => handleRecordsPerPage(e)}
+              open={selectOpen}
+              onOpen={() => setSelectOpen(true)}
+              onClose={() => setSelectOpen(false)}
+              className={`custom-select`}
+              onClick={() => setSelectOpen(!selectOpen)}
+              IconComponent={() => (
+                <div onClick={() => setSelectOpen(!selectOpen)} className="custom-select-icon">
+                  {selectOpen ? <FiChevronUp style={{ marginTop: '12px' }} /> : <FiChevronDown style={{ marginTop: '12px' }} />}
+                </div>
+              )}
+              sx={{
+                '& .MuiSelect-select': { overflow: 'visible !important' }
+              }}
+            >
+              {recordsList?.length && recordsList.map((item: any, i: any) => (
+                <MenuItem key={i} value={item[0]}>
+                  {item[1]}
+                </MenuItem>
+              ))}
+            </Select>
+            <Box sx={{ borderRadius: '7px', backgroundColor: 'white', height: '40px', minHeight: '40px', maxHeight: '40px', display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 1, p: '0px' }}>
+              <FabLeft onClick={handlePreviousPage} disabled={currentPage === 1}>
+                <FiChevronLeft style={{ height: '15px' }} />
+              </FabLeft>
+              <Typography sx={{ mt: 0, textTransform: 'lowercase', fontSize: '15px', color: '#1A3353', textAlign: 'center' }}>
+                {currentPage} to {totalPages}
+                {/* {renderPageNumbers()} */}
+              </Typography>
+              <FabRight onClick={handleNextPage} disabled={currentPage === totalPages}>
+                <FiChevronRight style={{ height: '15px' }} />
+              </FabRight>
+            </Box>
+            {showAddButton && (
+                        <Button
+                            variant='contained'
+                            startIcon={<FiPlus className='plus-icon' />}
+                            onClick={onAddOpportunity}
+                            className={'add-button'}
+                        >
+                            Add Opportunity
+                        </Button>
+            )}
+          </Stack>
       </CustomToolbar>
       <Container sx={{ width: '100%', maxWidth: '100%', minWidth: '100%' }}>
         <Box sx={{ width: '100%', minWidth: '100%', m: '15px 0px 0px 0px' }}>
@@ -459,11 +475,14 @@ export default function Opportunities(props: any) {
                                                                             style={{ fill: '#1A3353', cursor: 'pointer', width: '18px' }}
                                                                         />
                                                                     </IconButton> */}
-                              <IconButton>
-                                <FaTrashAlt
-                                  onClick={() => deleteRow(item?.id)}
-                                  style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }} />
-                              </IconButton>
+                              {userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && item.created_by.id === userId) ? (
+                                <IconButton>
+                                    <FaTrashAlt
+                                    onClick={() => deleteRow(item.id)}
+                                    style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }}
+                                    />
+                                </IconButton>
+                              ) : null}
                             </TableCell>
                           </TableRow>
                         )

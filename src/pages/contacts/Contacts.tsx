@@ -9,12 +9,12 @@ import { fetchData, Header } from '../../components/FetchData';
 import { ContactUrl } from '../../services/ApiUrls';
 import { AntSwitch, CustomTab, CustomToolbar, FabLeft, FabRight, StyledTableCell, StyledTableRow } from '../../styles/CssStyled';
 import { useNavigate } from 'react-router-dom';
-import { FaTrashAlt } from 'react-icons/fa';
+import { FaTrashAlt, FaEdit} from 'react-icons/fa';
 import { DeleteModal } from '../../components/DeleteModal';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { EnhancedTableHead } from '../../components/EnchancedTableHead';
-import { useMyContext } from '../../context/Context';
+import MyContext, { useMyContext } from '../../context/Context'
 
 interface HeadCell {
     disablePadding: boolean;
@@ -58,12 +58,12 @@ const headCells: readonly HeadCell[] = [
         id: '',
         numeric: true,
         disablePadding: false,
-        label: 'Action'
+        label: 'Actions'
     }
 ]
 
 export default function Contacts() {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     // const context = useMyContext();
 
     const [value, setValue] = useState('Open');
@@ -85,6 +85,8 @@ export default function Contacts() {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [recordsPerPage, setRecordsPerPage] = useState<number>(10);
     const [totalPages, setTotalPages] = useState<number>(0);
+    const { userRole, setUserRole, userId} = useMyContext();
+    console.log(userId, 'Contacts user id')
 
     // useEffect(() => {
     //     getContacts()
@@ -93,6 +95,7 @@ export default function Contacts() {
     useEffect(() => {
         getContacts();
     }, [currentPage, recordsPerPage]);
+
 
     // const handleChangeTab = (e: SyntheticEvent, val: any) => {
     //     setValue(val)
@@ -151,7 +154,58 @@ export default function Contacts() {
         setOrder(isAsc ? 'desc' : 'asc')
         setOrderBy(property)
     }
+    const getContactDetail = (id: any) => {
+        const Header = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('Token'),
+            org: localStorage.getItem('org')
+          }
+        fetchData(`${ContactUrl}/${id}/`, 'GET', null as any, Header)
+            .then((res) => {
+                // console.log(res, 'res');
+                if (!res.error) {
+                    const contactDetails = res?.contact_obj
+                    const addressDetails = res?.address_obj
+                    navigate('/app/contacts/edit-contact/', { 
+                        state: 
+                        { 
+                            countries,
+                            id: id,
+                            value: {
+                                salutation: contactDetails?.salutation,
+                                first_name: contactDetails?.first_name,
+                                last_name: contactDetails?.last_name,
+                                primary_email: contactDetails?.primary_email,
+                                secondary_email: contactDetails?.secondary_email,
+                                mobile_number: contactDetails?.mobile_number,
+                                secondary_number: contactDetails?.secondary_number,
+                                date_of_birth: contactDetails?.date_of_birth,
+                                organization: contactDetails?.organization,
+                                title: contactDetails?.title,
+                                language: contactDetails?.language,
+                                do_not_call: contactDetails?.do_not_call,
+                                department: contactDetails?.department,
+                                address: addressDetails?.address_line,
+                                street: addressDetails?.street,
+                                city: addressDetails?.city,
+                                state: addressDetails?.state,
+                                country: addressDetails?.country,
+                                postcode: addressDetails?.postcode,
+                                description: contactDetails?.description,
+                                linked_in_url: contactDetails?.linked_in_url,
+                                facebook_url: contactDetails?.facebook_url,
+                                twitter_username: contactDetails?.twitter_username
+                            } 
+                    }});
+                }
+            })
+    }
 
+    const handleEditContact = (contactId: any) => {
+        console.log('Navigating to edit contact with countries:', countries);
+        getContactDetail(contactId)
+    }
     const DeleteItem = () => {
         const Header = {
             Accept: 'application/json',
@@ -233,8 +287,11 @@ export default function Contacts() {
         setDeleteRowModal(false)
         setSelectedId('')
     }
+
+    const showAddButton = userRole !== 'USER' && userRole !== 'SALES REP';
     const modalDialog = 'Are You Sure you want to delete this contact?'
     const modalTitle = 'Delete Contact'
+    
 
     const recordsList = [[10, '10 Records per page'], [20, '20 Records per page'], [30, '30 Records per page'], [40, '40 Records per page'], [50, '50 Records per page']]
     // console.log(contactList, 'cccc')
@@ -294,14 +351,16 @@ export default function Contacts() {
                             <FiChevronRight style={{ height: '15px' }} />
                         </FabRight>
                     </Box>
-                    <Button
-                        variant='contained'
-                        startIcon={<FiPlus className='plus-icon' />}
-                        onClick={onAddContact}
-                        className={'add-button'}
-                    >
-                        Add Contact
-                    </Button>
+                    {showAddButton && (
+                        <Button
+                            variant='contained'
+                            startIcon={<FiPlus className='plus-icon' />}
+                            onClick={onAddContact}
+                            className={'add-button'}
+                        >
+                            Add Contact
+                        </Button>
+            )}
                 </Stack>
             </CustomToolbar>
 
@@ -338,6 +397,7 @@ export default function Contacts() {
                                             ? stableSort(contactList, getComparator(order, orderBy))
                                                 // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: any, index: any) => {
                                                 .map((item: any, index: any) => {
+                                                    
                                                     return (
                                                         <TableRow
                                                             tabIndex={-1}
@@ -351,7 +411,19 @@ export default function Contacts() {
                                                             {/* <StyledTableCell align='left'>
                                                 <AntSwitch checked={item.do_not_call} inputProps={{ 'aria-label': 'ant design' }} />
                                             </StyledTableCell> */}
-                                                            <TableCell className='tableCell'><FaTrashAlt style={{ cursor: 'pointer' }} onClick={() => deleteRow(item.id)} /></TableCell>
+                                                            <TableCell className='tableCell'>
+                                                                {userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && item.created_by === userId) ? (
+                                                                    <>
+                                                                        <FaEdit
+                                                                            style={{ cursor: 'pointer', marginRight: '10px' }}
+                                                                            onClick={() => handleEditContact(item.id)}/>
+                                                                        <FaTrashAlt
+                                                                            style={{ cursor: 'pointer' }}
+                                                                            onClick={() => deleteRow(item.id)}
+                                                                        />
+                                                                    </>
+                                                                ) : null}
+                                                            </TableCell>
                                                         </TableRow>
                                                     )
                                                 })
