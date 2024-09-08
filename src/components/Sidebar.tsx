@@ -7,21 +7,13 @@ import { fetchData } from './FetchData';
 import { ProfileUrl } from '../services/ApiUrls';
 import { Header1 } from './FetchData';
 import OrganizationModal from '../pages/organization/OrganizationModal';
-import Company from '../pages/company/Company';
-import AddCompany from '../pages/company/AddCompany';
-import CompanyDetails from '../pages/company/CompanyDetails';
-import EditCompany from '../pages/company/EditCompany';
-import Leads from '../pages/leads/Leads';
 import AddContacts from '../pages/contacts/AddContacts';
-import { EditLead } from '../pages/leads/EditLead';
-import LeadDetails from '../pages/leads/LeadDetails';
 import Contacts from '../pages/contacts/Contacts';
 import EditContact from '../pages/contacts/EditContacts';
 import ContactDetails from '../pages/contacts/ContactDetails';
 import Users from '../pages/users/Users';
-import Opportunities from '../pages/opportunities/Opportunities';
+import Deals from '../pages/deals/Deals';
 import Cases from '../pages/cases/Cases';
-import { AddLeads } from '../pages/leads/AddLeads';
 import Accounts from '../pages/accounts/Accounts';
 import { AddAccount } from '../pages/accounts/AddAccount';
 import { EditAccount } from '../pages/accounts/EditAccount';
@@ -29,9 +21,7 @@ import { AccountDetails } from '../pages/accounts/AccountDetails';
 import { AddUsers } from '../pages/users/AddUsers';
 import { EditUser } from '../pages/users/EditUser';
 import UserDetails from '../pages/users/UserDetails';
-import { AddOpportunity } from '../pages/opportunities/AddOpportunity';
-import { EditOpportunity } from '../pages/opportunities/EditOpportunity';
-import { OpportunityDetails } from '../pages/opportunities/OpportunityDetails';
+import { DealDetails } from '../pages/deals/DealDetails';
 import { AddCase } from '../pages/cases/AddCase';
 import { EditCase } from '../pages/cases/EditCase';
 import { CaseDetails } from '../pages/cases/CaseDetails';
@@ -62,27 +52,13 @@ export default function Sidebar(props: any) {
         toggleScreen()
     }, [navigate])
 
-    // useEffect(() => {
-    // navigate('/leads')
-    // if (localStorage.getItem('Token') && localStorage.getItem('org')) {
-    //     // setScreen('contacts')
-    //     navigate('/contacts')
-    // }
-    // if (!localStorage.getItem('Token')) {
-    //     navigate('/login')
-    // }
-    // if (!localStorage.getItem('org')) {
-    //     navigate('/organization')
-    // }
-    // toggleScreen()
-    // }, [])
     const toggleScreen = () => {
         // console.log(location.pathname.split('/'), 'll')
         if (location.pathname.split('/')[1] === '' || location.pathname.split('/')[1] === undefined || location.pathname.split('/')[2] === 'leads') {
             setScreen('deals')
         } else if (location.pathname.split('/')[2] === 'contacts') {
             setScreen('contacts')
-        } else if (location.pathname.split('/')[2] === 'opportunities') {
+        } else if (location.pathname.split('/')[2] === 'deals') {
             setScreen('deals')
         } else if (location.pathname.split('/')[2] === 'accounts') {
             setScreen('accounts')
@@ -126,12 +102,10 @@ export default function Sidebar(props: any) {
     const navList = userRole === 'USER' ? ['contacts', 'users'] : ['deals', 'contacts', 'accounts', 'users'];
     const navIcons = (text: any, screen: any): React.ReactNode => {
         switch (text) {
-            case 'deals':
-                return screen === 'leads' ? <FaUsers fill='#3e79f7' /> : <FaUsers />
             case 'contacts':
                 return screen === 'contacts' ? <FaAddressBook fill='#3e79f7' /> : <FaAddressBook />
-            case 'opportunities':
-                return screen === 'opportunities' ? <FaHandshake fill='#3e79f7' /> : <FaHandshake />
+            case 'deals':
+                return screen === 'deals' ? <FaHandshake fill='#3e79f7' /> : <FaHandshake />
             case 'accounts':
                 return screen === 'accounts' ? <FaBuilding fill='#3e79f7' /> : <FaBuilding />
             case 'companies':
@@ -258,7 +232,7 @@ export default function Sidebar(props: any) {
                                         sx={{ pt: '6px', pb: '6px' }}
                                         onClick={() => {
                                             if (text === "deals") {
-                                                navigate(`/app/leads`);
+                                                navigate(`/app/deals`);
                                             } else {
                                                 navigate(`/app/${text}`);
                                             }
@@ -281,25 +255,7 @@ export default function Sidebar(props: any) {
 
                     {/* <Box sx={{ width: drawerWidth === 60 ? '1380px' : '1240px', ml: drawerWidth === 60 ? '60px' : '200px', overflowX: 'hidden' }}> */}
                     <Box sx={{ width: 'auto', ml: drawerWidth === 60 ? '60px' : '200px', overflowX: 'hidden' }}>
-                        {/* {location.pathname.split('/')[1] === '' && <Contacts />}
-                {location.pathname.split('/')[1] === 'contacts' && <Contacts />}
-                {location.pathname.split('/')[2] === 'add-leads' && <AddLeads />} */}
-                        {/* {location.pathname === 'leads' && <LeadList />}
-                        {screen === 'contacts' && <Contacts />} */}
-                        {/* <Routes>
-                            <Route index element={<Navigate to="/contacts" replace />} />
-                            </Routes> */}
                         <Routes>
-                            <Route index element={<Leads />} />
-                            {/* <Route path='/' element={<Contacts />} /> */}
-                            <Route path='/app/leads' element={<Leads />} />
-                            <Route path='/app/leads/add-leads' element={<AddLeads />} />
-                            <Route path='/app/leads/edit-lead' element={<EditLead />} />
-                            <Route path='/app/leads/lead-details' element={<LeadDetails />} />
-                            <Route path='/app/companies' element={<Company />} />
-                            <Route path='/app/companies/add-company' element={<AddCompany />} />
-                            <Route path='/app/companies/edit-company' element={<EditCompany />} />
-                            <Route path='/app/companies/company-details' element={<CompanyDetails />} />
                             <Route path='/app/contacts' element={<Contacts />} />
                             <Route path='/app/contacts/add-contacts' element={<AddContacts />} />
                             <Route path='/app/contacts/contact-details' element={<ContactDetails />} />
@@ -312,10 +268,8 @@ export default function Sidebar(props: any) {
                             <Route path='/app/users/add-users' element={<AddUsers />} />
                             <Route path='/app/users/edit-user' element={<EditUser />} />
                             <Route path='/app/users/user-details' element={<UserDetails />} />
-                            <Route path='/app/opportunities' element={<Opportunities />} />
-                            <Route path='/app/opportunities/add-opportunity' element={<AddOpportunity />} />
-                            <Route path='/app/opportunities/opportunity-details' element={<OpportunityDetails />} />
-                            <Route path='/app/opportunities/edit-opportunity' element={<EditOpportunity />} />
+                            <Route path='/app/deals' element={<Deals />} />
+                            <Route path='/app/deals/deal-details' element={<DealDetails />} />
                             <Route path='/app/cases' element={<Cases />} />
                             <Route path='/app/cases/add-case' element={<AddCase />} />
                             <Route path='/app/cases/edit-case' element={<EditCase />} />
