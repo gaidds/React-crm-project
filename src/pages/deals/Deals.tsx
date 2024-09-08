@@ -72,8 +72,12 @@ interface HeadCell {
     }
   ]
 
+// Define the interfaces
 interface AssignedTo {
-    email: string;
+    user_details: {
+        email: string;
+        profile_pic: string; // Assuming there's a name field too
+    };
 }
 
 interface Deal {
@@ -95,11 +99,11 @@ export default function Deals(props: any) {
     const [selected, setSelected] = useState<string[]>([]);
     const [selectedId, setSelectedId] = useState<string[]>([]);
     const [isSelectedId, setIsSelectedId] = useState<boolean[]>([]);
-    const [order, setOrder] = useState('asc')
-    const [orderBy, setOrderBy] = useState('name')
+    const [order, setOrder] = useState('asc');
+    const [orderBy, setOrderBy] = useState('name');
 
     useEffect(() => {
-        getDeals()
+        getDeals();
     }, [currentPage, recordsPerPage]);
 
     const getDeals = async () => {
@@ -108,7 +112,7 @@ export default function Deals(props: any) {
             'Content-Type': 'application/json',
             Authorization: localStorage.getItem('Token'),
             org: localStorage.getItem('org')
-        }
+        };
         try {
             const offset = (currentPage - 1) * recordsPerPage;
             await fetchData(
@@ -116,45 +120,44 @@ export default function Deals(props: any) {
                 'GET',
                 null as any,
                 Header
-            )
-            .then((res) => {
+            ).then((res) => {
+                console.log(res, 'deals');
                 if (!res.error) {
-                    console.log(res.deals , 'deals');
                     setDeals(res?.deals || []);
                     setTotalPages(Math.ceil(res?.deals_count / recordsPerPage));
                 }
-            })
+            });
+        } catch (error) {
+            console.error('Error fetching data:', error);
         }
-        catch (error) {
-                console.error('Error fetching data:', error);
-            }
     };
 
     const handleRequestSort = (event: any, property: any) => {
-        const isAsc = orderBy === property && order === 'asc'
-        setOrder(isAsc ? 'desc' : 'asc')
-        setOrderBy(property)
-      }
-      const handleRowSelect = (accountId: string) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
+    };
+
+    const handleRowSelect = (accountId: string) => {
         const selectedIndex = selected.indexOf(accountId);
         let newSelected: string[] = [...selected];
         let newSelectedIds: string[] = [...selectedId];
         let newIsSelectedId: boolean[] = [...isSelectedId];
-    
+
         if (selectedIndex === -1) {
-          newSelected.push(accountId);
-          newSelectedIds.push(accountId);
-          newIsSelectedId.push(true);
+            newSelected.push(accountId);
+            newSelectedIds.push(accountId);
+            newIsSelectedId.push(true);
         } else {
-          newSelected.splice(selectedIndex, 1);
-          newSelectedIds.splice(selectedIndex, 1);
-          newIsSelectedId.splice(selectedIndex, 1);
+            newSelected.splice(selectedIndex, 1);
+            newSelectedIds.splice(selectedIndex, 1);
+            newIsSelectedId.splice(selectedIndex, 1);
         }
-    
+
         setSelected(newSelected);
         setSelectedId(newSelectedIds);
         setIsSelectedId(newIsSelectedId);
-      };
+    };
 
     return (
         <Box sx={{ mt: '60px' }}>
@@ -182,7 +185,12 @@ export default function Deals(props: any) {
                                                 <TableRow
                                                     tabIndex={-1}
                                                     key={deal.id}
-                                                    sx={{ border: 0, '&:nth-of-type(even)': { backgroundColor: 'whitesmoke' }, color: 'rgb(26, 51, 83)', textTransform: 'capitalize' }}
+                                                    sx={{
+                                                        border: 0,
+                                                        '&:nth-of-type(even)': { backgroundColor: 'whitesmoke' },
+                                                        color: 'rgb(26, 51, 83)',
+                                                        textTransform: 'capitalize',
+                                                    }}
                                                 >
                                                     <TableCell className='tableCell'>
                                                         {deal.name || '---'}
@@ -197,7 +205,15 @@ export default function Deals(props: any) {
                                                         {deal.country || '---'}
                                                     </TableCell>
                                                     <TableCell className='tableCell'>
-                                                        {deal.assigned_to.map(user => user.email).join(', ') || '---'} {/* should be fixed*/}
+                                                    <AvatarGroup max={4}>
+                                                        {deal.assigned_to.map((assignee, index) => (
+                                                            <Avatar
+                                                                key={index}
+                                                                src={assignee.user_details.profile_pic || undefined} // profile_pic for the image
+                                                                alt={assignee.user_details.email}
+                                                            />
+                                                        ))}
+                                                    </AvatarGroup>
                                                     </TableCell>
                                                     <TableCell className='tableCell'>
                                                         {deal.value || '---'}
@@ -215,4 +231,4 @@ export default function Deals(props: any) {
             </Container>
         </Box>
     );
-};
+}
