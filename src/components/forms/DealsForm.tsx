@@ -47,12 +47,12 @@ const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) 
       <FormControl fullWidth sx={{ mb: 2 }}>
         <InputLabel>Account</InputLabel>
         <Select
-          name="accounts_list"
-          value={formData.accounts_list || ''}
+          name="account"
+          value={formData.account || ''}
           onChange={handleInputChange}
         >
           {data.accounts_list.map(account => (
-            <MenuItem key={account} value={account.name}>
+            <MenuItem key={account} value={account.id}>
               {account.name}
             </MenuItem>
           ))}
@@ -62,17 +62,27 @@ const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) 
       <FormControl fullWidth sx={{ mb: 2 }}>
         <InputLabel>Assign to</InputLabel>
         <Select
-          name="users"
-          value={formData.users || ''}
+          name="assigned_to"
+          multiple
+          value={formData.assigned_to || []}
           onChange={handleInputChange}
+          renderValue={(selected) => (
+            <div>
+              {selected.map((id) => {
+                const user = data.users.find((u) => u.id === id);
+                return user ? user.user__email : null;
+              }).join(', ')}
+            </div>
+          )}
         >
           {data.users.map(user => (
-            <MenuItem key={user} value={user.user__email}>
+            <MenuItem key={user.id} value={user.id}>
               {user.user__email}
             </MenuItem>
           ))}
         </Select>
       </FormControl>
+
 
       <FormControl fullWidth sx={{ mb: 2 }}>
         <InputLabel>Deal Source</InputLabel>
@@ -91,12 +101,12 @@ const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) 
       <FormControl fullWidth sx={{ mb: 2 }}>
         <InputLabel>Currency</InputLabel>
         <Select
-          name="currencies"
-          value={formData.currencies || ''}
+          name="currency"
+          value={formData.currency || ''}
           onChange={handleInputChange}
         >
           {data.currency.map(item => (
-            <MenuItem key={item} value={item[1]}>
+            <MenuItem key={item} value={item[0]}>
               {item[1]}
             </MenuItem>
           ))}
@@ -104,19 +114,29 @@ const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) 
       </FormControl>
 
       <FormControl fullWidth sx={{ mb: 2 }}>
-       <InputLabel>Contacts</InputLabel>
-        <Select
-          name="contacts_list"
-          value={formData.contacts_list || ''}
-          onChange={handleInputChange}
-        >
-          {data.contacts_list.map((contact) => (
-            <MenuItem key={contact.id} value={contact.last_name}>
-              {contact.first_name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+        <InputLabel>Contacts</InputLabel>
+          <Select
+            name="contacts"
+            multiple
+            value={formData.contacts || []}
+            onChange={handleInputChange}
+            renderValue={(selected) => (
+              <div>
+                {selected.map((id) => {
+                  const contact = data.contacts_list.find((c) => c.id === id);
+                  return contact ? contact.first_name : null;
+                }).join(', ')}
+              </div>
+            )}
+          >
+            {data.contacts_list.map((contact) => (
+              <MenuItem key={contact.id} value={contact.id}>
+                {contact.first_name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
 
       <FormControl fullWidth sx={{ mb: 2 }}>
         <InputLabel>Stage</InputLabel>
@@ -136,12 +156,12 @@ const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) 
       <FormControl fullWidth sx={{ mb: 2 }}>
         <InputLabel>Country</InputLabel>
         <Select
-          name="countries"
-          value={formData.countries || ''}
+          name="country"
+          value={formData.country || ''}
           onChange={handleInputChange}
         >
           {data.countries.map(item => (
-            <MenuItem key={item} value={item[1]}>
+            <MenuItem key={item} value={item[0]}>
               {item[1]}
             </MenuItem>
           ))}
@@ -151,13 +171,13 @@ const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) 
       <FormControl fullWidth sx={{ mb: 2 }}>
         <InputLabel>Industry</InputLabel>
         <Select
-          name="industries"
-          value={formData.industries || ''}
+          name="industry"
+          value={formData.industry || ''}
           onChange={handleInputChange}
         >
           {data.industries.map(item => (
-            <MenuItem key={item} value={item}>
-              {item}
+            <MenuItem key={item} value={item[1]}>
+              {item[1]}
             </MenuItem>
           ))}
         </Select>
@@ -168,7 +188,7 @@ const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) 
         <TextField
           label="Value"
           name="value"
-          type="number"
+          type="string"
           value={formData.value || ''}
           onChange={handleInputChange}
           fullWidth
