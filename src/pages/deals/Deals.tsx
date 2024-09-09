@@ -11,7 +11,7 @@ import { fetchData } from '../../components/FetchData';
 import { getComparator, stableSort } from '../../components/Sorting';
 import { Label } from '../../components/Label';
 import { FaTrashAlt } from 'react-icons/fa';
-import { OpportunityUrl } from '../../services/ApiUrls';
+import DynamicModal from '../../components/modal/modal';
 import { DeleteModal } from '../../components/DeleteModal';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
@@ -108,7 +108,7 @@ export default function Deals(props: any) {
     const [deleteRowModal, setDeleteRowModal] = useState(false)
 
     const [selectOpen, setSelectOpen] = useState(false);
-
+    const [data,setData] = useState<any[]>([]);
     useEffect(() => {
         getDeals();
     }, [currentPage, recordsPerPage]);
@@ -131,6 +131,7 @@ export default function Deals(props: any) {
                 console.log(res, 'deals');
                 if (!res.error) {
                     setDeals(res?.deals || []);
+                    setData(res || []);
                     setTotalPages(Math.ceil(res?.deals_count / recordsPerPage));
                 }
             });
@@ -255,7 +256,7 @@ export default function Deals(props: any) {
                   <FiChevronRight style={{ height: '15px' }} />
                 </FabRight>
               </Box>
-              {showAddButton && ( <p> "Add Modal" </p>
+              {showAddButton && ( <DynamicModal mode='add' page='Deals' data={data}></DynamicModal>
               )}
             </Stack>
         </CustomToolbar>
@@ -317,7 +318,7 @@ export default function Deals(props: any) {
                                                         {deal.value || '---'}
                                                     </TableCell>
                                                     <TableCell className='tableCell'>
-                                                        {deals.map((deal, index) => (
+                                                        {
                                                             (userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && deal.created_by.id === userId)) ? (
                                                                 <IconButton key={deal.id}>
                                                                     <FaTrashAlt
@@ -326,7 +327,7 @@ export default function Deals(props: any) {
                                                                     />
                                                                 </IconButton>
                                                             ) : null
-                                                        ))}
+                                                        }
                                                     </TableCell>
                                                 </TableRow>
                                             );
