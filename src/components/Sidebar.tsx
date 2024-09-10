@@ -25,7 +25,7 @@ import { DealDetails } from '../pages/deals/DealDetails';
 import { AddCase } from '../pages/cases/AddCase';
 import { EditCase } from '../pages/cases/EditCase';
 import { CaseDetails } from '../pages/cases/CaseDetails';
-import logo from '../assets/images/auth/img_logo.png';
+import logo from '../assets/images/auth/app_logo.png';
 import { StyledListItemButton, StyledListItemText } from '../styles/CssStyled';
 import MyContext, { useMyContext } from '../context/Context';
 
@@ -107,28 +107,28 @@ export default function Sidebar(props: any) {
     const navIcons = (text: any, screen: any): React.ReactNode => {
         switch (text) {
             case 'contacts':
-                return screen === 'contacts' ? <FaAddressBook fill='#3e79f7' /> : <FaAddressBook />
+                return screen === 'contacts' ? <FaAddressBook fill='#3e79f7' size={24} /> : <FaAddressBook size={24}/>
             case 'deals':
-                return screen === 'deals' ? <FaHandshake fill='#3e79f7' /> : <FaHandshake />
+                return screen === 'deals' ? <FaHandshake fill='#3e79f7'  size={24}/> : <FaHandshake  size={24}/>
             case 'accounts':
-                return screen === 'accounts' ? <FaBuilding fill='#3e79f7' /> : <FaBuilding />
+                return screen === 'accounts' ? <FaBuilding fill='#3e79f7'  size={24}/> : <FaBuilding  size={24}/>
             case 'companies':
-                return screen === 'companies' ? <FaIndustry fill='#3e79f7' /> : <FaIndustry />
+                return screen === 'companies' ? <FaIndustry fill='#3e79f7' size={24}/> : <FaIndustry size={24}/>
             // case 'analytics':
             //     return screen === 'analytics' ? <FaChartLine fill='#3e79f7' /> : <FaChartLine />
             case 'users':
-                return screen === 'users' ? <FaUserFriends fill='#3e79f7' /> : <FaUserFriends />
+                return screen === 'users' ? <FaUserFriends fill='#3e79f7' size={24}/> : <FaUserFriends size={24}/>
             case 'cases':
-                return screen === 'cases' ? <FaBriefcase fill='#3e79f7' /> : <FaBriefcase />
+                return screen === 'cases' ? <FaBriefcase fill='#3e79f7' size={24}/> : <FaBriefcase size={24}/>
             default: return <FaDiceD6 fill='#3e79f7' />
         }
     }
     const navIconsBottom = (text: any, screen: any): React.ReactNode => {
         switch (text) {
             case 'logout':
-                return screen === 'logout' ? <FaSignOutAlt fill='#3e79f7' /> : <FaSignOutAlt/>
+                return screen === 'logout' ? <FaSignOutAlt fill='#3e79f7' size={24}/> : <FaSignOutAlt size={24}/>
             case 'profile':
-                return screen === 'profile' ? <Avatar src={userDetail?.user_details?.profile_pic} sx={{ height: 35, width: 35 }} />:  <Avatar src={userDetail?.user_details?.profile_pic} sx={{ height: 24, width: 24 }} />;
+                return screen === 'profile' ? <Avatar src={userDetail?.user_details?.profile_pic} sx={{ height: 28, width: 28 }} />:  <Avatar src={userDetail?.user_details?.profile_pic} sx={{ height: 28, width: 28 }} />;
         }
     }
 
@@ -171,11 +171,11 @@ export default function Sidebar(props: any) {
                 >
                     <Box>
                         <Toolbar>
-                            {drawerWidth === 60 ? <img src={logo} width={'40px'} style={{ transform: 'rotate(270deg)', marginLeft: '-15px', marginRight: '10px' }} /> : <img src={logo} width={'100px'} style={{ marginLeft: '-5px', marginRight: '30px' }} />}
+                            {drawerWidth === 60 ? <img src={logo} width={'30px'} style={{  marginLeft: '-15px', marginRight: '15px' }} /> : <img src={logo} width={'40px'} style={{ marginLeft: '-5px', marginRight: '40px' }} />}
                             <IconButton sx={{ ml: '-10px' }} onClick={() => setDrawerWidth(drawerWidth === 60 ? 200 : 60)}>
                                 <FaBars style={{ height: '20px' }} />
                             </IconButton>
-                            <Typography sx={{ fontWeight: 'bold', color: 'black', ml: '20px', textTransform: 'capitalize', fontSize: '20px', mt: '5px' }}>
+                            <Typography sx={{ fontWeight: 'bold', color: 'black', ml: '20px', textTransform: 'capitalize', xfontSize: '20px', mt: '5px' }}>
                                 {screen}
                             </Typography>
                         </Toolbar>
@@ -238,9 +238,11 @@ export default function Sidebar(props: any) {
                     sx={{
                         width: drawerWidth,
                         flexShrink: 0,
-                        [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+                        [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' , backgroundColor: '#031C30',},
                         display: 'flex',
                         height: '100%',
+                        
+                        
                     }}
                 >
                     <Box sx={{ flex: '1 1 auto', display: 'flex', flexDirection: 'column' }}>
@@ -259,10 +261,10 @@ export default function Sidebar(props: any) {
                                         }}
                                         selected={screen === text}
                                     >
-                                        <ListItemIcon sx={{ ml: '5px' }}>
+                                        <ListItemIcon sx={{ ml: '5px', color: 'white' }}>
                                             {navIcons(text, screen)}
                                         </ListItemIcon>
-                                        <StyledListItemText primary={text} sx={{ ml: -2, textTransform: 'capitalize' }} />
+                                        <StyledListItemText primary={text} sx={{ ml: -2, textTransform: 'capitalize', color: 'white' }} />
                                     </StyledListItemButton>
                                 </ListItem>
                             ))}
@@ -286,10 +288,10 @@ export default function Sidebar(props: any) {
                                         }}
                                         selected={screen === text}
                                     >
-                                        <ListItemIcon sx={{ ml: '5px', alignItems: 'center'  }}>
+                                x        <ListItemIcon sx={{ ml: '5px', alignItems: 'center', color: 'white'  }}>
                                             {navIconsBottom(text, screen)}
                                         </ListItemIcon>
-                                        <StyledListItemText primary={text} sx={{ ml: -2, textTransform: 'capitalize' }} />
+                                        <StyledListItemText primary={text} sx={{ ml: -2, textTransform: 'capitalize' , color: 'white'}} />
                                     </StyledListItemButton>
                                 </ListItem>
                             ))}
