@@ -21,7 +21,7 @@ import { AccountDetails } from '../pages/accounts/AccountDetails';
 import { AddUsers } from '../pages/users/AddUsers';
 import { EditUser } from '../pages/users/EditUser';
 import UserDetails from '../pages/users/UserDetails';
-import { DealDetails } from '../pages/deals/DealDetails';
+import DealDetails from '../pages/deals/DealDetails';
 import { AddCase } from '../pages/cases/AddCase';
 import { EditCase } from '../pages/cases/EditCase';
 import { CaseDetails } from '../pages/cases/CaseDetails';
@@ -269,7 +269,7 @@ export default function Sidebar(props: any) {
                             <Route path='/app/users/edit-user' element={<EditUser />} />
                             <Route path='/app/users/user-details' element={<UserDetails />} />
                             <Route path='/app/deals' element={<Deals />} />
-                            <Route path='/app/deals/deal-details' element={<DealDetails />} />
+                            <Route path='/app/deals/:dealId' element={<DealDetails />} />
                             <Route path='/app/cases' element={<Cases />} />
                             <Route path='/app/cases/add-case' element={<AddCase />} />
                             <Route path='/app/cases/edit-case' element={<EditCase />} />

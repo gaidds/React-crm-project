@@ -209,6 +209,11 @@ export default function Deals(props: any) {
         setRecordsPerPage(parseInt(event.target.value));
         setCurrentPage(1);
       };
+      const navigate = useNavigate();
+      const handleItemClick = (id:string) => {
+        navigate(`/app/deals/${id}`);
+        console.log("MAN INJAAM", id)
+      }
 
       const modalDialog = 'Are You Sure You want to delete selected Deal?'
       const modalTitle = 'Delete Deal'
@@ -292,7 +297,15 @@ export default function Deals(props: any) {
                                                     }}
                                                 >
                                                     <TableCell className='tableCell'>
-                                                        {deal.name || '---'}
+                                                    <div 
+                                                      onClick={() => handleItemClick(deal.id)} 
+                                                      style={{ 
+                                                        color: 'blue',  
+                                                        cursor: 'pointer' 
+                                                      }}
+                                                    >
+                                                      {deal.name || '---'}
+                                                    </div>
                                                     </TableCell>
                                                     <TableCell className='tableCell'>
                                                         {deal.probability || '---'}
