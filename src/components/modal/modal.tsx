@@ -48,7 +48,14 @@ export default function DynamicModal({ mode, page, id, data, icon, text }: Modal
   const [formData, setFormData] = React.useState<any>({});
   const [open, setOpen] = React.useState(false);
 
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {
+    if (mode === 'edit')
+    {
+      const myDeal = data.deals.find(deal => deal.id === id);
+      setFormData(myDeal);
+    }
+    setOpen(true);
+  }
   const handleClose = () => setOpen(false);
 
   const handleInputChange = (
