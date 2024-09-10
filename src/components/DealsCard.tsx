@@ -130,7 +130,7 @@ const DealsCard: React.FC<DealsCardProps> = ({ name, country, assignedUsers, pro
             justifyContent: 'center',
             px: 1,
             py: 0.5,
-            borderRadius: 1,
+            borderRadius: 3,
             backgroundColor: stage === 'CLOSED WON' ? '#D4EDDA' : '#F8D7DA',
             color: stage === 'CLOSED WON' ? '#155724' : '#721C24',
           }}
