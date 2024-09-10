@@ -1,8 +1,9 @@
 import React, { useState , MouseEvent} from 'react';
-import { Box, Typography, Avatar, LinearProgress, IconButton, Menu, MenuItem, AvatarGroup } from '@mui/material';
+import { Box, Typography, Avatar, LinearProgress, IconButton, AvatarGroup } from '@mui/material';
 import { styled } from '@mui/system';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useNavigate } from 'react-router-dom';
+
 
 interface User {
   name: string;
@@ -31,9 +32,6 @@ const DealsCard: React.FC<DealsCardProps> = ({ name, country, assignedUsers, pro
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  // Number of users to display
-  const displayedUsers = assignedUsers.slice(0, 3);
-  const moreCount = assignedUsers.length - displayedUsers.length;
 
   const handleCardClick = () => {
     if (!anchorEl) { // Only navigate if the menu is not open
@@ -41,27 +39,7 @@ const DealsCard: React.FC<DealsCardProps> = ({ name, country, assignedUsers, pro
     }
   };
 
-  const handleMenuClick = (event: MouseEvent<HTMLElement>) => {
-    event.stopPropagation();
-    setAnchorEl(event.currentTarget);
-  };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleEdit = () => {
-    handleMenuClose();
-    // Handle edit action here
-    console.log('Edit clicked');
-  };
-
-  const handleDelete = () => {
-    handleMenuClose();
-    // Handle delete action here
-    console.log('Delete clicked');
-  };
-  
   return (
     <Box
       sx={{
@@ -80,17 +58,6 @@ const DealsCard: React.FC<DealsCardProps> = ({ name, country, assignedUsers, pro
       }}
       onClick={handleCardClick}
     >
-      <IconButton
-        sx={{
-          position: 'absolute',
-          top: 8,
-          right: 8,
-          color: 'text.secondary',
-        }}
-        onClick={handleMenuClick}
-      >
-        <MoreVertIcon />
-      </IconButton>
       
       <Box mb={2}>
         <Typography variant="h6" noWrap>{name}</Typography>
@@ -140,14 +107,6 @@ const DealsCard: React.FC<DealsCardProps> = ({ name, country, assignedUsers, pro
           </Typography>
         </Box>
       )}
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleMenuClose}
-      >
-        <MenuItem onClick={handleEdit}>Edit</MenuItem>
-        <MenuItem onClick={handleDelete}>Delete</MenuItem>
-      </Menu>
     </Box>
   );
 };
