@@ -10,6 +10,7 @@ import ContactsForm from '../forms/ContactsForm';
 import { fetchData, Header } from '../FetchData';
 import { DealUrl, UserUrl, UsersUrl, AccountsUrl, ContactUrl } from '../../services/ApiUrls';
 import { SelectChangeEvent } from '@mui/material';
+import { FaEdit } from 'react-icons/fa';
 
 const buttonStyle = {
   backgroundColor: '#65558F',
@@ -39,9 +40,10 @@ type ModalProps = {
   page: 'Users' | 'Contacts' | 'Accounts' | 'Deals';
   id?: string;
   data: any;
+  icon?: boolean;
 };
 
-export default function DynamicModal({ mode, page, id, data }: ModalProps) {
+export default function DynamicModal({ mode, page, id, data, icon }: ModalProps) {
   const [formData, setFormData] = React.useState<any>({});
   const [open, setOpen] = React.useState(false);
 
@@ -102,7 +104,13 @@ export default function DynamicModal({ mode, page, id, data }: ModalProps) {
 
   return (
     <>
-      <Button onClick={handleOpen} sx={buttonStyle}>{mode === 'add' ? 'Add' : 'Edit'}</Button>
+     {icon && mode === 'edit' ? (
+        <FaEdit style={{ cursor: 'pointer', marginRight: '10px' }} onClick={handleOpen} />
+      ) : (
+        <Button onClick={handleOpen} sx={buttonStyle}>
+          {mode === 'add' ? 'Add' : 'Edit'}
+        </Button>
+      )}
       <Modal
         open={open}
         onClose={handleClose}

@@ -21,7 +21,6 @@ type DealsFormProps = {
 }; 
 
 const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) => {
-
   return (
     <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 2 }}>
       <Grid item xs={12}>
@@ -66,14 +65,14 @@ const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) 
           multiple
           value={formData.assigned_to || []}
           onChange={handleInputChange}
-          renderValue={(selected) => (
-            <div>
-              {selected.map((id) => {
-                const user = data.users.find((u) => u.id === id);
-                return user ? user.user__email : null;
-              }).join(', ')}
-            </div>
-          )}
+          // renderValue={(selected) => (
+          //   <div>
+          //     {selected.map((id) => {
+          //       const user = data.users.find((u) => u.id === id);
+          //       return user ? user.user__email : null;
+          //     }).join(', ')}
+          //   </div>
+          // )}
         >
           {data.users.map(user => (
             <MenuItem key={user.id} value={user.id}>
@@ -120,14 +119,14 @@ const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) 
             multiple
             value={formData.contacts || []}
             onChange={handleInputChange}
-            renderValue={(selected) => (
-              <div>
-                {selected.map((id) => {
-                  const contact = data.contacts_list.find((c) => c.id === id);
-                  return contact ? contact.first_name : null;
-                }).join(', ')}
-              </div>
-            )}
+            // renderValue={(selected) => (
+            //   <div>
+            //     {selected.map((id) => {
+            //       const contact = data.contacts_list.find((c) => c.id === id);
+            //       return contact ? contact.first_name : null;
+            //     }).join(', ')}
+            //   </div>
+            // )}
           >
             {data.contacts_list.map((contact) => (
               <MenuItem key={contact.id} value={contact.id}>

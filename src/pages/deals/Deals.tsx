@@ -317,17 +317,20 @@ export default function Deals(props: any) {
                                                     <TableCell className='tableCell'>
                                                         {deal.value || '---'}
                                                     </TableCell>
-                                                    <TableCell className='tableCell'>
-                                                        {
-                                                            (userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && deal.created_by.id === userId)) ? (
-                                                                <IconButton key={deal.id}>
-                                                                    <FaTrashAlt
-                                                                        onClick={() => deleteRow(deal.id)}
-                                                                        style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }}
-                                                                    />
-                                                                </IconButton>
-                                                            ) : null
-                                                        }
+                                                    <TableCell className="tableCell">
+                                                      {(userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && deal.created_by.id === userId)) ? (
+                                                        <>
+                                                          {/* Edit Icon */}
+                                                          <DynamicModal mode='edit' page='Deals' id={deal.id} data={data} icon={true}></DynamicModal>
+                                                          {/* Delete Icon */}
+                                                          <IconButton key={`delete-${deal.id}`}>
+                                                            <FaTrashAlt
+                                                              onClick={() => deleteRow(deal.id)}
+                                                              style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }}
+                                                            />
+                                                          </IconButton>
+                                                        </>
+                                                      ) : null}
                                                     </TableCell>
                                                 </TableRow>
                                             );
