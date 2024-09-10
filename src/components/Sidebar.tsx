@@ -41,7 +41,8 @@ export default function Sidebar(props: any) {
     const [screen, setScreen] = useState('contacts')
     const [drawerWidth, setDrawerWidth] = useState(200)
     const [headerWidth, setHeaderWidth] = useState(drawerWidth)
-    const [userDetail, setUserDetail] = useState('')
+    const [loading, setLoading] = useState(true);
+    const [userDetail, setUserDetail] = useState<any>(null);
     const [organizationModal, setOrganizationModal] = useState(false)
     // const [navList, setNavList] = useState<string[]>(['deals', 'contacts', 'accounts', 'users']);
     const organizationModalClose = () => { setOrganizationModal(false) }
@@ -91,15 +92,18 @@ export default function Sidebar(props: any) {
                     setUserRole(res?.user_obj.role)
                     setUserId(res?.user_obj.user_details.id)
                     setProfileId(res?.user_obj.id)
+                    setLoading(false);
                 }
             })
             .catch((error) => {
                 console.error('Error:', error)
+                setLoading(false);
             })
     }
 
 
     const navList = userRole === 'USER' ? ['contacts', 'users'] : ['deals', 'contacts', 'accounts', 'users'];
+    const navListBottom = userRole === 'USER' ? ['profile', 'logout'] : ['profile', 'logout'];
     const navIcons = (text: any, screen: any): React.ReactNode => {
         switch (text) {
             case 'contacts':
@@ -119,6 +123,14 @@ export default function Sidebar(props: any) {
             default: return <FaDiceD6 fill='#3e79f7' />
         }
     }
+    const navIconsBottom = (text: any, screen: any): React.ReactNode => {
+        switch (text) {
+            case 'logout':
+                return screen === 'logout' ? <FaSignOutAlt fill='#3e79f7' /> : <FaSignOutAlt/>
+            case 'profile':
+                return screen === 'profile' ? <Avatar src={userDetail?.user_details?.profile_pic} sx={{ height: 35, width: 35 }} />:  <Avatar src={userDetail?.user_details?.profile_pic} sx={{ height: 24, width: 24 }} />;
+        }
+    }
 
 
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -136,6 +148,11 @@ export default function Sidebar(props: any) {
     const id = open ? 'simple-popover' : undefined;
     // console.log(screen, 'sidebar');
     const context = { drawerWidth: drawerWidth, screen: screen }
+
+    if (loading) {
+        return <div>Loading...</div>; // You can replace this with a loader/spinner
+    }
+
     return (
         <>
             <Box>
@@ -172,7 +189,7 @@ export default function Sidebar(props: any) {
                         {/* <IconButton onClick={userProfile} sx={{ mr: 2 }}><FaCog /></IconButton> */}
                         <IconButton onClick={handleClick} sx={{ mr: 3 }}>
                             <Avatar
-                                // src='hj'
+                                src={userDetail.user_details.profile_pic}
                                 sx={{ height: '27px', width: '27px' }}
                             />
                         </IconButton>
@@ -221,10 +238,12 @@ export default function Sidebar(props: any) {
                     sx={{
                         width: drawerWidth,
                         flexShrink: 0,
-                        [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' }
+                        [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+                        display: 'flex',
+                        height: '100%',
                     }}
                 >
-                    <Box>
+                    <Box sx={{ flex: '1 1 auto', display: 'flex', flexDirection: 'column' }}>
                         <List sx={{ pt: '65px' }}>
                             {navList.map((text, index) => (
                                 <ListItem key={text} disablePadding  >
@@ -249,6 +268,34 @@ export default function Sidebar(props: any) {
                             ))}
                         </List>
                     </Box>
+                    <Box sx={{ flex: '1 1 auto' }} />
+                    <Box sx={{ mb: '25px' }}>
+                        <List sx={{ pt: '65px' }}>
+                            {navListBottom.map((text, index) => (
+                                <ListItem key={text} disablePadding  >
+                                    <StyledListItemButton
+                                        sx={{ pt: '6px', pb: '6px' }}
+                                        onClick={() => {
+                                            if (text === "logout") {
+                                                localStorage.clear();
+                                                navigate('/login');
+                                            } else {
+                                                navigate(`/app/${text}`);
+                                            }
+                                            setScreen(text);
+                                        }}
+                                        selected={screen === text}
+                                    >
+                                        <ListItemIcon sx={{ ml: '5px', alignItems: 'center'  }}>
+                                            {navIconsBottom(text, screen)}
+                                        </ListItemIcon>
+                                        <StyledListItemText primary={text} sx={{ ml: -2, textTransform: 'capitalize' }} />
+                                    </StyledListItemButton>
+                                </ListItem>
+                            ))}
+                        </List>
+                    </Box>
+                    
 
                 </Drawer>
                 {/* <MyContext.Provider value={context}> */}
