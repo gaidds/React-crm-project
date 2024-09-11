@@ -128,7 +128,7 @@ export default function Sidebar(props: any) {
             case 'logout':
                 return screen === 'logout' ? <FaSignOutAlt fill='#3e79f7' size={24}/> : <FaSignOutAlt size={24}/>
             case 'profile':
-                return screen === 'profile' ? <Avatar src={userDetail?.user_details?.profile_pic} sx={{ height: 28, width: 28 }} />:  <Avatar src={userDetail?.user_details?.profile_pic} sx={{ height: 28, width: 28 }} />;
+                return screen === 'profile' ? <Avatar src={userDetail?.user_details?.profile_pic} sx={{ height: 30, width: 30 }} />:  <Avatar src={userDetail?.user_details?.profile_pic} sx={{ height: 30, width: 30 }} />;
         }
     }
 
@@ -171,8 +171,8 @@ export default function Sidebar(props: any) {
                 >
                     <Box>
                         <Toolbar>
-                            {drawerWidth === 75 ? <img src={logo} width={'30px'} style={{  marginLeft: '-5px', marginRight: '15px' }} /> : <img src={logo} width={'40px'} style={{ marginLeft: '-5px', marginRight: '40px' }} />}
-                            <IconButton sx={{ ml: '-10px' }} onClick={() => setDrawerWidth(drawerWidth === 75 ? 200 : 75)}>
+                            {drawerWidth === 70 ? <img src={logo} width={'30px'} style={{  marginLeft: '-5px', marginRight: '15px' }} /> : <img src={logo} width={'40px'} style={{ marginLeft: '-5px', marginRight: '40px' }} />}
+                            <IconButton sx={{ ml: '-10px' }} onClick={() => setDrawerWidth(drawerWidth === 70 ? 200 : 70)}>
                                 <FaBars style={{ height: '20px' }} />
                             </IconButton>
                             <Typography sx={{ fontWeight: 'bold', color: 'black', ml: '20px', textTransform: 'capitalize', xfontSize: '20px', mt: '5px' }}>
@@ -250,7 +250,7 @@ export default function Sidebar(props: any) {
                             {navList.map((text, index) => (
                                 <ListItem key={text} disablePadding  >
                                     <StyledListItemButton
-                                        sx={{ pt: '6px', pb: '6px' }}
+                                        sx={{ pt: '10px', pb: '10px' , display: 'flex', alignItems: 'center' }}
                                         onClick={() => {
                                             if (text === "deals") {
                                                 navigate(`/app/deals`);
@@ -261,10 +261,10 @@ export default function Sidebar(props: any) {
                                         }}
                                         selected={screen === text}
                                     >
-                                        <ListItemIcon sx={{ ml: '3px', color: 'white'}}>
+                                        <ListItemIcon sx={{ ml: '1px', color: 'white',  display: 'flex', alignItems: 'center'}}>
                                             {navIcons(text, screen)}
                                         </ListItemIcon>
-                                        {drawerWidth !== 75 && (
+                                        {drawerWidth !== 70 && (
                                                 <StyledListItemText primary={text} sx={{ ml: -2, textTransform: 'capitalize', color: 'white' }} />
                                             )}
                                     </StyledListItemButton>
@@ -278,7 +278,7 @@ export default function Sidebar(props: any) {
                             {navListBottom.map((text, index) => (
                                 <ListItem key={text} disablePadding  >
                                     <StyledListItemButton
-                                        sx={{ pt: '6px', pb: '6px' }}
+                                        sx={{ pt: '10px', pb: '10px', display: 'flex', alignItems: 'center'  }}
                                         onClick={() => {
                                             if (text === "logout") {
                                                 localStorage.clear();
@@ -290,10 +290,10 @@ export default function Sidebar(props: any) {
                                         }}
                                         selected={screen === text}
                                     >
-                                        <ListItemIcon sx={{ ml: '3px', color: 'white', minWidth: '40px', justifyContent: 'center'  }}>
+                                        <ListItemIcon sx={{ ml: '-5px', color: 'white', minWidth: '40px', justifyContent: 'center' , display: 'flex', alignItems: 'center'}}>
                                             {navIconsBottom(text, screen)}
                                         </ListItemIcon>
-                                        {drawerWidth !== 75 && (
+                                        {drawerWidth !== 70 && (
                                             <StyledListItemText primary={text} sx={{ ml: '15px', textTransform: 'capitalize', color: 'white' }} />
                                         )}
                                     </StyledListItemButton>
@@ -307,7 +307,7 @@ export default function Sidebar(props: any) {
                 {/* <MyContext.Provider value={context}> */}
 
                     {/* <Box sx={{ width: drawerWidth === 60 ? '1380px' : '1240px', ml: drawerWidth === 60 ? '60px' : '200px', overflowX: 'hidden' }}> */}
-                    <Box sx={{ width: 'auto', ml: drawerWidth === 75 ? '75px' : '200px', overflowX: 'hidden' }}>
+                    <Box sx={{ width: 'auto', ml: drawerWidth === 70 ? '70px' : '200px', overflowX: 'hidden' }}>
                         <Routes>
                             <Route path='/app/contacts' element={<Contacts />} />
                             <Route path='/app/contacts/add-contacts' element={<AddContacts />} />
