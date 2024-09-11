@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { AppBar, Avatar, Box, Drawer, IconButton, List, ListItem, ListItemIcon, Popover, Toolbar, Tooltip, Typography } from '@mui/material';
-import { FaAddressBook, FaBars, FaBriefcase, FaBuilding, FaChartLine, FaCog, FaDiceD6, FaHandshake, FaIndustry, FaSignOutAlt, FaTachometerAlt, FaUserFriends, FaUsers } from "react-icons/fa";
+import { FaAddressBook, FaBars, FaBriefcase, FaBuilding, FaChartLine, FaCog, FaDiceD6, FaHandshake, FaIndustry, FaSignOutAlt, FaSlidersH, FaTachometerAlt, FaUserFriends, FaUsers } from "react-icons/fa";
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { fetchData } from './FetchData';
 import { ProfileUrl } from '../services/ApiUrls';
@@ -103,32 +103,37 @@ export default function Sidebar(props: any) {
 
 
     const navList = userRole === 'USER' ? ['contacts', 'users'] : ['deals', 'contacts', 'accounts', 'users'];
-    const navListBottom = userRole === 'USER' ? ['profile', 'logout'] : ['profile', 'logout'];
+    const navListBottom = userRole === 'ADMIN' ? ['dashboard', 'settings', 'profile', 'logout'] : ['profile', 'logout'];
     const navIcons = (text: any, screen: any): React.ReactNode => {
         switch (text) {
             case 'contacts':
-                return screen === 'contacts' ? <FaAddressBook fill='#3e79f7' size={24} /> : <FaAddressBook size={24}/>
+                return screen === 'contacts' ? <FaAddressBook fill='#3e79f7' size={22} /> : <FaAddressBook size={22}/>
             case 'deals':
-                return screen === 'deals' ? <FaHandshake fill='#3e79f7'  size={24}/> : <FaHandshake  size={24}/>
+                return screen === 'deals' ? <FaHandshake fill='#3e79f7'  size={22}/> : <FaHandshake  size={22}/>
             case 'accounts':
-                return screen === 'accounts' ? <FaBuilding fill='#3e79f7'  size={24}/> : <FaBuilding  size={24}/>
+                return screen === 'accounts' ? <FaBuilding fill='#3e79f7'  size={22}/> : <FaBuilding  size={22}/>
             case 'companies':
-                return screen === 'companies' ? <FaIndustry fill='#3e79f7' size={24}/> : <FaIndustry size={24}/>
+                return screen === 'companies' ? <FaIndustry fill='#3e79f7' size={22}/> : <FaIndustry size={22}/>
             // case 'analytics':
             //     return screen === 'analytics' ? <FaChartLine fill='#3e79f7' /> : <FaChartLine />
             case 'users':
-                return screen === 'users' ? <FaUserFriends fill='#3e79f7' size={24}/> : <FaUserFriends size={24}/>
+                return screen === 'users' ? <FaUserFriends fill='#3e79f7' size={22}/> : <FaUserFriends size={22}/>
             case 'cases':
-                return screen === 'cases' ? <FaBriefcase fill='#3e79f7' size={24}/> : <FaBriefcase size={24}/>
+                return screen === 'cases' ? <FaBriefcase fill='#3e79f7' size={22}/> : <FaBriefcase size={22}/>
             default: return <FaDiceD6 fill='#3e79f7' />
         }
     }
     const navIconsBottom = (text: any, screen: any): React.ReactNode => {
         switch (text) {
             case 'logout':
-                return screen === 'logout' ? <FaSignOutAlt fill='#3e79f7' size={24}/> : <FaSignOutAlt size={24}/>
+                return screen === 'logout' ? <FaSignOutAlt fill='#3e79f7' size={22}/> : <FaSignOutAlt size={22}/>
             case 'profile':
                 return screen === 'profile' ? <Avatar src={userDetail?.user_details?.profile_pic} sx={{ height: 30, width: 30 }} />:  <Avatar src={userDetail?.user_details?.profile_pic} sx={{ height: 30, width: 30 }} />;
+            case 'dashboard':
+                return screen === 'dashboard' ? <FaSlidersH fill='#3e79f7' size={22}/> : <FaSlidersH size={22}/>
+            case 'settings':
+                return screen === 'settings' ? <FaCog fill='#3e79f7' size={22}/> : <FaCog size={22}/>
+        
         }
     }
 
