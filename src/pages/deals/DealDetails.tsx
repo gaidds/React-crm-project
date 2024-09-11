@@ -6,8 +6,14 @@ import { fetchData } from '../../components/FetchData';
 interface Deal {
   name: string;
   account: string;
-  assigned_to: string[];
-  contacts: string[];
+  assigned_to: [{
+    user_details:{ 
+      email:string;}
+  }];
+  contacts: [{
+    first_name:string;
+    last_name: string;
+  }];
   website: string;
   stage: string;
   deal_source: string;
@@ -64,8 +70,8 @@ const DealDetails: React.FC = () => {
       <h1>Deal Details</h1>
       <p><strong>Name:</strong> {deal.name}</p>
       <p><strong>Account:</strong> {deal.account}</p>
-      <p><strong>Assigned To:</strong> {deal.assigned_to.join(', ')}</p>
-      <p><strong>Contacts:</strong> {deal.contacts.join(', ')}</p>
+      <p><strong>Assigned To:</strong> {deal.assigned_to.map(user => user.user_details.email).join(', ')}</p>
+      <p><strong>Contacts:</strong> {deal.contacts[0].first_name} {deal.contacts[0].last_name}</p>
       <p><strong>Website:</strong> {deal.website}</p>
       <p><strong>Stage:</strong> {deal.stage}</p>
       <p><strong>Deal Source:</strong> {deal.deal_source}</p>
