@@ -37,3 +37,35 @@
     font-weight: 500;
     font-size: 12px;
 }
+
+
+.stages-bar-container-vertical{
+    display: flex;
+    width: auto;
+    height: 100%;
+    text-align: center;
+    flex-direction: column;
+}
+
+.stages-bar-container-vertical .stages-bar-stage-top{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 12px ;
+    height: 100%;
+    margin-bottom: 0 !important;
+    margin-right: 10px !important;
+}
+
+.stages-bar-container-vertical .stages-bar-stage-container{
+    display: flex;
+    align-items: center;
+}
+
+.stages-bar-container-vertical .stages-bar-stage-container:first-child .stages-bar-stage-top{
+    border-radius: 10px 10px 0 0 ;
+}
+
+.stages-bar-container-vertical .stages-bar-stage-container:last-child .stages-bar-stage-top{
+    border-radius: 0 0 10px 10px ;
+}
