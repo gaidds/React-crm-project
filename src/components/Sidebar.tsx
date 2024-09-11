@@ -165,21 +165,33 @@ export default function Sidebar(props: any) {
                     sx={{
                         zIndex: (theme) => theme.zIndex.drawer + 1,
                         height: '60px',
-                        backgroundColor: 'white',
+                        backgroundColor: 'rgba(255, 255, 255, 0)',
                         display: 'flex',
                         flexDirection: 'row',
                         justifyContent: 'space-between',
-                        // boxShadow: 'none',
-                        // borderBottom: `0.5px solid #0000001f`
-                        boxShadow: '1px'
+                        boxShadow: 'none',
                     }}
                 >
                     <Box>
                         <Toolbar>
-                            {drawerWidth === 70 ? <img src={logo} width={'30px'} style={{  marginLeft: '-5px', marginRight: '15px' }} /> : <img src={logo} width={'40px'} style={{ marginLeft: '-5px', marginRight: '40px' }} />}
-                            <IconButton sx={{ ml: '-10px' }} onClick={() => setDrawerWidth(drawerWidth === 70 ? 200 : 70)}>
-                                <FaBars style={{ height: '20px' }} />
-                            </IconButton>
+                        <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer'}} onClick={() => setDrawerWidth(drawerWidth === 70 ? 200 : 70)}>
+                        <img
+                            src={logo}
+                            width={'35px'}
+                            style={{
+                            marginLeft: '-5px',
+                            marginRight: drawerWidth === 70 ? '15px' : '10px',
+                            cursor: 'pointer',
+                            }}
+                        />
+                        {drawerWidth !== 70 && (
+                            <span
+                            style={{ marginLeft: '10px', marginRight: '40px', cursor: 'pointer', fontWeight: 'bold' }}
+                            >
+                            Bottle CRM
+                            </span>
+                        )}
+                        </div>
                             <Typography sx={{ fontWeight: 'bold', color: 'black', ml: '20px', textTransform: 'capitalize', xfontSize: '20px', mt: '5px' }}>
                                 {screen}
                             </Typography>
@@ -238,18 +250,23 @@ export default function Sidebar(props: any) {
                     </Box>
                 </AppBar>
 
-                <Drawer
-                    variant="permanent"
-                    sx={{
-                        width: drawerWidth,
-                        flexShrink: 0,
-                        [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' , backgroundColor: '#031C30',},
-                        display: 'flex',
-                        height: '100%',
-                        
-                        
-                    }}
-                >
+                    <Drawer
+                        variant="permanent"
+                        sx={{
+                            width: drawerWidth,
+                            flexShrink: 0,
+                            [`& .MuiDrawer-paper`]: {
+                            width: drawerWidth,
+                            boxSizing: 'border-box',
+                            backgroundColor: '#031C30', 
+                            borderRadius: '0px 16px 16px 0px',
+                            border: 'none',
+                            },
+                            display: 'flex',
+                            height: '100%',
+                        }}
+                        >
+
                     <Box sx={{ flex: '1 1 auto', display: 'flex', flexDirection: 'column' }}>
                         <List sx={{ pt: '65px' }}>
                             {navList.map((text, index) => (
@@ -266,7 +283,7 @@ export default function Sidebar(props: any) {
                                         }}
                                         selected={screen === text}
                                     >
-                                        <ListItemIcon sx={{ ml: '1px', color: 'white',  display: 'flex', alignItems: 'center'}}>
+                                        <ListItemIcon sx={{ pt: '10px', pb: '10px', ml: '1px', color: 'white',  display: 'flex', alignItems: 'center'}}>
                                             {navIcons(text, screen)}
                                         </ListItemIcon>
                                         {drawerWidth !== 70 && (
@@ -277,8 +294,7 @@ export default function Sidebar(props: any) {
                             ))}
                         </List>
                     </Box>
-                    <Box sx={{ flex: '1 1 auto' }} />
-                    <Box sx={{  display: 'flex', flexDirection: 'column', mb: '20px' }}>
+                    <Box sx={{  display: 'flex', flexDirection: 'column' }}>
                         <List sx={{ pt: '65px' }}>
                             {navListBottom.map((text, index) => (
                                 <ListItem key={text} disablePadding  >
@@ -295,7 +311,7 @@ export default function Sidebar(props: any) {
                                         }}
                                         selected={screen === text}
                                     >
-                                        <ListItemIcon sx={{ ml: '-5px', color: 'white', minWidth: '40px', justifyContent: 'center' , display: 'flex', alignItems: 'center'}}>
+                                        <ListItemIcon sx={{ pt: '10px', pb: '10px',ml: '-5px', color: 'white', minWidth: '40px', justifyContent: 'center' , display: 'flex', alignItems: 'center'}}>
                                             {navIconsBottom(text, screen)}
                                         </ListItemIcon>
                                         {drawerWidth !== 70 && (
