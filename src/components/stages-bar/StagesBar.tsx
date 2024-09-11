@@ -2,9 +2,9 @@ import { FC } from 'react';
 import './styles.css';
 import { StagesBarProps } from './types';
 
-const StagesBar: FC<StagesBarProps> = ({ stages }) => {
+const StagesBar: FC<StagesBarProps> = ({ stages, vertical }) => {
   return (
-    <div className="stages-bar-container">
+    <div className={`stages-bar-container${vertical ? '-vertical' : ''}`}>
       {stages?.map(({ name, color }) => (
         <div className="stages-bar-stage-container">
           <div
