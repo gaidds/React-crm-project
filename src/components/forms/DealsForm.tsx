@@ -1,13 +1,30 @@
 import * as React from 'react';
 import { TextField, MenuItem, Select, InputLabel, FormControl, Box, Grid, Autocomplete, containerClasses, SelectChangeEvent } from '@mui/material';
 
+type Deal = {
+  name: string;
+  account: string; 
+  assigned_to: string[]; 
+  contacts: string[]; 
+  website: string;
+  stage: string;
+  deal_source: string;
+  industry: string;
+  currency: string;
+  country: string;
+  value: string | number; 
+  close_date: string;
+  probability: number; 
+  tags: string[]; 
+};
+
 
 type DealsFormProps = {
   mode: 'add' | 'edit';
   handleInputChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<any>
   ) => void;
-  formData: any;
+  formData: Deal ;
   data: {
     accounts_list: any[];
     contacts_list: any[];
@@ -66,39 +83,17 @@ const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) 
           multiple
           value={formData.assigned_to || []}
           onChange={handleInputChange}
-          // renderValue={(selected) => (
-          //   <div>
-          //     {selected.map((id) => {
-          //       const user = data.users.find((u) => u.id === id);
-          //       return user ? user.user__email : null;
-          //     }).join(', ')}
-          //   </div>
-          // )}
+          renderValue={(selected) =>
+            selected.map(id => data.users.find(user => user.id === id)?.user__email).join(', ')
+          }
         >
           {data.users.map(user => (
-            <MenuItem key={user.id} value={user.id}>
+            <MenuItem key={user} value={user.id}>
               {user.user__email}
             </MenuItem>
           ))}
         </Select>
       </FormControl>
-
-      {/* <FormControl fullWidth sx={{ mb: 2 }}>
-        <InputLabel>Assign to</InputLabel>
-        <Autocomplete
-      multiple
-      limitTags={3}
-      id="multiple-limit-tags"
-      options={data.users}
-      getOptionLabel={(option) => option.user__email}
-      defaultValue={formData.assigned_to || []}
-      renderInput={(params) => (
-        <TextField {...params} label="Assigned to" placeholder="" />
-      )}
-    />
-      </FormControl> */}
-
-
       <FormControl fullWidth sx={{ mb: 2 }}>
         <InputLabel>Deal Source</InputLabel>
         <Select
@@ -127,15 +122,15 @@ const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) 
           ))}
         </Select>
       </FormControl>
-        <FormControl fullWidth sx={{ mb: 2 }}>
+      <FormControl fullWidth sx={{ mb: 2 }}>
         <InputLabel>Contact</InputLabel>
         <Select
-          name="contact"
-          value={formData.contact || ''}
+          name="contacts"
+          value={formData.contacts || ''}
           onChange={handleInputChange}
         >
           {data.contacts_list.map(contact => (
-            <MenuItem key={contact} value={contact.id}>
+            <MenuItem key={contact.id} value={contact.id}>
               {contact.first_name}
             </MenuItem>
           ))}
