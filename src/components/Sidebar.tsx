@@ -171,8 +171,8 @@ export default function Sidebar(props: any) {
                 >
                     <Box>
                         <Toolbar>
-                            {drawerWidth === 60 ? <img src={logo} width={'30px'} style={{  marginLeft: '-15px', marginRight: '15px' }} /> : <img src={logo} width={'40px'} style={{ marginLeft: '-5px', marginRight: '40px' }} />}
-                            <IconButton sx={{ ml: '-10px' }} onClick={() => setDrawerWidth(drawerWidth === 60 ? 200 : 60)}>
+                            {drawerWidth === 75 ? <img src={logo} width={'30px'} style={{  marginLeft: '-5px', marginRight: '15px' }} /> : <img src={logo} width={'40px'} style={{ marginLeft: '-5px', marginRight: '40px' }} />}
+                            <IconButton sx={{ ml: '-10px' }} onClick={() => setDrawerWidth(drawerWidth === 75 ? 200 : 75)}>
                                 <FaBars style={{ height: '20px' }} />
                             </IconButton>
                             <Typography sx={{ fontWeight: 'bold', color: 'black', ml: '20px', textTransform: 'capitalize', xfontSize: '20px', mt: '5px' }}>
@@ -261,17 +261,19 @@ export default function Sidebar(props: any) {
                                         }}
                                         selected={screen === text}
                                     >
-                                        <ListItemIcon sx={{ ml: '5px', color: 'white' }}>
+                                        <ListItemIcon sx={{ ml: '3px', color: 'white'}}>
                                             {navIcons(text, screen)}
                                         </ListItemIcon>
-                                        <StyledListItemText primary={text} sx={{ ml: -2, textTransform: 'capitalize', color: 'white' }} />
+                                        {drawerWidth !== 75 && (
+                                                <StyledListItemText primary={text} sx={{ ml: -2, textTransform: 'capitalize', color: 'white' }} />
+                                            )}
                                     </StyledListItemButton>
                                 </ListItem>
                             ))}
                         </List>
                     </Box>
                     <Box sx={{ flex: '1 1 auto' }} />
-                    <Box sx={{ mb: '25px' }}>
+                    <Box sx={{  display: 'flex', flexDirection: 'column', mb: '20px' }}>
                         <List sx={{ pt: '65px' }}>
                             {navListBottom.map((text, index) => (
                                 <ListItem key={text} disablePadding  >
@@ -288,10 +290,12 @@ export default function Sidebar(props: any) {
                                         }}
                                         selected={screen === text}
                                     >
-                                x        <ListItemIcon sx={{ ml: '5px', alignItems: 'center', color: 'white'  }}>
+                                        <ListItemIcon sx={{ ml: '3px', color: 'white', minWidth: '40px', justifyContent: 'center'  }}>
                                             {navIconsBottom(text, screen)}
                                         </ListItemIcon>
-                                        <StyledListItemText primary={text} sx={{ ml: -2, textTransform: 'capitalize' , color: 'white'}} />
+                                        {drawerWidth !== 75 && (
+                                            <StyledListItemText primary={text} sx={{ ml: '15px', textTransform: 'capitalize', color: 'white' }} />
+                                        )}
                                     </StyledListItemButton>
                                 </ListItem>
                             ))}
@@ -303,7 +307,7 @@ export default function Sidebar(props: any) {
                 {/* <MyContext.Provider value={context}> */}
 
                     {/* <Box sx={{ width: drawerWidth === 60 ? '1380px' : '1240px', ml: drawerWidth === 60 ? '60px' : '200px', overflowX: 'hidden' }}> */}
-                    <Box sx={{ width: 'auto', ml: drawerWidth === 60 ? '60px' : '200px', overflowX: 'hidden' }}>
+                    <Box sx={{ width: 'auto', ml: drawerWidth === 75 ? '75px' : '200px', overflowX: 'hidden' }}>
                         <Routes>
                             <Route path='/app/contacts' element={<Contacts />} />
                             <Route path='/app/contacts/add-contacts' element={<AddContacts />} />
