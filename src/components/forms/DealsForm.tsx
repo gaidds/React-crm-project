@@ -41,27 +41,33 @@ const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) 
 
   return (
     <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 2 }}>
+      <FormControl>
       <Grid item xs={12}>
         <TextField
           label="Deal Name"
           name="name"
           value={formData.name || ''}
           onChange={handleInputChange}
+          size='small'
           fullWidth
         />
       </Grid>
+      </FormControl>
 
+    <FormControl>      
       <Grid item xs={12}>
         <TextField
           label="Website"
           name="website"
           value={formData.website || ''}
           onChange={handleInputChange}
+          size='small'
           fullWidth
         />
       </Grid>
+      </FormControl>
 
-      <FormControl fullWidth sx={{ mb: 2 }}>
+      <FormControl fullWidth size='small' sx={{ mb: 2 }}>
         <InputLabel>Account</InputLabel>
         <Select
           name="account"
@@ -76,7 +82,7 @@ const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) 
         </Select>
       </FormControl>
 
-      <FormControl fullWidth sx={{ mb: 2 }}>
+      <FormControl fullWidth size='small' sx={{ mb: 2 }}>
         <InputLabel>Assign to</InputLabel>
         <Select
           name="assigned_to"
@@ -94,7 +100,7 @@ const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) 
           ))}
         </Select>
       </FormControl>
-      <FormControl fullWidth sx={{ mb: 2 }}>
+      <FormControl fullWidth size='small' sx={{ mb: 2 }}>
         <InputLabel>Deal Source</InputLabel>
         <Select
           name="deal_source"
@@ -108,7 +114,7 @@ const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) 
           ))}
         </Select>
       </FormControl>
-      <FormControl fullWidth sx={{ mb: 2 }}>
+      <FormControl fullWidth size='small' sx={{ mb: 2 }}>
         <InputLabel>Currency</InputLabel>
         <Select
           name="currency"
@@ -122,7 +128,7 @@ const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) 
           ))}
         </Select>
       </FormControl>
-      <FormControl fullWidth sx={{ mb: 2 }}>
+      <FormControl fullWidth size='small' sx={{ mb: 2 }}>
         <InputLabel>Contact</InputLabel>
         <Select
           name="contacts"
@@ -136,7 +142,7 @@ const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) 
           ))}
         </Select>
       </FormControl>
-      <FormControl fullWidth sx={{ mb: 2 }}>
+      <FormControl fullWidth size='small' sx={{ mb: 2 }}>
         <InputLabel>Stage</InputLabel>
         <Select
           name="stage"
@@ -151,7 +157,7 @@ const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) 
         </Select>
       </FormControl>
 
-      <FormControl fullWidth sx={{ mb: 2 }}>
+      <FormControl fullWidth size='small' sx={{ mb: 2 }}>
         <InputLabel>Country</InputLabel>
         <Select
           name="country"
@@ -166,7 +172,7 @@ const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) 
         </Select>
       </FormControl>
 
-      <FormControl fullWidth sx={{ mb: 2 }}>
+      <FormControl fullWidth size='small' sx={{ mb: 2 }}>
         <InputLabel>Industry</InputLabel>
         <Select
           name="industry"
@@ -180,41 +186,47 @@ const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) 
           ))}
         </Select>
       </FormControl>
-
-
-      <Grid item xs={12}>
+          <FormControl>
+          <Grid item xs={12}>
         <TextField
           label="Value"
           name="value"
           type="string"
           value={formData.value || ''}
           onChange={handleInputChange}
+          size='small'
           fullWidth
         />
       </Grid>
+      </FormControl>
 
-      <Grid item xs={12}>
-        <TextField
-          label="Probability"
-          name="probability"
-          type="number"
-          value={formData.probability || ''}
-          onChange={handleInputChange}
-          fullWidth
-        />
-      </Grid>
-
-      <Grid item xs={12}>
-        <TextField
-          label="Close Date"
-          name="close_date"
-          type="date"
-          value={formData.close_date || ''}
-          onChange={handleInputChange}
-          fullWidth
-          InputLabelProps={{ shrink: true }}
-        />
-      </Grid>
+        <FormControl>
+            <Grid item xs={12}>
+          <TextField
+            label="Probability"
+            name="probability"
+            type="number"
+            value={formData.probability || ''}
+            onChange={handleInputChange}
+            size='small'
+            fullWidth
+          />
+        </Grid>
+            </FormControl>
+  <FormControl>
+  <Grid item xs={12}>
+          <TextField
+            label="Close Date"
+            name="close_date"
+            type="date"
+            value={formData.close_date || ''}
+            onChange={handleInputChange}
+            size='small'
+            fullWidth
+            InputLabelProps={{ shrink: true }}
+          />
+        </Grid>
+  </FormControl>
     </Box>
   );
 };
