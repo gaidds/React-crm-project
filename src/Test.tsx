@@ -1,11 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import DealsCard from './components/DealsCard';
-import sashaPhoto from './assets/images/IMG_9257B4B21EE3-1.jpeg'
-import sasha2Photo from './assets/images/profile_photo.jpg'
-import profile3 from './assets/images/profile3.jpeg'
-import profile4 from './assets/images/profile4.jpeg'
-import profile5 from './assets/images/profile5.jpeg'
+import sashaPhoto from './assets/images/profile_images_test/IMG_9257B4B21EE3-1.jpeg'
+import sasha2Photo from './assets/images/profile_images_test/profile_photo.jpg'
+import profile3 from './assets/images/profile_images_test/profile3.jpeg'
+import profile4 from './assets/images/profile_images_test/profile4.jpeg'
+import profile5 from './assets/images/profile_images_test/profile5.jpeg'
 import { createTheme, ThemeProvider } from '@mui/material';
 
 const theme = createTheme();
