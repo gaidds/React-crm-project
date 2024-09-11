@@ -1,0 +1,30 @@
+.MuiLinearProgress-root{
+    height: 12px !important;
+    border-radius: 20px;
+    background-color: #CCCCCC !important;
+}
+.MuiLinearProgress-bar{
+    border-radius: 20px;
+    background-color: #1CBEC3 !important;
+    
+}
+
+.progress-bar-labels-container{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.progress-bar-label{
+    position: relative;
+}
+
+.progress-bar-circle{
+    position: absolute;
+    border-radius: 50%;
+    height: 8px;
+    width: 8px;
+    left: calc(50% - 12px);
+    top: -26px;
+    background-color: white;
+}
