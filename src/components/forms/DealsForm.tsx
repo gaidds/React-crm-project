@@ -61,6 +61,30 @@ const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) 
 
       <FormControl fullWidth sx={{ mb: 2 }}>
         <InputLabel>Assign to</InputLabel>
+        <Select
+          name="assigned_to"
+          multiple
+          value={formData.assigned_to || []}
+          onChange={handleInputChange}
+          // renderValue={(selected) => (
+          //   <div>
+          //     {selected.map((id) => {
+          //       const user = data.users.find((u) => u.id === id);
+          //       return user ? user.user__email : null;
+          //     }).join(', ')}
+          //   </div>
+          // )}
+        >
+          {data.users.map(user => (
+            <MenuItem key={user.id} value={user.id}>
+              {user.user__email}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
+      {/* <FormControl fullWidth sx={{ mb: 2 }}>
+        <InputLabel>Assign to</InputLabel>
         <Autocomplete
       multiple
       limitTags={3}
@@ -72,7 +96,7 @@ const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) 
         <TextField {...params} label="Assigned to" placeholder="" />
       )}
     />
-      </FormControl>
+      </FormControl> */}
 
 
       <FormControl fullWidth sx={{ mb: 2 }}>
@@ -103,32 +127,20 @@ const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) 
           ))}
         </Select>
       </FormControl>
-
-      <FormControl fullWidth sx={{ mb: 2 }}>
-        <InputLabel>Contacts</InputLabel>
-          <Select
-            name="contacts"
-            multiple
-            value={formData.contacts || []}
-            onChange={handleInputChange}
-            renderValue={(selected) => (
-              <div>
-                {selected.map((id) => {
-                  const contact = data.contacts_list.find((c) => c.id === id);
-                  return contact ? contact.first_name : null;
-                }).join(', ')}
-              </div>
-            )}
-          >
-            {data.contacts_list.map((contact) => (
-              <MenuItem key={contact.id} value={contact.id}>
-                {contact.first_name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-
+        <FormControl fullWidth sx={{ mb: 2 }}>
+        <InputLabel>Contact</InputLabel>
+        <Select
+          name="contact"
+          value={formData.contact || ''}
+          onChange={handleInputChange}
+        >
+          {data.contacts_list.map(contact => (
+            <MenuItem key={contact} value={contact.id}>
+              {contact.first_name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
       <FormControl fullWidth sx={{ mb: 2 }}>
         <InputLabel>Stage</InputLabel>
         <Select

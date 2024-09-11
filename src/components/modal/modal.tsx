@@ -35,6 +35,19 @@ const style = {
   borderRadius: '16px',
 };
 
+interface Deal {
+  id: string;
+  name: string;
+  website: string;
+  account: string;
+  contact: string;
+  probability: number;
+  stage: string;
+  country: string;
+  assigned_to: any[];
+  value: string;
+}
+
 type ModalProps = {
   mode: 'add' | 'edit';
   page: 'Users' | 'Contacts' | 'Accounts' | 'Deals';
@@ -51,7 +64,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text }: Modal
   const handleOpen = () => {
     if (mode === 'edit')
     {
-      const myDeal = data.deals.find(deal => deal.id === id);
+      const myDeal = data.deals.find((deal: Deal) => deal.id === id);;
       setFormData(myDeal);
     }
     setOpen(true);
