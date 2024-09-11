@@ -107,32 +107,32 @@ export default function Sidebar(props: any) {
     const navIcons = (text: any, screen: any): React.ReactNode => {
         switch (text) {
             case 'contacts':
-                return screen === 'contacts' ? <FaAddressBook fill='#3e79f7' size={22} /> : <FaAddressBook size={22}/>
+                return screen === 'contacts' ? <FaAddressBook fill='#7B61FF' size={22} /> : <FaAddressBook size={22}/>
             case 'deals':
-                return screen === 'deals' ? <FaHandshake fill='#3e79f7'  size={22}/> : <FaHandshake  size={22}/>
+                return screen === 'deals' ? <FaHandshake fill='#7B61FF'  size={22}/> : <FaHandshake  size={22}/>
             case 'accounts':
-                return screen === 'accounts' ? <FaBuilding fill='#3e79f7'  size={22}/> : <FaBuilding  size={22}/>
+                return screen === 'accounts' ? <FaBuilding fill='#7B61FF'  size={22}/> : <FaBuilding  size={22}/>
             case 'companies':
-                return screen === 'companies' ? <FaIndustry fill='#3e79f7' size={22}/> : <FaIndustry size={22}/>
+                return screen === 'companies' ? <FaIndustry fill='#7B61FF' size={22}/> : <FaIndustry size={22}/>
             // case 'analytics':
             //     return screen === 'analytics' ? <FaChartLine fill='#3e79f7' /> : <FaChartLine />
             case 'users':
-                return screen === 'users' ? <FaUserFriends fill='#3e79f7' size={22}/> : <FaUserFriends size={22}/>
+                return screen === 'users' ? <FaUserFriends fill='#7B61FF' size={22}/> : <FaUserFriends size={22}/>
             case 'cases':
-                return screen === 'cases' ? <FaBriefcase fill='#3e79f7' size={22}/> : <FaBriefcase size={22}/>
-            default: return <FaDiceD6 fill='#3e79f7' />
+                return screen === 'cases' ? <FaBriefcase fill='#7B61FF' size={22}/> : <FaBriefcase size={22}/>
+            default: return <FaDiceD6 fill='#7B61FF' />
         }
     }
     const navIconsBottom = (text: any, screen: any): React.ReactNode => {
         switch (text) {
             case 'logout':
-                return screen === 'logout' ? <FaSignOutAlt fill='#3e79f7' size={22}/> : <FaSignOutAlt size={22}/>
+                return screen === 'logout' ? <FaSignOutAlt fill='#7B61FF' size={22}/> : <FaSignOutAlt size={22}/>
             case 'profile':
                 return screen === 'profile' ? <Avatar src={userDetail?.user_details?.profile_pic} sx={{ height: 30, width: 30 }} />:  <Avatar src={userDetail?.user_details?.profile_pic} sx={{ height: 30, width: 30 }} />;
             case 'dashboard':
-                return screen === 'dashboard' ? <FaSlidersH fill='#3e79f7' size={22}/> : <FaSlidersH size={22}/>
+                return screen === 'dashboard' ? <FaSlidersH fill='#7B61FF' size={22}/> : <FaSlidersH size={22}/>
             case 'settings':
-                return screen === 'settings' ? <FaCog fill='#3e79f7' size={22}/> : <FaCog size={22}/>
+                return screen === 'settings' ? <FaCog fill='#7B61FF' size={22}/> : <FaCog size={22}/>
         
         }
     }
