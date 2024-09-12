@@ -1,13 +1,30 @@
 import * as React from 'react';
 import { TextField, MenuItem, Select, InputLabel, FormControl, Box, Grid, Autocomplete, containerClasses, SelectChangeEvent } from '@mui/material';
 
+type Deal = {
+  name: string;
+  account: string; 
+  assigned_to: string[]; 
+  contacts: string[]; 
+  website: string;
+  stage: string;
+  deal_source: string;
+  industry: string;
+  currency: string;
+  country: string;
+  value: string | number; 
+  close_date: string;
+  probability: number; 
+  tags: string[]; 
+};
+
 
 type DealsFormProps = {
   mode: 'add' | 'edit';
   handleInputChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<any>
   ) => void;
-  formData: any;
+  formData: Deal ;
   data: {
     accounts_list: any[];
     contacts_list: any[];
@@ -21,6 +38,7 @@ type DealsFormProps = {
 }; 
 
 const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) => {
+
   return (
     <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 2 }}>
       <Grid item xs={12}>
@@ -65,24 +83,17 @@ const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) 
           multiple
           value={formData.assigned_to || []}
           onChange={handleInputChange}
-          // renderValue={(selected) => (
-          //   <div>
-          //     {selected.map((id) => {
-          //       const user = data.users.find((u) => u.id === id);
-          //       return user ? user.user__email : null;
-          //     }).join(', ')}
-          //   </div>
-          // )}
+          renderValue={(selected) =>
+            selected.map(id => data.users.find(user => user.id === id)?.user__email).join(', ')
+          }
         >
           {data.users.map(user => (
-            <MenuItem key={user.id} value={user.id}>
+            <MenuItem key={user} value={user.id}>
               {user.user__email}
             </MenuItem>
           ))}
         </Select>
       </FormControl>
-
-
       <FormControl fullWidth sx={{ mb: 2 }}>
         <InputLabel>Deal Source</InputLabel>
         <Select
@@ -111,32 +122,20 @@ const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) 
           ))}
         </Select>
       </FormControl>
-
       <FormControl fullWidth sx={{ mb: 2 }}>
-        <InputLabel>Contacts</InputLabel>
-          <Select
-            name="contacts"
-            multiple
-            value={formData.contacts || []}
-            onChange={handleInputChange}
-            // renderValue={(selected) => (
-            //   <div>
-            //     {selected.map((id) => {
-            //       const contact = data.contacts_list.find((c) => c.id === id);
-            //       return contact ? contact.first_name : null;
-            //     }).join(', ')}
-            //   </div>
-            // )}
-          >
-            {data.contacts_list.map((contact) => (
-              <MenuItem key={contact.id} value={contact.id}>
-                {contact.first_name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-
+        <InputLabel>Contact</InputLabel>
+        <Select
+          name="contacts"
+          value={formData.contacts || ''}
+          onChange={handleInputChange}
+        >
+          {data.contacts_list.map(contact => (
+            <MenuItem key={contact.id} value={contact.id}>
+              {contact.first_name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
       <FormControl fullWidth sx={{ mb: 2 }}>
         <InputLabel>Stage</InputLabel>
         <Select

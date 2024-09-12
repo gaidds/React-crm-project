@@ -35,15 +35,29 @@ const style = {
   borderRadius: '16px',
 };
 
+interface Deal {
+  id: string;
+  name: string;
+  website: string;
+  account: string;
+  contact: string;
+  probability: number;
+  stage: string;
+  country: string;
+  assigned_to: any[];
+  value: string;
+}
+
 type ModalProps = {
   mode: 'add' | 'edit';
   page: 'Users' | 'Contacts' | 'Accounts' | 'Deals';
   id?: string;
   data: any;
   icon?: boolean;
+  text?: boolean;
 };
 
-export default function DynamicModal({ mode, page, id, data, icon }: ModalProps) {
+export default function DynamicModal({ mode, page, id, data, icon, text }: ModalProps) {
   const [formData, setFormData] = React.useState<any>({});
   const [open, setOpen] = React.useState(false);
 
@@ -54,12 +68,10 @@ export default function DynamicModal({ mode, page, id, data, icon }: ModalProps)
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<any>
   ) => {
     const { name, value } = event.target;
-    if ('value' in event.target) {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
+    setFormData({
+      ...formData,
+      [name]: name === 'contacts' ? [value] : value,
+    });
   };
 
   const handleSave = () => {
@@ -79,7 +91,6 @@ export default function DynamicModal({ mode, page, id, data, icon }: ModalProps)
 
     fetchData(url, method, JSON.stringify(formData), headers)
       .then(data => {
-        console.log('Success:', data);
         handleClose();
       })
       .catch(error => {
@@ -104,13 +115,21 @@ export default function DynamicModal({ mode, page, id, data, icon }: ModalProps)
 
   return (
     <>
-     {icon && mode === 'edit' ? (
-        <FaEdit style={{ cursor: 'pointer', marginRight: '10px' }} onClick={handleOpen} />
-      ) : (
-        <Button onClick={handleOpen} sx={buttonStyle}>
-          {mode === 'add' ? 'Add' : 'Edit'}
-        </Button>
-      )}
+          { text ? (
+              // Show only "Edit" text if `text=true`
+              <span style={{ cursor: 'pointer' }} onClick={handleOpen}>Edit</span>
+            ) : (
+              // Otherwise, show the icon or button based on conditions
+              icon && mode === 'edit' ? (
+                <FaEdit style={{ cursor: 'pointer', marginRight: '10px' }} onClick={handleOpen} />
+              ) : (
+                <Button onClick={handleOpen} sx={buttonStyle}>
+                  {mode === 'add' ? 'Add' : 'Edit'}
+                </Button>
+              )
+            )
+          }
+
       <Modal
         open={open}
         onClose={handleClose}
