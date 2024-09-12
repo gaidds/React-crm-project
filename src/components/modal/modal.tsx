@@ -63,13 +63,31 @@ export default function DynamicModal({ mode, page, id, data, icon, text }: Modal
 
   const handleOpen = () => {
     if (mode === 'edit') {
-      const deals : Deals = data.deals;
+      const deals: Deals = data.deals;
       const myDeal: DealFormData | undefined = data.deals.find(deal => deal.id === id);
       if (myDeal) {
         console.log('Pre-populating form with data:', myDeal);
-        setDealFormData({...myDeal,
-           country: convertCountryNameToCode(myDeal.country),
-          });
+        
+        // Extract only the fields you need
+        const filteredDeal: DealFormData = {
+          name: myDeal.name,
+          account: myDeal.account,
+          assigned_to: myDeal.assigned_to,
+          contacts: myDeal.contacts,
+          website: myDeal.website,
+          stage: myDeal.stage,
+          deal_source: myDeal.deal_source,
+          industry: myDeal.industry,
+          currency: myDeal.currency,
+          country: convertCountryNameToCode(myDeal.country),
+          value: myDeal.value,
+          probability: myDeal.probability,
+          close_date: myDeal.close_date,
+          description: myDeal.description,
+          tags: myDeal.tags
+        };
+        
+        setDealFormData(filteredDeal);
       } else {
         console.error('Deal not found!');
       }
