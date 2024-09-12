@@ -11,7 +11,7 @@ import { fetchData, Header } from '../FetchData';
 import { DealUrl, UserUrl, UsersUrl, AccountsUrl, ContactUrl } from '../../services/ApiUrls';
 import { SelectChangeEvent } from '@mui/material';
 import { FaEdit } from 'react-icons/fa';
-import { DealFormData, ContactFormData, AccountFormData, UserFormData , ModalProps} from './types';
+import { DealFormData, ContactFormData, AccountFormData, UserFormData , ModalProps, Deals, convertCountryNameToCode} from './types';
 import { useState, useEffect } from 'react';
 
 const buttonStyle = {
@@ -61,10 +61,23 @@ export default function DynamicModal({ mode, page, id, data, icon, text }: Modal
   const [accountFormData, setAccountFormData] = useState<AccountFormData>({ name: '' });
   const [open, setOpen] = useState(false);
 
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {
+    if (mode === 'edit') {
+      const deals : Deals = data.deals;
+      const myDeal: DealFormData | undefined = data.deals.find(deal => deal.id === id);
+      if (myDeal) {
+        console.log('Pre-populating form with data:', myDeal);
+        setDealFormData({...myDeal,
+           country: convertCountryNameToCode(myDeal.country),
+          });
+      } else {
+        console.error('Deal not found!');
+      }
+    }
+    setOpen(true);
+  };
   const handleClose = () => setOpen(false);
 
-  // Populate formData when modal opens in 'edit' mode
   useEffect(() => {
     if (mode === 'edit' && data) {
       switch (page) {
