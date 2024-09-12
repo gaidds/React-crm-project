@@ -35,7 +35,7 @@ const DealsCard: React.FC<DealsCardProps> = ({ name, country, assignedUsers, pro
 
   const handleCardClick = () => {
     if (!anchorEl) { // Only navigate if the menu is not open
-      navigate('/app/deals/deals-details'); // Ensure this path matches your routing configuration
+      navigate('/app/deals/deal-details'); // Ensure this path matches your routing configuration
     }
   };
 
