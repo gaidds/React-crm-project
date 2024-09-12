@@ -42,21 +42,21 @@ const DealsCard: React.FC<DealsCardProps> = ({ name, country, assignedUsers, pro
 
   return (
     <Box
-      sx={{
-        border: '2px solid #ccc',
-        borderRadius: 4,
-        p: 2,
-        width: 120, 
-        height: 190, 
-        m: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between', 
-        backgroundColor: '#FEF7FF',
-        cursor: 'pointer', 
-        position: 'relative',
-        '&:hover': { backgroundColor: '#E8E2EA', },
-      }}
+    sx={{
+      border: '2px solid #ccc',
+      borderRadius: 4,
+      p: 2,
+      width: 120, 
+      height: 190, 
+      m: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between', 
+      backgroundColor: '#FEF7FF',
+      cursor: 'pointer', 
+      position: 'relative',
+      '&:hover': { backgroundColor: '#E8E2EA' },
+    }}
       onClick={handleCardClick}
     >
       
@@ -68,17 +68,23 @@ const DealsCard: React.FC<DealsCardProps> = ({ name, country, assignedUsers, pro
       </Box>
 
       <Box><Typography variant="h6">Assigned to</Typography></Box>
-      <Box display="flex" mb={2} flexWrap="wrap">
-      <AvatarGroup max={4}>
-          {assignedUsers.map((user, index) => (
-            <Avatar
-              key={index}
-              alt={user.name}
-              src={user.photo}
-            />
-          ))}
-        </AvatarGroup>
-      </Box>
+      <Box display="flex" flexWrap="wrap" sx={{ height: 48, overflow: 'hidden' }}>
+          <AvatarGroup max={4}>
+            {assignedUsers.length > 0 ? (
+              assignedUsers.map((user, index) => (
+                <Avatar
+                  key={index}
+                  alt={user.name}
+                  src={user.photo}
+                />
+              ))
+            ) : (
+              <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
+                No users assigned
+              </Typography>
+            )}
+          </AvatarGroup>
+        </Box>
 
       <Box display="flex" alignItems="center" justifyContent="space-between" mb={5}>
         <StyledLinearProgress variant="determinate" value={probability} sx={{ flexGrow: 1 }} />
@@ -86,28 +92,30 @@ const DealsCard: React.FC<DealsCardProps> = ({ name, country, assignedUsers, pro
           {probability}%
         </Typography>
       </Box>
-      {(stage === 'CLOSED WON' || stage === 'CLOSED LOST') && (
-        <Box
-          sx={{
-            position: 'absolute',
-            bottom: 8,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            px: 1,
-            py: 0.5,
-            borderRadius: 3,
-            backgroundColor: stage === 'CLOSED WON' ? '#D4EDDA' : '#F8D7DA',
-            color: stage === 'CLOSED WON' ? '#155724' : '#721C24',
-          }}
-        >
-          <Typography variant="body2">
-            {stage === 'CLOSED WON' ? 'WON' : 'LOST'}
-          </Typography>
-        </Box>
-      )}
+      <Box
+  sx={{
+    height: 22,
+    position: 'absolute',
+    bottom: 8,
+    left: '50%',
+    transform: 'translateX(-50%)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    px: 1,
+    py: 0.5,
+    borderRadius: 3,
+    backgroundColor: stage === 'CLOSED WON' ? '#D4EDDA' : '#F8D7DA',
+    color: stage === 'CLOSED WON' ? '#155724' : '#721C24',
+    visibility: (stage === 'CLOSED WON' || stage === 'CLOSED LOST') ? 'visible' : 'hidden'
+  }}
+>
+  {stage === 'CLOSED WON' || stage === 'CLOSED LOST' ? (
+    <Typography variant="body2">
+      {stage === 'CLOSED WON' ? 'WON' : 'LOST'}
+    </Typography>
+  ) : null}
+</Box>
     </Box>
   );
 };
