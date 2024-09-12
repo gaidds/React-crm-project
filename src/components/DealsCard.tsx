@@ -47,7 +47,7 @@ const DealsCard: React.FC<DealsCardProps> = ({ name, country, assignedUsers, pro
       borderRadius: 4,
       p: 2,
       width: 120, 
-      height: 190, 
+      height: 200, 
       m: 1,
       display: 'flex',
       flexDirection: 'column',
@@ -87,14 +87,14 @@ const DealsCard: React.FC<DealsCardProps> = ({ name, country, assignedUsers, pro
         </Box>
 
       <Box display="flex" alignItems="center" justifyContent="space-between" mb={5}>
-        <StyledLinearProgress variant="determinate" value={probability} sx={{ flexGrow: 1 }} />
+        <StyledLinearProgress variant="determinate" value={probability} sx={{ flexGrow: 1 , mt: 1}} />
         <Typography variant="body2"  sx={{ ml: 0, minWidth: '40px', textAlign: 'right' }}>
           {probability}%
         </Typography>
       </Box>
       <Box
   sx={{
-    height: 22,
+    height: 18,
     position: 'absolute',
     bottom: 8,
     left: '50%',
