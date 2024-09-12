@@ -4,9 +4,7 @@
     background-color: #CCCCCC !important;
 }
 .MuiLinearProgress-bar{
-    border-radius: 20px;
-    background-color: #1CBEC3 !important;
-    
+    border-radius: 20px;   
 }
 
 .progress-bar-labels-container{

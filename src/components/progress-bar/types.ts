@@ -1,4 +1,4 @@
 export interface ProgressBarProps {
-    status: string[];
+    status: {state: string, color: string}[];
     currentState: string;
   }
