@@ -19,6 +19,12 @@ const buttonStyle = {
   color: 'white',
   borderRadius: '30px',
   padding: '10px 20px',
+  width: '100px', // Fixed width
+  height: '36px', // Fixed height
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  textAlign: 'center',
   '&:hover': {
     backgroundColor: '#89829e',
   },
@@ -67,8 +73,6 @@ export default function DynamicModal({ mode, page, id, data, icon, text }: Modal
       const myDeal: DealFormData | undefined = data.deals.find(deal => deal.id === id);
       if (myDeal) {
         console.log('Pre-populating form with data:', myDeal);
-        
-        // Extract only the fields you need
         const filteredDeal: DealFormData = {
           name: myDeal.name,
           account: myDeal.account,
