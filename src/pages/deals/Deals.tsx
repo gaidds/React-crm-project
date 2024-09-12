@@ -238,7 +238,7 @@ export default function Deals(props: any) {
                             <IconButton color="primary" >
                                 <FaFilter />
                             </IconButton>
-                            <DynamicModal mode='add' page='Deals' data={[]} />
+                            <DynamicModal mode='add' page='Deals' data={data} />
                         </>
                     )}
                 </Stack>
