@@ -55,6 +55,7 @@ const DealsCard: React.FC<DealsCardProps> = ({ name, country, assignedUsers, pro
         backgroundColor: '#FEF7FF',
         cursor: 'pointer', 
         position: 'relative',
+        '&:hover': { backgroundColor: '#E8E2EA', },
       }}
       onClick={handleCardClick}
     >
