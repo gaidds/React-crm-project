@@ -44,7 +44,7 @@ const style = {
 };
 
 
-export default function DynamicModal({ mode, page, id, data, icon, text }: ModalProps) {
+export default function DynamicModal({ mode, page, id, data, icon, text, onSaveSuccess }: ModalProps) {
   const [dealFormData, setDealFormData] = useState<DealFormData>({
     name: '',
     account: '',
@@ -168,18 +168,18 @@ export default function DynamicModal({ mode, page, id, data, icon, text }: Modal
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const baseUrl = {
       Deals: DealUrl,
       Contacts: ContactUrl,
       Accounts: AccountsUrl,
       Users: UsersUrl,
     }[page];
-
+  
     const url = mode === 'add' ? `${baseUrl}/` : `${baseUrl}/${id}/`;
     const method = mode === 'add' ? 'POST' : 'PUT';
     const headers = Header;
-
+  
     let formData;
     switch (page) {
       case 'Deals':
@@ -198,14 +198,20 @@ export default function DynamicModal({ mode, page, id, data, icon, text }: Modal
         console.error('Invalid page type');
         return;
     }
-
-    fetchData(url, method, JSON.stringify(formData), headers)
-      .then(() => {
-        handleClose();
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
+  
+    try {
+      await fetchData(url, method, JSON.stringify(formData), headers);
+  
+      // Call the parent's state update function, if passed
+      if (typeof onSaveSuccess === 'function') {
+        await onSaveSuccess();  // Wait for the state to be updated
+      }
+  
+      // After state update is confirmed, close the modal
+      handleClose();
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   const renderForm = () => {

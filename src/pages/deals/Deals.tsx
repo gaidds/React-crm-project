@@ -274,7 +274,9 @@ export default function Deals(props: any) {
                   <FiChevronRight style={{ height: '15px' }} />
                 </FabRight>
               </Box>
-              {showAddButton && ( <DynamicModal mode='add' page='Deals' data={data}></DynamicModal>
+              {showAddButton && ( <DynamicModal mode='add' page='Deals' data={data} onSaveSuccess={async () => {
+                                                                                                  await getDeals();
+                                                                                                }}></DynamicModal>
               )}
             </Stack>
         </CustomToolbar>
@@ -341,7 +343,9 @@ export default function Deals(props: any) {
                                                       {(userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && deal.created_by.id === userId)) ? (
                                                         <>
                                                           {/* Edit Icon */}
-                                                          <DynamicModal mode='edit' page='Deals' id={deal.id} data={data} icon={true}></DynamicModal>
+                                                          <DynamicModal mode='edit' page='Deals' id={deal.id} data={data} icon={true} onSaveSuccess={async () => {
+                                                                                                                                  await getDeals();
+                                                                                                                                }}></DynamicModal>
                                                           {/* Delete Icon */}
                                                           <IconButton key={`delete-${deal.id}`}>
                                                             <FaTrashAlt

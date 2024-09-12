@@ -39,6 +39,7 @@ export interface DealFormData {
     data: any;
     icon?: boolean;
     text?: boolean;
+    onSaveSuccess: () => Promise<void>;
   };
 
 
