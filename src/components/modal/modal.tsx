@@ -11,6 +11,8 @@ import { fetchData, Header } from '../FetchData';
 import { DealUrl, UserUrl, UsersUrl, AccountsUrl, ContactUrl } from '../../services/ApiUrls';
 import { SelectChangeEvent } from '@mui/material';
 import { FaEdit } from 'react-icons/fa';
+import { DealFormErrors } from './types';
+import { useState } from 'react';
 
 const buttonStyle = {
   backgroundColor: '#65558F',
@@ -58,8 +60,10 @@ type ModalProps = {
 };
 
 export default function DynamicModal({ mode, page, id, data, icon, text }: ModalProps) {
-  const [formData, setFormData] = React.useState<any>({});
-  const [open, setOpen] = React.useState(false);
+  const [formData, setFormData] = useState<any>({});
+  const [open, setOpen] = useState(false);
+  const [errors, setErrors] = useState<DealFormErrors>({});
+  const [error, setError] = useState(false);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -74,29 +78,36 @@ export default function DynamicModal({ mode, page, id, data, icon, text }: Modal
     });
   };
 
-  const handleSave = () => {
+  const handleSave = async (e: any) => {
+    if (errors && Object.keys(errors).length > 0) {
+      console.error("Cannot save due to errors:", errors);
+      return;
+    }
+  
     const baseUrl = {
       'Deals': DealUrl,
       'Contacts': ContactUrl,
       'Accounts': AccountsUrl,
       'Users': UsersUrl
     }[page];
-
-    const url = mode === 'add'
-      ? `${baseUrl}/`
-      : `${baseUrl}/${id}/`;
-    
+  
+    const url = mode === 'add' ? `${baseUrl}/` : `${baseUrl}/${id}/`;
     const method = mode === 'add' ? 'POST' : 'PUT';
     const headers = Header;
-
-    fetchData(url, method, JSON.stringify(formData), headers)
-      .then(data => {
-        handleClose();
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+  
+    try {
+      const data = await fetchData(url, method, JSON.stringify(formData), headers);
+  
+      if (data.error) {
+        setError(true);
+        console.error('Error:', data.error);
+        setErrors(data.errors);
+      }
+    } catch (error) {
+      console.error("Error during save:", error);
+    }
   };
+  
 
   const renderForm = () => {
     switch (page) {
@@ -107,7 +118,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text }: Modal
       case 'Accounts':
         return <AccountsForm mode={mode} handleInputChange={handleInputChange} formData={formData} data={data}/>;
       case 'Deals':
-        return <DealsForm mode={mode} handleInputChange={handleInputChange} formData={formData} data={data}/>;
+        return <DealsForm mode={mode} handleInputChange={handleInputChange} formData={formData} data={data} errors={errors}/>;
       default:
         return null;
     }
