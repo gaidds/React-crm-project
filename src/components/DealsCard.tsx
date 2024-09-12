@@ -21,7 +21,7 @@ interface DealsCardProps {
 // Styled progress bar with color change based on probability
 const StyledLinearProgress = styled(LinearProgress)<{ value: number }>(({ value, theme }) => ({
   height: 14,
-  borderRadius: 5,
+  borderRadius: 7,
   backgroundColor: "#CCCCCC",
   '& .MuiLinearProgress-bar': {
     backgroundColor: value >= 75 ? '#075F18' : value >= 60 ? '#94C31C' : value >= 40 ? '#EBDA25' : value >= 20 ? '#FF8C00' : '#CA1D1F',
@@ -47,7 +47,7 @@ const DealsCard: React.FC<DealsCardProps> = ({ name, country, assignedUsers, pro
       borderRadius: 4,
       p: 2,
       width: 120, 
-      height: 200, 
+      height: 190, 
       m: 1,
       display: 'flex',
       flexDirection: 'column',
@@ -68,7 +68,7 @@ const DealsCard: React.FC<DealsCardProps> = ({ name, country, assignedUsers, pro
       </Box>
 
       <Box><Typography variant="h6">Assigned to</Typography></Box>
-      <Box display="flex" flexWrap="wrap" sx={{ height: 48, overflow: 'hidden' }}>
+      <Box display="flex" flexWrap="wrap" sx={{ height: 45, overflow: 'hidden' }}>
           <AvatarGroup max={4}>
             {assignedUsers.length > 0 ? (
               assignedUsers.map((user, index) => (
@@ -76,6 +76,7 @@ const DealsCard: React.FC<DealsCardProps> = ({ name, country, assignedUsers, pro
                   key={index}
                   alt={user.name}
                   src={user.photo}
+                  sx={{ width: 33, height: 33 }}
                 />
               ))
             ) : (
@@ -86,15 +87,17 @@ const DealsCard: React.FC<DealsCardProps> = ({ name, country, assignedUsers, pro
           </AvatarGroup>
         </Box>
 
-      <Box display="flex" alignItems="center" justifyContent="space-between" mb={5}>
-        <StyledLinearProgress variant="determinate" value={probability} sx={{ flexGrow: 1 , mt: 1}} />
-        <Typography variant="body2"  sx={{ ml: 0, minWidth: '40px', textAlign: 'right' }}>
-          {probability}%
-        </Typography>
+      <Box display="flex" alignItems="center" justifyContent="space-between" mb={4}>
+      <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
+          <StyledLinearProgress variant="determinate" value={probability} sx={{ flexGrow: 1 }} />
+          <Typography variant="body2" sx={{ ml: -1, minWidth: '40px', textAlign: 'right', lineHeight: '14px' }}>
+            {probability}%
+          </Typography>
+        </Box>
       </Box>
       <Box
   sx={{
-    height: 18,
+    height: 16,
     position: 'absolute',
     bottom: 8,
     left: '50%',
