@@ -1,41 +1,7 @@
 import * as React from 'react';
-import { TextField, MenuItem, Select, InputLabel, FormControl, Box, Grid, Autocomplete, containerClasses, SelectChangeEvent } from '@mui/material';
+import { TextField, MenuItem, Select, InputLabel, FormControl, Box, Grid} from '@mui/material';
+import { DealsFormProps } from './types';
 
-type Deal = {
-  name: string;
-  account: string; 
-  assigned_to: string[]; 
-  contacts: string[]; 
-  website: string;
-  stage: string;
-  deal_source: string;
-  industry: string;
-  currency: string;
-  country: string;
-  value: string | number; 
-  close_date: string;
-  probability: number; 
-  tags: string[]; 
-};
-
-
-type DealsFormProps = {
-  mode: 'add' | 'edit';
-  handleInputChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<any>
-  ) => void;
-  formData: Deal ;
-  data: {
-    accounts_list: any[];
-    contacts_list: any[];
-    currency: any[];
-    countries: any[];
-    deal_source: any[];
-    industries: any[];
-    stage: any[];
-    users: any[];
-  };
-}; 
 
 const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) => {
 
