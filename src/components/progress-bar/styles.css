@@ -28,3 +28,8 @@
     top: -26px;
     background-color: white;
 }
+
+.progress-bar-label:last-child .progress-bar-circle{
+    left: auto;
+    right: 4px;
+}
