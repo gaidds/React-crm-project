@@ -1,5 +1,5 @@
 import { DealUrl } from '../../services/ApiUrls';
-import { Avatar, AvatarGroup, Box, Button, IconButton, Stack, Typography, Select, MenuItem, TableContainer, Table, TableCell, TableRow, Paper, TableBody, Container } from '@mui/material'
+import { Avatar, AvatarGroup, Box, Button, IconButton, Stack, Typography, Select, MenuItem, TableContainer, Table, TableCell, TableRow, Paper, TableBody, Container, Tabs } from '@mui/material'
 import React, { SyntheticEvent, useEffect, useState } from 'react'
 import { Spinner } from '../../components/Spinner';
 import { FiPlus } from "@react-icons/all-files/fi/FiPlus";
@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { fetchData } from '../../components/FetchData';
 import { getComparator, stableSort } from '../../components/Sorting';
 import { Label } from '../../components/Label';
-import { FaTrashAlt } from 'react-icons/fa';
+import { FaFilter, FaTrashAlt } from 'react-icons/fa';
 import DynamicModal from '../../components/modal/modal';
 import { DeleteModal } from '../../components/DeleteModal';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
@@ -109,6 +109,8 @@ export default function Deals(props: any) {
 
     const [selectOpen, setSelectOpen] = useState(false);
     const [data,setData] = useState<any[]>([]);
+    const [tab, setTab] = useState('list-view');
+    const navigate = useNavigate();
     useEffect(() => {
         getDeals();
     }, [currentPage, recordsPerPage]);
@@ -139,6 +141,16 @@ export default function Deals(props: any) {
             console.error('Error fetching data:', error);
         }
     };
+
+    const handleChangeTab = (event: React.SyntheticEvent, newValue: string) => {
+      setTab(newValue);
+      if (newValue === 'card-view') {
+        navigate('/app/deals/card-view'); // Navigate to Card View
+      } else if (newValue === 'list-view') {
+        navigate('/app/deals'); // Navigate to List View
+      }
+    };
+
 
     const handleRequestSort = (event: any, property: any) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -219,8 +231,18 @@ export default function Deals(props: any) {
     return (
 
         <Box sx={{ mt: '60px' }}>
-        <CustomToolbar sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+        <CustomToolbar sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+        <Stack direction="row" spacing={2} alignItems="center">
+                    {showAddButton && (
+                        <>
+                            <IconButton color="primary" >
+                                <FaFilter />
+                            </IconButton>
+                            <DynamicModal mode='add' page='Deals' data={[]} />
+                        </>
+                    )}
+                </Stack>
+                <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 2, ml: 1 }}>
               <Select
                 value={recordsPerPage}
                 onChange={(e: any) => handleRecordsPerPage(e)}
@@ -256,9 +278,33 @@ export default function Deals(props: any) {
                   <FiChevronRight style={{ height: '15px' }} />
                 </FabRight>
               </Box>
-              {showAddButton && ( <DynamicModal mode='add' page='Deals' data={data}></DynamicModal>
-              )}
             </Stack>
+                <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'right' }}>
+                <Tabs value={tab} onChange={handleChangeTab} sx={{ mt: '26px', '& .MuiTabs-indicator': {
+              backgroundColor: 'transparent', 
+              height: 4, 
+            }, }}>
+                        <CustomTab value="card-view" label="Card View"
+                            sx={{
+                                backgroundColor: tab === 'card-view' ? 'white' : '#E2E7EB',
+                                color: tab === 'card-view' ? 'black' : 'black',
+                                borderTop: '1px solid black', // Top border
+                                borderLeft: '1px solid black', // Left border
+                                borderRight: '1px solid black', // Right border
+                                borderBottom: 'none', 
+                            }} />
+                        <CustomTab value="list-view" label="List View"
+                            sx={{
+                                backgroundColor: tab === 'list-view' ? 'white' : '#E2E7EB',
+                                color: tab === 'list-view' ? 'black' : 'black',
+                                borderTop: '1px solid black', // Top border
+                                borderLeft: '1px solid black', // Left border
+                                borderRight: '1px solid black', // Right border
+                                borderBottom: 'none', 
+                                ml: '5px',
+                            }} />
+                    </Tabs>
+                </Box>
         </CustomToolbar>
             <Container sx={{ width: '100%', maxWidth: '100%', minWidth: '100%' }}>
                 <Box sx={{ width: '100%', minWidth: '100%', m: '15px 0px 0px 0px' }}>

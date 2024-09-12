@@ -1,5 +1,5 @@
 import { DealUrl } from '../../services/ApiUrls';
-import { Avatar, AvatarGroup, Box, Grid2, Button, IconButton, Stack, Typography, Select, MenuItem, TableContainer, Table, TableCell, TableRow, Paper, TableBody, Container, Divider } from '@mui/material'
+import { Avatar, AvatarGroup, Box, Grid2, Button, IconButton, Stack, Typography, Select, MenuItem, TableContainer, Table, TableCell, TableRow, Paper, TableBody, Container, Divider, Tab, Tabs } from '@mui/material'
 import React, { SyntheticEvent, useEffect, useState } from 'react'
 import { Spinner } from '../../components/Spinner';
 import { FiPlus } from "@react-icons/all-files/fi/FiPlus";
@@ -19,62 +19,9 @@ import { EnhancedTableHead } from '../../components/EnchancedTableHead';
 import MyContext, { useMyContext } from '../../context/Context'
 import DealsCard from '../../components/DealsCard';
 import StagesBar from '../../components/stages-bar/StagesBar';
+import {FaFilter} from "react-icons/fa"
 
 
-// Define TypeScript interfaces for your data
-
-interface HeadCell {
-    disablePadding: boolean;
-    id: any;
-    label: string;
-    numeric: boolean;
-  }
-  const headCells: readonly HeadCell[] = [
-    {
-      id: 'name',
-      numeric: false,
-      disablePadding: false,
-      label: 'Name'
-    },
-    {
-      id: 'probability',
-      numeric: true,
-      disablePadding: false,
-      label: 'Probability'
-    },
-    {
-      id: 'stage',
-      numeric: false,
-      disablePadding: false,
-      label: 'Stage'
-    },
-    {
-      id: 'country',
-      numeric: false,
-      disablePadding: false,
-      label: 'Country'
-    },
-    {
-        id: 'assigned_to',
-        numeric: false,
-        disablePadding: false,
-        label: 'Assigned To'
-      },
-    {
-      id: 'value',
-      numeric: false,
-      disablePadding: false,
-      label: 'Value'
-    },
-    {
-      id: '',
-      numeric: true,
-      disablePadding: false,
-      label: 'Action'
-    }
-  ]
-
-// Define the interfaces
 interface AssignedTo {
     user_details: {
         email: string;
@@ -106,6 +53,9 @@ export default function DealsCardView(props: any) {
 
     const [selectOpen, setSelectOpen] = useState(false);
     const [data,setData] = useState<any[]>([]);
+    const [tab, setTab] = useState('card-view');
+    const navigate = useNavigate();
+  
 
     const stagesData = [
         { name: 'ASSIGNED LEAD', color: '#004E85' },
@@ -159,73 +109,112 @@ export default function DealsCardView(props: any) {
 
       const showAddButton = userRole !== 'USER' && userRole !== 'SALES REP';
 
+      const handleChangeTab = (event: React.SyntheticEvent, newValue: string) => {
+        setTab(newValue);
+        if (newValue === 'card-view') {
+          navigate('/app/deals/card-view'); // Navigate to Card View
+        } else if (newValue === 'list-view') {
+          navigate('/app/deals'); // Navigate to List View
+        }
+      };
+
 console.log(deals,'deals')
 
     return (
 
-        <Box sx={{ mt: '60px', height: '100vh', display: 'flex', flexDirection: 'column'  }}>
-        <CustomToolbar sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-              {showAddButton && ( <DynamicModal mode='add' page='Deals' data={data}></DynamicModal>
-              )}
-            </Stack>
-        </CustomToolbar>
-        <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          flexGrow: 1,
-          width: '95%',          
-          margin: '0 auto',   
-          mt: 4   
-        }}
-      >
-        <Box sx={{ flexShrink: 0 }}>
-          <StagesBar stages={stagesData} />
-        </Box>
-
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            overflowX: 'hidden',  
-            height: '100%',       
-            flexGrow: 1 ,
-            mt: 3    
-          }}
-        >
-          {stagesData.map(stage => (
+      <Box sx={{ mt: '60px', height: '100vh', display: 'flex', flexDirection: 'column' }}>
+            <CustomToolbar sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', mb: 3}}>
+                <Stack direction="row" spacing={2} alignItems="center">
+                    {showAddButton && (
+                        <>
+                        <IconButton color="primary" >
+                            <FaFilter />
+                        </IconButton>
+                        <DynamicModal mode='add' page='Deals' data={[]}/>
+                    </>
+                    )}
+                </Stack>
+                <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'right' }}>
+                <Tabs value={tab} onChange={handleChangeTab} sx={{ mt: '26px', '& .MuiTabs-indicator': {
+              backgroundColor: 'transparent', 
+              height: 4, 
+            }, }}>
+                        <CustomTab value="card-view" label="Card View"
+                            sx={{
+                                backgroundColor: tab === 'card-view' ? 'white' : '#E2E7EB',
+                                color: tab === 'card-view' ? 'black' : 'black',
+                                borderTop: '1px solid black', // Top border
+                                borderLeft: '1px solid black', // Left border
+                                borderRight: '1px solid black', // Right border
+                                borderBottom: 'none', 
+                            }} />
+                        <CustomTab value="list-view" label="List View"
+                            sx={{
+                                backgroundColor: tab === 'list-view' ? 'white' : '#E2E7EB',
+                                color: tab === 'list-view' ? 'black' : 'black',
+                                borderTop: '1px solid black', // Top border
+                                borderLeft: '1px solid black', // Left border
+                                borderRight: '1px solid black', // Right border
+                                borderBottom: 'none', 
+                                ml: '5px',
+                            }} />
+                    </Tabs>
+                </Box>
+            </CustomToolbar>
             <Box
-              key={stage.name}
-              sx={{
-                flex: '1 0 0',     
-                p: 1,
-                display: 'flex',
-                flexDirection: 'column',
-                overflowY: 'auto',  
-                height: '100%',     
-                overflowX: 'hidden',
-                alignItems: 'center',
-
-              }}
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flexGrow: 1,
+                    width: '95%',
+                    margin: '0 auto',
+                    mt: 4
+                }}
             >
-              {dealsByStage[stage.name]?.map(deal => (
-                <DealsCard
-                  key={deal.id}
-                  name={deal.name}
-                  country={deal.country}
-                  assignedUsers={deal.assigned_to.map(user => ({
-                    name: user.user_details.email,
-                    photo: user.user_details.profile_pic
-                  }))}
-                  probability={deal.probability}
-                  stage={deal.stage}
-                />
-              ))}
+                <Box sx={{ flexShrink: 0 }}>
+                    <StagesBar stages={stagesData} />
+                </Box>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        overflowX: 'hidden',
+                        height: '100%',
+                        flexGrow: 1,
+                        mt: 3
+                    }}
+                >
+                    {stagesData.map(stage => (
+                        <Box
+                            key={stage.name}
+                            sx={{
+                                flex: '1 0 0',
+                                p: 1,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                overflowY: 'auto',
+                                height: '100%',
+                                overflowX: 'hidden',
+                                alignItems: 'center',
+                            }}
+                        >
+                            {dealsByStage[stage.name]?.map(deal => (
+                                <DealsCard
+                                    key={deal.id}
+                                    name={deal.name}
+                                    country={deal.country}
+                                    assignedUsers={deal.assigned_to.map(user => ({
+                                        name: user.user_details.email,
+                                        photo: user.user_details.profile_pic
+                                    }))}
+                                    probability={deal.probability}
+                                    stage={deal.stage}
+                                />
+                            ))}
+                        </Box>
+                    ))}
+                </Box>
             </Box>
-          ))}
-        </Box>
-      </Box>
         </Box>
     );
 }
