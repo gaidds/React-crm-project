@@ -35,7 +35,7 @@ const DealsCard: React.FC<DealsCardProps> = ({ name, country, assignedUsers, pro
 
   const handleCardClick = () => {
     if (!anchorEl) { // Only navigate if the menu is not open
-      navigate('/deals-details'); // Ensure this path matches your routing configuration
+      navigate('/app/deals/deals-details'); // Ensure this path matches your routing configuration
     }
   };
 
@@ -46,8 +46,8 @@ const DealsCard: React.FC<DealsCardProps> = ({ name, country, assignedUsers, pro
         border: '2px solid #ccc',
         borderRadius: 4,
         p: 2,
-        width: 180, 
-        height: 250, 
+        width: 120, 
+        height: 190, 
         m: 1,
         display: 'flex',
         flexDirection: 'column',
@@ -61,7 +61,7 @@ const DealsCard: React.FC<DealsCardProps> = ({ name, country, assignedUsers, pro
       
       <Box mb={2}>
         <Typography variant="h6" noWrap>{name}</Typography>
-        <Typography variant="body2" color="textSecondary">
+        <Typography variant="body2" noWrap color="textSecondary" >
           {country}
         </Typography>
       </Box>

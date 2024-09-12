@@ -28,6 +28,8 @@ import { CaseDetails } from '../pages/cases/CaseDetails';
 import logo from '../assets/images/auth/app_logo.png';
 import { StyledListItemButton, StyledListItemText } from '../styles/CssStyled';
 import MyContext, { useMyContext } from '../context/Context';
+import DealsCardView from '../pages/deals/DealsCardView';
+
 
 // declare global {
 //     interface Window {
@@ -327,6 +329,7 @@ export default function Sidebar(props: any) {
                             <Route path='/app/users/edit-user' element={<EditUser />} />
                             <Route path='/app/users/user-details' element={<UserDetails />} />
                             <Route path='/app/deals' element={<Deals />} />
+                            <Route path='/app/deals/card-view' element={<DealsCardView />} />
                             <Route path='/app/deals/deal-details' element={<DealDetails />} />
                             <Route path='/app/cases' element={<Cases />} />
                             <Route path='/app/cases/add-case' element={<AddCase />} />
