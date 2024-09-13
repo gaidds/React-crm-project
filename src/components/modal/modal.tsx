@@ -211,12 +211,9 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
   };
 
   const handleSave = async () => {
-    // Prevent save if there are form validation errors
-    if (errors && Object.keys(errors).length > 0) {
-      console.error("Cannot save due to errors:", errors);
-      return;
-    }
-  
+    setErrors({});
+
+    console.log('Save button clicked');
     // Define base URLs for different pages
     const baseUrl = {
       Deals: DealUrl,
@@ -251,27 +248,24 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
     }
   
     try {
-      // Make the API request to save the form data
       const data = await fetchData(url, method, JSON.stringify(formData), headers);
   
       // Handle errors returned from the backend
       if (data.error) {
         setError(true);
         console.error('Error:', data.error);
-        setErrors(data.errors); // Set errors to display them in the form
+        setErrors(data.errors);
         return;
       }
   
-      // Call the parent's state update function (if provided)
       if (typeof onSaveSuccess === 'function') {
-        await onSaveSuccess();  // Wait for the state to be updated
+        await onSaveSuccess();
       }
-  
-      // Close the modal after successfully saving
       handleClose();
+
     } catch (error) {
       console.error("Error during save:", error);
-      setError(true); // Optionally, you can set a general error state
+      setError(true);
     }
   };
   
@@ -286,7 +280,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
       case 'Accounts':
         return <AccountsForm mode={mode} handleInputChange={handleInputChange} formData={accountFormData} data={data} />;
       case 'Deals':
-        return <DealsForm mode={mode} handleInputChange={handleInputChange} handleAutocompleteChange={handleAutocompleteChange} formData={dealFormData} data={data} />;
+        return <DealsForm mode={mode} handleInputChange={handleInputChange} handleAutocompleteChange={handleAutocompleteChange} formData={dealFormData} data={data} errors={errors}/>;
       default:
         return null;
     }
