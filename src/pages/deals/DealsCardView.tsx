@@ -123,12 +123,12 @@ console.log(deals,'deals')
     return (
 
       <Box sx={{ mt: '60px', height: '100vh', display: 'flex', flexDirection: 'column' }}>
-            <CustomToolbar sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', mb: 3}}>
+            <CustomToolbar sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', mb: 3, }}>
                 <Stack direction="row" spacing={2} alignItems="center">
                     {showAddButton && (
                         <>
                         <IconButton color="primary" >
-                            <FaFilter />
+                            <FaFilter style={{ color: '#333F49' }} />
                         </IconButton>
                         <DynamicModal mode='add' page='Deals' data={data}/>
                     </>
@@ -192,7 +192,6 @@ console.log(deals,'deals')
                                 p: 1,
                                 display: 'flex',
                                 flexDirection: 'column',
-                                overflowY: 'auto',
                                 height: '100%',
                                 overflowX: 'hidden',
                                 alignItems: 'center',

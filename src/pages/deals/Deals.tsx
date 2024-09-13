@@ -236,7 +236,7 @@ export default function Deals(props: any) {
                     {showAddButton && (
                         <>
                             <IconButton color="primary" >
-                                <FaFilter />
+                                <FaFilter style={{ color: '#333F49' }}/>
                             </IconButton>
                             <DynamicModal mode='add' page='Deals' data={data} />
                         </>
