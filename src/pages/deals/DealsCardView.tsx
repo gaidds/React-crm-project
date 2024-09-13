@@ -36,11 +36,6 @@ export default function DealsCardView(props: any) {
     const [deals, setDeals] = useState<Deal[]>([]);
     const [dealsByStage, setDealsByStage] = useState<{ [key: string]: Deal[] }>({});
     const [loading, setLoading] = useState<boolean>(true);
-    const [selected, setSelected] = useState<string[]>([]);
-    const [selectedId, setSelectedId] = useState<string[]>([]);
-    const [isSelectedId, setIsSelectedId] = useState<boolean[]>([]);
-
-    const [selectOpen, setSelectOpen] = useState(false);
     const [data,setData] = useState<any[]>([]);
     const [tab, setTab] = useState('card-view');
     const navigate = useNavigate();
