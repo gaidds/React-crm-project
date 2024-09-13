@@ -17,6 +17,7 @@ import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { EnhancedTableHead } from '../../components/EnchancedTableHead';
 import MyContext, { useMyContext } from '../../context/Context'
+// import "./styles.css"
 
 
 // Define TypeScript interfaces for your data
@@ -36,13 +37,13 @@ interface HeadCell {
     },
     {
       id: 'probability',
-      numeric: true,
+      numeric: false,
       disablePadding: false,
       label: 'Probability'
     },
     {
       id: 'stage',
-      numeric: false,
+      numeric: true,
       disablePadding: false,
       label: 'Stage'
     },
@@ -216,6 +217,23 @@ export default function Deals(props: any) {
     
       const recordsList = [[10, '10 Records per page'], [20, '20 Records per page'], [30, '30 Records per page'], [40, '40 Records per page'], [50, '50 Records per page']]
 
+    const styleStage = (stage: string) => {
+      let result = ""
+      switch (stage) {
+        case "ASSIGNED LEAD" :
+          result ="bg-red"
+          break;
+          case "QUALIFCATION" :
+            result ="#004E85"
+            break;
+        case "IN PROCESS":
+           result = "bg-black" 
+           break;
+        default:
+           result = ""
+      }
+      return result
+    }
     return (
 
         <Box sx={{ mt: '60px' }}>
@@ -256,7 +274,9 @@ export default function Deals(props: any) {
                   <FiChevronRight style={{ height: '15px' }} />
                 </FabRight>
               </Box>
-              {showAddButton && ( <DynamicModal mode='add' page='Deals' data={data}></DynamicModal>
+              {showAddButton && ( <DynamicModal mode='add' page='Deals' data={data} onSaveSuccess={async () => {
+                                                                                                  await getDeals();
+                                                                                                }}></DynamicModal>
               )}
             </Stack>
         </CustomToolbar>
@@ -297,8 +317,10 @@ export default function Deals(props: any) {
                                                     <TableCell className='tableCell'>
                                                         {deal.probability || '---'}
                                                     </TableCell>
-                                                    <TableCell className='tableCell'>
+                                                    <TableCell className='table-cell-stage' >
+                                                      <Box className= {styleStage(deal.stage)}>
                                                         {deal.stage || '---'}
+                                                      </Box>
                                                     </TableCell>
                                                     <TableCell className='tableCell'>
                                                         {deal.country || '---'}
@@ -321,7 +343,9 @@ export default function Deals(props: any) {
                                                       {(userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && deal.created_by.id === userId)) ? (
                                                         <>
                                                           {/* Edit Icon */}
-                                                          <DynamicModal mode='edit' page='Deals' id={deal.id} data={data} icon={true}></DynamicModal>
+                                                          <DynamicModal mode='edit' page='Deals' id={deal.id} data={data} icon={true} onSaveSuccess={async () => {
+                                                                                                                                  await getDeals();
+                                                                                                                                }}></DynamicModal>
                                                           {/* Delete Icon */}
                                                           <IconButton key={`delete-${deal.id}`}>
                                                             <FaTrashAlt

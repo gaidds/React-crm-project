@@ -13,6 +13,8 @@ import { SelectChangeEvent } from '@mui/material';
 import { FaEdit } from 'react-icons/fa';
 import { DealFormData, ContactFormData, AccountFormData, UserFormData , ModalProps, Deals, convertCountryNameToCode, DealFormErrors} from './types';
 import { useState, useEffect } from 'react';
+import { User } from '../forms/types';
+
 
 const buttonStyle = {
   backgroundColor: '#65558F',
@@ -44,7 +46,7 @@ const style = {
 };
 
 
-export default function DynamicModal({ mode, page, id, data, icon, text }: ModalProps) {
+export default function DynamicModal({ mode, page, id, data, icon, text, onSaveSuccess }: ModalProps) {
   const [dealFormData, setDealFormData] = useState<DealFormData>({
     name: '',
     account: '',
@@ -78,8 +80,8 @@ export default function DynamicModal({ mode, page, id, data, icon, text }: Modal
         const filteredDeal: DealFormData = {
           name: myDeal.name,
           account: myDeal.account,
-          assigned_to: myDeal.assigned_to,
-          contacts: myDeal.contacts,
+          assigned_to: myDeal.assigned_to.map(user => user.id),
+          contacts: myDeal.contacts.map(contact => contact.id),
           website: myDeal.website,
           stage: myDeal.stage,
           deal_source: myDeal.deal_source,
@@ -170,12 +172,52 @@ export default function DynamicModal({ mode, page, id, data, icon, text }: Modal
     }
   };
 
-  const handleSave = async (e: any) => {
+  // const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
+  const handleAutocompleteChange = (
+    event: React.ChangeEvent<{}>,
+    newValue: User[]
+  ) => {
+    const selectedUserIds = newValue.map(user => user.id);
+    // setSelectedUserIds(selectedIds); // Extract the selected user IDs
+  
+    switch (page) {
+      case 'Deals':
+        setDealFormData((prevState) => ({
+          ...prevState,
+          assigned_to: selectedUserIds,
+        }));
+        break;
+      case 'Contacts':
+        setConactFormData((prevState) => ({
+          ...prevState,
+          assigned_to: selectedUserIds,
+        }));
+        break;
+      case 'Accounts':
+        setAccountFormData((prevState) => ({
+          ...prevState,
+          assigned_to: selectedUserIds,
+        }));
+        break;
+      case 'Users':
+        setUserFormData((prevState) => ({
+          ...prevState,
+          assigned_to: selectedUserIds,
+        }));
+        break;
+      default:
+        console.error('Invalid page type');
+    }
+  };
+
+  const handleSave = async () => {
+    // Prevent save if there are form validation errors
     if (errors && Object.keys(errors).length > 0) {
       console.error("Cannot save due to errors:", errors);
       return;
     }
   
+    // Define base URLs for different pages
     const baseUrl = {
       Deals: DealUrl,
       Contacts: ContactUrl,
@@ -183,10 +225,12 @@ export default function DynamicModal({ mode, page, id, data, icon, text }: Modal
       Users: UsersUrl,
     }[page];
   
+    // Define the URL and HTTP method based on mode (add or edit)
     const url = mode === 'add' ? `${baseUrl}/` : `${baseUrl}/${id}/`;
     const method = mode === 'add' ? 'POST' : 'PUT';
     const headers = Header;
-    
+  
+    // Define the form data based on the current page
     let formData;
     switch (page) {
       case 'Deals':
@@ -207,17 +251,30 @@ export default function DynamicModal({ mode, page, id, data, icon, text }: Modal
     }
   
     try {
+      // Make the API request to save the form data
       const data = await fetchData(url, method, JSON.stringify(formData), headers);
   
+      // Handle errors returned from the backend
       if (data.error) {
         setError(true);
         console.error('Error:', data.error);
-        setErrors(data.errors);
+        setErrors(data.errors); // Set errors to display them in the form
+        return;
       }
+  
+      // Call the parent's state update function (if provided)
+      if (typeof onSaveSuccess === 'function') {
+        await onSaveSuccess();  // Wait for the state to be updated
+      }
+  
+      // Close the modal after successfully saving
+      handleClose();
     } catch (error) {
       console.error("Error during save:", error);
+      setError(true); // Optionally, you can set a general error state
     }
   };
+  
   
 
   const renderForm = () => {
@@ -229,7 +286,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text }: Modal
       case 'Accounts':
         return <AccountsForm mode={mode} handleInputChange={handleInputChange} formData={accountFormData} data={data} />;
       case 'Deals':
-        return <DealsForm mode={mode} handleInputChange={handleInputChange} formData={dealFormData} data={data} errors={errors}/>;
+        return <DealsForm mode={mode} handleInputChange={handleInputChange} handleAutocompleteChange={handleAutocompleteChange} formData={dealFormData} data={data} />;
       default:
         return null;
     }
