@@ -1,8 +1,8 @@
 export interface DealFormData {
     name: string;
     account: string;
-    assigned_to: string[];
-    contacts: string[];
+    assigned_to:any[];
+    contacts: any[];
     website: string;
     stage: string;
     deal_source: string;

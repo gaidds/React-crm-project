@@ -6,6 +6,10 @@ export type DealsFormProps = {
     handleInputChange: (
       e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<any>
     ) => void;
+    handleAutocompleteChange: (
+      event: React.ChangeEvent<{}>,
+      newValue: User[]
+    ) => void;
     formData: DealFormData ;
     data: {
       accounts_list: any[];
@@ -18,3 +22,9 @@ export type DealsFormProps = {
       users: any[];
     };
   }; 
+
+
+  export type User={
+    id: string;
+    user__email: string;
+  };

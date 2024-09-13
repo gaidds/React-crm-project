@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { TextField, MenuItem, Select, InputLabel, FormControl, Box, Grid} from '@mui/material';
+import { TextField, MenuItem, Select, InputLabel, Chip, FormControl, Box, Grid, Autocomplete, Avatar} from '@mui/material';
 import { DealsFormProps } from './types';
 
 
-const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) => {
+
+const DealsForm = ({ mode, handleInputChange, handleAutocompleteChange, formData, data }: DealsFormProps) => {
 
   return (
     <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 2 }}>
@@ -43,22 +44,14 @@ const DealsForm = ({ mode, handleInputChange, formData, data }: DealsFormProps) 
       </FormControl>
 
       <FormControl fullWidth sx={{ mb: 2 }}>
-        <InputLabel>Assign to</InputLabel>
-        <Select
-          name="assigned_to"
+        <Autocomplete
           multiple
-          value={formData.assigned_to || []}
-          onChange={handleInputChange}
-          renderValue={(selected) =>
-            selected.map(id => data.users.find(user => user.id === id)?.user__email).join(', ')
-          }
-        >
-          {data.users.map(user => (
-            <MenuItem key={user} value={user.id}>
-              {user.user__email}
-            </MenuItem>
-          ))}
-        </Select>
+          value={data.users.filter(user => formData.assigned_to.includes(user.id))}
+          onChange={handleAutocompleteChange} // Use the new handler
+          options={data.users}
+          getOptionLabel={(option) => option.user__email}
+          renderInput={(params) => <TextField {...params} label="Select Users" variant="outlined" />}
+        />
       </FormControl>
       <FormControl fullWidth sx={{ mb: 2 }}>
         <InputLabel>Deal Source</InputLabel>

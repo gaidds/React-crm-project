@@ -13,6 +13,8 @@ import { SelectChangeEvent } from '@mui/material';
 import { FaEdit } from 'react-icons/fa';
 import { DealFormData, ContactFormData, AccountFormData, UserFormData , ModalProps, Deals, convertCountryNameToCode} from './types';
 import { useState, useEffect } from 'react';
+import { User } from '../forms/types';
+
 
 const buttonStyle = {
   backgroundColor: '#65558F',
@@ -76,8 +78,8 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
         const filteredDeal: DealFormData = {
           name: myDeal.name,
           account: myDeal.account,
-          assigned_to: myDeal.assigned_to,
-          contacts: myDeal.contacts,
+          assigned_to: myDeal.assigned_to.map(user => user.id),
+          contacts: myDeal.contacts.map(contact => contact.id),
           website: myDeal.website,
           stage: myDeal.stage,
           deal_source: myDeal.deal_source,
@@ -168,6 +170,44 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
     }
   };
 
+  // const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
+  const handleAutocompleteChange = (
+    event: React.ChangeEvent<{}>,
+    newValue: User[]
+  ) => {
+    const selectedUserIds = newValue.map(user => user.id);
+    // setSelectedUserIds(selectedIds); // Extract the selected user IDs
+  
+    switch (page) {
+      case 'Deals':
+        setDealFormData((prevState) => ({
+          ...prevState,
+          assigned_to: selectedUserIds,
+        }));
+        break;
+      case 'Contacts':
+        setConactFormData((prevState) => ({
+          ...prevState,
+          assigned_to: selectedUserIds,
+        }));
+        break;
+      case 'Accounts':
+        setAccountFormData((prevState) => ({
+          ...prevState,
+          assigned_to: selectedUserIds,
+        }));
+        break;
+      case 'Users':
+        setUserFormData((prevState) => ({
+          ...prevState,
+          assigned_to: selectedUserIds,
+        }));
+        break;
+      default:
+        console.error('Invalid page type');
+    }
+  };
+
   const handleSave = async () => {
     const baseUrl = {
       Deals: DealUrl,
@@ -223,7 +263,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
       case 'Accounts':
         return <AccountsForm mode={mode} handleInputChange={handleInputChange} formData={accountFormData} data={data} />;
       case 'Deals':
-        return <DealsForm mode={mode} handleInputChange={handleInputChange} formData={dealFormData} data={data} />;
+        return <DealsForm mode={mode} handleInputChange={handleInputChange} handleAutocompleteChange={handleAutocompleteChange} formData={dealFormData} data={data} />;
       default:
         return null;
     }
