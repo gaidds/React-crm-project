@@ -1,22 +1,11 @@
 import { DealUrl } from '../../services/ApiUrls';
-import { Avatar, AvatarGroup, Box, Grid2, Button, IconButton, Stack, Typography, Select, MenuItem, TableContainer, Table, TableCell, TableRow, Paper, TableBody, Container, Divider, Tab, Tabs } from '@mui/material'
-import React, { SyntheticEvent, useEffect, useState } from 'react'
-import { Spinner } from '../../components/Spinner';
-import { FiPlus } from "@react-icons/all-files/fi/FiPlus";
-import { FiChevronLeft } from "@react-icons/all-files/fi/FiChevronLeft";
-import { FiChevronRight } from "@react-icons/all-files/fi/FiChevronRight";
-import { CustomTab, CustomToolbar, FabLeft, FabRight, StyledTableCell, StyledTableRow } from '../../styles/CssStyled';
+import { Box, IconButton, Stack, Tabs } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import { CustomTab, CustomToolbar} from '../../styles/CssStyled';
 import { useNavigate } from 'react-router-dom';
 import { fetchData } from '../../components/FetchData';
-import { getComparator, stableSort } from '../../components/Sorting';
-import { Label } from '../../components/Label';
-import { FaTrashAlt } from 'react-icons/fa';
 import DynamicModal from '../../components/modal/modal';
-import { DeleteModal } from '../../components/DeleteModal';
-import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
-import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
-import { EnhancedTableHead } from '../../components/EnchancedTableHead';
-import MyContext, { useMyContext } from '../../context/Context'
+import { useMyContext } from '../../context/Context'
 import DealsCard from '../../components/DealsCard';
 import StagesBar from '../../components/stages-bar/StagesBar';
 import {FaFilter} from "react-icons/fa"
