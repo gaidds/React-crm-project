@@ -81,6 +81,7 @@ interface AssignedTo {
     };
 }
 
+
 interface Deal {
     id: string;
     name: string;
@@ -282,9 +283,12 @@ export default function Deals(props: any) {
         </CustomToolbar>
             <Container sx={{ width: '100%', maxWidth: '100%', minWidth: '100%' }}>
                 <Box sx={{ width: '100%', minWidth: '100%', m: '15px 0px 0px 0px' }}>
-                    <Paper sx={{ width: 'calc(100% - 15px)', mb: 2, p: '0px 15px 15px 15px' }}>
-                        <TableContainer>
-                            <Table>
+                    <Paper sx={{ width: 'calc(100% - 15px)', mb: 2, p: '0px 15px 15px 15px', borderRadius:'16px'}}>
+                        <TableContainer sx={{borderRadius: '16px'}}>
+                            <Table    sx={{"& .MuiTableCell-head": {
+                                      color: "white",
+                                      backgroundColor: "#333F49",
+                                  }}}>
                                 <EnhancedTableHead
                                     numSelected={selected.length}
                                     order={order}
