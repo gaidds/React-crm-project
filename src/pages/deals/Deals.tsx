@@ -281,13 +281,13 @@ export default function Deals(props: any) {
               )}
             </Stack>
         </CustomToolbar>
-            <Container sx={{ width: '100%', maxWidth: '100%', minWidth: '100%' }}>
+        <Container sx={{ width: '100%', maxWidth: '100%', minWidth: '100%' }}>
                 <Box sx={{ width: '100%', minWidth: '100%', m: '15px 0px 0px 0px' }}>
-                    <Paper sx={{ width: 'calc(100% - 15px)', mb: 2, p: '0px 15px 15px 15px', borderRadius:'16px'}}>
+                    <Paper sx={{ width: 'calc(100% - 15px)', mb: 2, p: '15px 15px 15px 15px', borderRadius:'16px'}}>
                         <TableContainer sx={{borderRadius: '16px'}}>
                             <Table    sx={{"& .MuiTableCell-head": {
                                       color: "white",
-                                      backgroundColor: "#333F49",
+                                      backgroundColor: "#6B778C",
                                   }}}>
                                 <EnhancedTableHead
                                     numSelected={selected.length}
