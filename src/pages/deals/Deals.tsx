@@ -76,6 +76,7 @@ interface HeadCell {
 // Define the interfaces
 interface AssignedTo {
     user_details: {
+        id: string;
         email: string;
         profile_pic: string;
     };
@@ -344,21 +345,20 @@ export default function Deals(props: any) {
                                                         {deal.value || '---'}
                                                     </TableCell>
                                                     <TableCell className="tableCell">
-                                                      {(userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && deal.created_by.id === userId)) ? (
-                                                        <>
-                                                          {/* Edit Icon */}
-                                                          <DynamicModal mode='edit' page='Deals' id={deal.id} data={data} icon={true} onSaveSuccess={async () => {
-                                                                                                                                  await getDeals();
-                                                                                                                                }}></DynamicModal>
-                                                          {/* Delete Icon */}
-                                                          <IconButton key={`delete-${deal.id}`}>
+                                                    {(userRole === 'ADMIN' || 
+                                                                    deal.created_by.id === userId || 
+                                                                    deal.assigned_to.some((assignee: any) => assignee.user_details.id === userId)) && (
+                                                          <DynamicModal mode='edit'
+                                                           page='Deals' id={deal.id} 
+                                                           data={data} icon={true} 
+                                                           onSaveSuccess={async () => {await getDeals();}}/>
+                                                          )}
+                                                    {(userRole === 'ADMIN' || deal.created_by.id === userId) && (
                                                             <FaTrashAlt
                                                               onClick={() => deleteRow(deal.id)}
-                                                              style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }}
+                                                              style={{fill: '#1A3353', cursor: 'pointer', marginRight: '10px'}}
                                                             />
-                                                          </IconButton>
-                                                        </>
-                                                      ) : null}
+                                                    )}
                                                     </TableCell>
                                                 </TableRow>
                                             );

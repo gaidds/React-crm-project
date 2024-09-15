@@ -293,7 +293,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
           Edit
         </span>
       ) : icon && mode === 'edit' ? (
-        <FaEdit style={{ cursor: 'pointer', marginRight: '10px' }} onClick={handleOpen} />
+        <FaEdit style={{fill: '#1A3353', cursor: 'pointer', marginRight: '10px' }} onClick={handleOpen} />
       ) : (
         <Button onClick={handleOpen} sx={buttonStyle}>
           {mode === 'add' ? 'Add' : 'Edit'}

@@ -57,7 +57,7 @@ const DealsForm = ({ mode, handleInputChange, handleAutocompleteChange, formData
 </FormHelperText>
       </FormControl>
 
-      <FormControl fullWidth sx={{ mb: 2 }}>
+      <FormControl fullWidth sx={{ mb: 2 }} size='small'>
         <Autocomplete
           multiple
           value={data.users.filter(user => formData.assigned_to.includes(user.id))}
@@ -65,6 +65,7 @@ const DealsForm = ({ mode, handleInputChange, handleAutocompleteChange, formData
           options={data.users}
           getOptionLabel={(option) => option.user__email}
           renderInput={(params) => <TextField {...params} label="Select Users" variant="outlined" />}
+          size = 'small'
         />
       </FormControl>
       <FormControl fullWidth size='small' sx={{ mb: 2 }}>
