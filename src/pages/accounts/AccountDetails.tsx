@@ -228,12 +228,12 @@ export const AccountDetails = (props: any) => {
     const backBtn = 'Back To Accounts'
 
     return (
-        <Box sx={{ mt: '60px' }}>
+        <Box sx={{ mt: '60px'}}>
             <div>
                 <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} editHandle={showEditButton ? editHandle : null} />
                 <Box sx={{ mt: '110px', p: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Box sx={{ width: '65%' }}>
-                        <Box sx={{ borderRadius: '10px', border: '1px solid #80808038', backgroundColor: 'white' }}>
+                        <Box sx={{ borderRadius: '16px', border: '1px solid #80808038', backgroundColor: 'white' }}>
                             <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <div style={{ fontWeight: 600, fontSize: '18px', color: '#1a3353f0' }}>
                                     Account Information
@@ -415,7 +415,7 @@ export const AccountDetails = (props: any) => {
                         </Box>
                     </Box>
                     <Box sx={{ width: '34%' }}>
-                        <Box sx={{ borderRadius: '10px', border: '1px solid #80808038', backgroundColor: 'white' }}>
+                        <Box sx={{ borderRadius: '16px', border: '1px solid #80808038', backgroundColor: 'white' }}>
                             <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <div style={{ fontWeight: 600, fontSize: '18px', color: '#1a3353f0' }}>
                                     Attachments
