@@ -63,6 +63,36 @@ export default function DynamicModal({ mode, page, id, data, icon, text }: Modal
 
   const handleOpen = () => setOpen(true);
 
+  const handleOpen = () => {
+    if (mode === 'edit') {
+      const deals: Deals = data.deals;
+      const myDeal: DealFormData | undefined = data.deals.find(deal => deal.id === id);
+      if (myDeal) {
+        const filteredDeal: DealFormData = {
+          name: myDeal.name,
+          account: myDeal.account,
+          assigned_to: myDeal.assigned_to.map(user => user.id),
+          contacts: myDeal.contacts.map(contact => contact.id),
+          website: myDeal.website,
+          stage: myDeal.stage,
+          deal_source: myDeal.deal_source,
+          industry: myDeal.industry,
+          currency: myDeal.currency,
+          country: convertCountryNameToCode(myDeal.country),
+          value: myDeal.value,
+          probability: myDeal.probability,
+          close_date: myDeal.close_date,
+          description: myDeal.description,
+          tags: myDeal.tags
+        };
+        
+        setDealFormData(filteredDeal);
+      } else {
+        console.error('Deal not found!');
+      }
+    }
+    setOpen(true);
+  };
   const handleClose = () => setOpen(false);
 
   const handleInputChange = (
