@@ -377,7 +377,7 @@ export default function Sidebar(props: any) {
                             <Route path='/app/users/user-details' element={<UserDetails />} />
                             <Route path='/app/deals' element={<Deals />} />
                             <Route path='/app/deals/card-view' element={<DealsCardView />} />
-                            <Route path='/app/deals/deal-details' element={<DealDetails />} />
+                            <Route path='/app/deals/:dealId' element={<DealDetails />} />
                             <Route path='/app/cases' element={<Cases />} />
                             <Route path='/app/cases/add-case' element={<AddCase />} />
                             <Route path='/app/cases/edit-case' element={<EditCase />} />
