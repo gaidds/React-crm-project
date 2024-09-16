@@ -113,7 +113,6 @@ export default function Deals(props: any) {
     const [selectOpen, setSelectOpen] = useState(false);
     const [data,setData] = useState<any[]>([]);
     const [tab, setTab] = useState('list-view');
-    const navigate = useNavigate();
     useEffect(() => {
         getDeals();
     }, [currentPage, recordsPerPage]);
