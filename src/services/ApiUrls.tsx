@@ -14,10 +14,8 @@ export const OrgUrl = 'org';
 
 export const CompanyUrl = 'leads/company';
 export const CompaniesUrl = 'leads/companies';
-// Deal
-export const DealUrl = 'deals';
 // Lead
-export const LeadUrl = 'deals';
+export const LeadUrl = 'leads';
 // Contact
 export const ContactUrl = 'contacts';
 // Opportunity
