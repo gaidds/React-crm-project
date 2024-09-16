@@ -142,7 +142,7 @@ export default function Deals(props: any) {
         }
     };
 
-    const handleChangeTab = (event: React.SyntheticEvent, newValue: string) => {
+    const handleChangeTab = (newValue: string) => {
       setTab(newValue);
       if (newValue === 'card-view') {
         navigate('/app/deals/card-view'); // Navigate to Card View
@@ -279,31 +279,32 @@ export default function Deals(props: any) {
                 </FabRight>
               </Box>
             </Stack>
-                <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'right' }}>
-                <Tabs value={tab} onChange={handleChangeTab} sx={{ mt: '26px', '& .MuiTabs-indicator': {
-              backgroundColor: 'transparent', 
-              height: 4, 
-            }, }}>
-                        <CustomTab value="card-view" label="Card View"
-                            sx={{
-                                backgroundColor: tab === 'card-view' ? 'white' : '#E2E7EB',
-                                color: tab === 'card-view' ? 'black' : 'black',
-                                borderTop: '1px solid black', // Top border
-                                borderLeft: '1px solid black', // Left border
-                                borderRight: '1px solid black', // Right border
-                                borderBottom: 'none', 
-                            }} />
-                        <CustomTab value="list-view" label="List View"
-                            sx={{
-                                backgroundColor: tab === 'list-view' ? 'white' : '#E2E7EB',
-                                color: tab === 'list-view' ? 'black' : 'black',
-                                borderTop: '1px solid black', // Top border
-                                borderLeft: '1px solid black', // Left border
-                                borderRight: '1px solid black', // Right border
-                                borderBottom: 'none', 
-                                ml: '5px',
-                            }} />
-                    </Tabs>
+            <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'right', mt: '26px' }}>
+                    <Button
+                        variant={tab === 'card-view' ? 'contained' : 'outlined'}
+                        onClick={() => handleChangeTab('card-view')}
+                        sx={{
+                        backgroundColor: tab === 'card-view' ? 'white' : '#E2E7EB',
+                        color: 'black',
+                        border: '1px solid black',
+                        borderRadius: 2,
+                        mr: '5px', // Adds spacing between buttons
+                        }}
+                    >
+                        Card View
+                    </Button>
+                    <Button
+                        variant={tab === 'list-view' ? 'contained' : 'outlined'}
+                        onClick={() => handleChangeTab('list-view')}
+                        sx={{
+                        backgroundColor: tab === 'list-view' ? 'white' : '#E2E7EB',
+                        color: 'black',
+                        border: '1px solid black',
+                        borderRadius: 2,
+                        }}
+                    >
+                        List View
+                    </Button>
                 </Box>
         </CustomToolbar>
             <Container sx={{ width: '100%', maxWidth: '100%', minWidth: '100%' }}>
