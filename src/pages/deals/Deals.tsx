@@ -113,7 +113,6 @@ export default function Deals(props: any) {
     const [selectOpen, setSelectOpen] = useState(false);
     const [data,setData] = useState<any[]>([]);
     const [tab, setTab] = useState('list-view');
-    const navigate = useNavigate();
     useEffect(() => {
         getDeals();
     }, [currentPage, recordsPerPage]);
@@ -227,7 +226,6 @@ export default function Deals(props: any) {
       const navigate = useNavigate();
       const handleItemClick = (id:string) => {
         navigate(`/app/deals/${id}`);
-        console.log("MAN INJAAM", id)
       }
 
       const modalDialog = 'Are You Sure You want to delete selected Deal?'

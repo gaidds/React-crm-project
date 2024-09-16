@@ -61,8 +61,8 @@ const DealsForm = ({ mode, handleInputChange, handleAutocompleteChange, formData
   {errors?.account?.[0] ? errors?.account[0] : ''}
 </FormHelperText>
       </FormControl>
+      {(mode === 'add' || (mode === 'edit' && (userRole === 'ADMIN' || myDeal?.created_by?.id === userId))) && (
       <FormControl fullWidth sx={{ mb: 2 }} size='small'>
-  {(mode === 'add' || (mode === 'edit' && (userRole === 'ADMIN' || myDeal?.created_by?.id === userId))) && (
     <Autocomplete
       multiple
       value={data.users.filter(user => formData.assigned_to.includes(user.id))}
@@ -72,8 +72,8 @@ const DealsForm = ({ mode, handleInputChange, handleAutocompleteChange, formData
       renderInput={(params) => <TextField {...params} label="Assign to" variant="outlined" />}
       size='small'
     />
-  )}
 </FormControl>
+)}
       <FormControl fullWidth size='small' sx={{ mb: 2 }}>
         <InputLabel>Deal Source</InputLabel>
         <Select
