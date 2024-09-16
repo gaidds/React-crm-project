@@ -7,12 +7,22 @@ import profile3 from './assets/images/profile3.jpeg'
 import profile4 from './assets/images/profile4.jpeg'
 import profile5 from './assets/images/profile5.jpeg'
 import { createTheme, ThemeProvider } from '@mui/material';
+import StagesBar from './components/stages-bar/StagesBar';
 
 const theme = createTheme();
 
 function Test() {
     // Mock data for the DealsCard
+    const stages = [
+      { name: 'ASSIGNED LEAD', color: '#004E85' },
+      { name: 'IN PROCESS', color: '#1C7EC3' },
+      { name: 'OPPORTUNITY', color: '#1CBEC3' },
+      { name: 'QUALIFICATION', color: '#EBDA25' },
+      { name: 'NEGOTIATION', color: '#94C31C' },
+      { name: 'CLOSED', color: '#075F18' },
+    ];
     const deal = {
+      id:'1',
       name: 'Big Tech Deal',
       country: 'USA',
       assignedUsers: [
@@ -26,6 +36,7 @@ function Test() {
       stage: "CLOSED WON",
     };
     const deal2 = {
+      id:'2',
       name: 'Small Deal',
       country: 'Netherlands',
       assignedUsers: [
@@ -40,6 +51,7 @@ function Test() {
     };
 
     const deal3 = {
+      id:'3',
       name: 'Nice Deal',
       country: 'France',
       assignedUsers: [
@@ -56,9 +68,13 @@ function Test() {
     return (
     <>
     <h1>Test page</h1>
+    <div>
+      <StagesBar stages={stages} />
+    </div>
     <ThemeProvider theme={theme}>
       {/* Directly render the DealsCard component */}
       <DealsCard
+        id={deal.id}
         name={deal.name}
         country={deal.country}
         assignedUsers={deal.assignedUsers}
@@ -69,6 +85,7 @@ function Test() {
     <ThemeProvider theme={theme}>
       {/* Directly render the DealsCard component */}
       <DealsCard
+        id={deal.id}
         name={deal2.name}
         country={deal2.country}
         assignedUsers={deal2.assignedUsers}
@@ -79,6 +96,7 @@ function Test() {
     <ThemeProvider theme={theme}>
       {/* Directly render the DealsCard component */}
       <DealsCard
+        id={deal.id}
         name={deal3.name}
         country={deal3.country}
         assignedUsers={deal3.assignedUsers}

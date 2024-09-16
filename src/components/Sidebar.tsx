@@ -28,6 +28,8 @@ import { CaseDetails } from '../pages/cases/CaseDetails';
 import logo from '../assets/images/auth/app_logo.png';
 import { StyledListItemButton, StyledListItemText } from '../styles/CssStyled';
 import MyContext, { useMyContext } from '../context/Context';
+import DealsCardView from '../pages/deals/DealsCardView';
+
 
 // declare global {
 //     interface Window {
@@ -163,9 +165,9 @@ export default function Sidebar(props: any) {
             <Box>
                 <AppBar position="fixed"
                     sx={{
-                        zIndex: (theme) => theme.zIndex.drawer + 1,
+                        // zIndex: (theme) => theme.zIndex.drawer + 1,
                         height: '60px',
-                        backgroundColor: 'rgba(255, 255, 255, 0)',
+                        backgroundColor: '#E2E7EB',
                         display: 'flex',
                         flexDirection: 'row',
                         justifyContent: 'space-between',
@@ -264,11 +266,42 @@ export default function Sidebar(props: any) {
                             },
                             display: 'flex',
                             height: '100%',
+                            zIndex: 1000
                         }}
                         >
 
-                    <Box sx={{ flex: '1 1 auto', display: 'flex', flexDirection: 'column' }}>
-                        <List sx={{ pt: '65px' }}>
+                        <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    padding: '16px',
+                                    backgroundColor: '#031C30',
+                                    color: 'white'
+                                }}
+                            >
+                                <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => setDrawerWidth(drawerWidth === 70 ? 200 : 70)}>
+                                    <img
+                                        src={logo}
+                                        width={'35px'}
+                                        style={{
+                                            marginLeft: '-5px',
+                                            marginRight: drawerWidth === 70 ? '15px' : '10px',
+                                            cursor: 'pointer',
+                                        }}
+                                    />
+                                    {drawerWidth !== 70 && (
+                                        <span
+                                            style={{ marginLeft: '10px', marginRight: '10px', cursor: 'pointer', fontWeight: 'bold' }}
+                                        >
+                                            Bottle CRM
+                                        </span>
+                                    )}
+                                </div>
+                            </Box>
+                    
+
+                    <Box sx={{ flex: '1 1 auto', display: 'flex', flexDirection: 'column',  paddingTop: 'px', }}>
+                        <List sx={{ pt: '0px' }}>
                             {navList.map((text, index) => (
                                 <ListItem key={text} disablePadding  >
                                     <StyledListItemButton
@@ -343,7 +376,8 @@ export default function Sidebar(props: any) {
                             <Route path='/app/users/edit-user' element={<EditUser />} />
                             <Route path='/app/users/user-details' element={<UserDetails />} />
                             <Route path='/app/deals' element={<Deals />} />
-                            <Route path='/app/deals/:dealId' element={<DealDetails />} />
+                            <Route path='/app/deals/card-view' element={<DealsCardView />} />
+                            <Route path='/app/deals/deal-details' element={<DealDetails />} />
                             <Route path='/app/cases' element={<Cases />} />
                             <Route path='/app/cases/add-case' element={<AddCase />} />
                             <Route path='/app/cases/edit-case' element={<EditCase />} />
