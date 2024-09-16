@@ -114,7 +114,9 @@ console.log(deals,'deals')
                         <IconButton color="primary" >
                             <FaFilter style={{ color: '#333F49' }} />
                         </IconButton>
-                        <DynamicModal mode='add' page='Deals' data={data}/>
+                        <DynamicModal mode='add' page='Deals' data={data} onSaveSuccess={async () => {
+                                                                                                  await getDeals();
+                                                                                                }}/>
                     </>
                     )}
                 </Stack>
