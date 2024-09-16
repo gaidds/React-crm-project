@@ -74,7 +74,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
   const handleOpen = () => {
     if (mode === 'edit') {
       const deals: Deals = data.deals;
-      const myDeal: DealFormData | undefined = data.deals.find(deal => deal.id === id);
+      const myDeal: DealFormData | undefined = data.deals.find((deal: any) => deal.id === id);
       if (myDeal) {
         console.log('Pre-populating form with data:', myDeal);
         const filteredDeal: DealFormData = {
