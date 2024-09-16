@@ -182,6 +182,7 @@ console.log(deals,'deals')
                         >
                             {dealsByStage[stage.name]?.map(deal => (
                                 <DealsCard
+                                    id={deal.id}
                                     key={deal.id}
                                     name={deal.name}
                                     country={deal.country}

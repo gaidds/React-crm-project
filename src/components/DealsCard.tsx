@@ -11,6 +11,7 @@ interface User {
 }
 
 interface DealsCardProps {
+  id: string;
   name: string;
   country: string;
   assignedUsers: User[];
@@ -28,14 +29,14 @@ const StyledLinearProgress = styled(LinearProgress)<{ value: number }>(({ value,
   },
 }));
 
-const DealsCard: React.FC<DealsCardProps> = ({ name, country, assignedUsers, probability, stage}) => {
+const DealsCard: React.FC<DealsCardProps> = ({ id, name, country, assignedUsers, probability, stage}) => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
 
-  const handleCardClick = () => {
+  const handleCardClick = (id:string) => {
     if (!anchorEl) { // Only navigate if the menu is not open
-      navigate('/app/deals/deal-details'); // Ensure this path matches your routing configuration
+      navigate(`/app/deals/${id}`);// Ensure this path matches your routing configuration
     }
   };
 
@@ -57,7 +58,7 @@ const DealsCard: React.FC<DealsCardProps> = ({ name, country, assignedUsers, pro
       position: 'relative',
       '&:hover': { backgroundColor: '#E8E2EA' },
     }}
-      onClick={handleCardClick}
+    onClick={() => handleCardClick(id)}
     >
       
       <Box mb={2}>

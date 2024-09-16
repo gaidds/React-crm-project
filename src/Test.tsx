@@ -22,6 +22,7 @@ function Test() {
       { name: 'CLOSED', color: '#075F18' },
     ];
     const deal = {
+      id:'1',
       name: 'Big Tech Deal',
       country: 'USA',
       assignedUsers: [
@@ -35,6 +36,7 @@ function Test() {
       stage: "CLOSED WON",
     };
     const deal2 = {
+      id:'2',
       name: 'Small Deal',
       country: 'Netherlands',
       assignedUsers: [
@@ -49,6 +51,7 @@ function Test() {
     };
 
     const deal3 = {
+      id:'3',
       name: 'Nice Deal',
       country: 'France',
       assignedUsers: [
@@ -71,6 +74,7 @@ function Test() {
     <ThemeProvider theme={theme}>
       {/* Directly render the DealsCard component */}
       <DealsCard
+        id={deal.id}
         name={deal.name}
         country={deal.country}
         assignedUsers={deal.assignedUsers}
@@ -81,6 +85,7 @@ function Test() {
     <ThemeProvider theme={theme}>
       {/* Directly render the DealsCard component */}
       <DealsCard
+        id={deal.id}
         name={deal2.name}
         country={deal2.country}
         assignedUsers={deal2.assignedUsers}
@@ -91,6 +96,7 @@ function Test() {
     <ThemeProvider theme={theme}>
       {/* Directly render the DealsCard component */}
       <DealsCard
+        id={deal.id}
         name={deal3.name}
         country={deal3.country}
         assignedUsers={deal3.assignedUsers}
