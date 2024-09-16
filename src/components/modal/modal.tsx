@@ -68,6 +68,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text }: Modal
       const deals: Deals = data.deals;
       const myDeal: DealFormData | undefined = data.deals.find(deal => deal.id === id);
       if (myDeal) {
+        console.log('Pre-populating form with data:', myDeal);
         const filteredDeal: DealFormData = {
           name: myDeal.name,
           account: myDeal.account,

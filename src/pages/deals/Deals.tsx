@@ -212,6 +212,7 @@ export default function Deals(props: any) {
       const navigate = useNavigate();
       const handleItemClick = (id:string) => {
         navigate(`/app/deals/${id}`);
+        console.log("MAN INJAAM", id)
       }
 
       const modalDialog = 'Are You Sure You want to delete selected Deal?'

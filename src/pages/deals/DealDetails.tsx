@@ -2,9 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { DealUrl } from '../../services/ApiUrls';
 import { fetchData } from '../../components/FetchData';
-import { Box, Container, Paper } from '@mui/material';
-import { CustomToolbar } from '../../styles/CssStyled';
-import DynamicModal from '../../components/modal/modal';
 
 interface Deal {
   name: string;
@@ -33,30 +30,27 @@ interface Deal {
 const DealDetails: React.FC = () => {
   const { dealId } = useParams<{ dealId: string }>(); 
   const [deal, setDeal] = useState<Deal | null>(null);
-  const [data, setData] = useState<any[]>([]);
 
-  useEffect(() => { if (dealId) {
+  useEffect(() => {     if (dealId) {
     fetchDeal();
-    getDeals();
   }
 }, [dealId]);
 
-const getDeals = async () => {
-        const Header = {Accept: 'application/json', 'Content-Type': 'application/json', Authorization: localStorage.getItem('Token'), org: localStorage.getItem('org')};
-        try {
-            await fetchData(`${DealUrl}`,'GET',null as any,Header).then((res) => {
-                if (!res.error) {
-                    setData(res || []);
-                }
-            });
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-    };
     const fetchDeal = async () => {
-        const Header = {Accept: 'application/json','Content-Type': 'application/json',Authorization: localStorage.getItem('Token'),org: localStorage.getItem('org')};
+        const Header = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('Token'),
+            org: localStorage.getItem('org')
+        };
         try {
-            await fetchData(`${DealUrl}/${dealId}`,'GET',null as any,Header).then((res) => {
+            await fetchData(
+                `${DealUrl}/${dealId}`,
+                'GET',
+                null as any,
+                Header
+            ).then((res) => {
+                console.log(res, 'DEAL');
                 if (!res.error) {
                     setDeal(res?.deal_obj);
                 }
@@ -65,41 +59,31 @@ const getDeals = async () => {
             console.error('Error fetching data:', error);
         }
     };
+
+
   if (!deal) {
     return <div>Loading...</div>;
   }
 
   return (
-    <Box sx={{ mt: '60px' }}>
-      <CustomToolbar sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-        <DynamicModal page='Deals' id={dealId} mode='edit' data={data} onSaveSuccess={async () => {
-                                                                                                  await fetchDeal();}} />
-      </CustomToolbar>
-      <Container sx={{ width: '100%', maxWidth: '100%', minWidth: '100%'}}>
-        <Box sx={{ width: '100%', minWidth: '100%', m: '15px 0px 0px 0px'}}>
-            <Paper sx={{ width: 'calc(100% - 15px)', mb: 2, p: '15px 15px 15px 15px', borderRadius:'16px' }}>
-                <div>
-                  <h1>Deal Details</h1>
-                  <p><strong>Name:</strong> {deal.name}</p>
-                  <p><strong>Account:</strong> {deal.account_name}</p>
-                  <p><strong>Assigned To:</strong> {deal.assigned_to.map(user => user.user_details.email).join(', ')}</p>
-                  <p><strong>Contacts:</strong> {deal.contacts[0].first_name} {deal.contacts[0].last_name}</p>
-                  <p><strong>Website:</strong> {deal.website}</p>
-                  <p><strong>Stage:</strong> {deal.stage}</p>
-                  <p><strong>Deal Source:</strong> {deal.deal_source}</p>
-                  <p><strong>Industry:</strong> {deal.industry}</p>
-                  <p><strong>Currency:</strong> {deal.currency}</p>
-                  <p><strong>Country:</strong> {deal.country}</p>
-                  <p><strong>Value:</strong> {deal.value}</p>
-                  <p><strong>Probability:</strong> {deal.probability}%</p>
-                  <p><strong>Close Date:</strong> {new Date(deal.close_date).toLocaleDateString()}</p>
-                  <p><strong>Description:</strong> {deal.description}</p>
-                  <p><strong>Tags:</strong> {deal.tags.join(', ')}</p>
-                </div>
-              </Paper>
-            </Box>
-          </Container>
-      </Box>
+    <div>
+      <h1>Deal Details</h1>
+      <p><strong>Name:</strong> {deal.name}</p>
+      <p><strong>Account:</strong> {deal.account_name}</p>
+      <p><strong>Assigned To:</strong> {deal.assigned_to.map(user => user.user_details.email).join(', ')}</p>
+      <p><strong>Contacts:</strong> {deal.contacts[0].first_name} {deal.contacts[0].last_name}</p>
+      <p><strong>Website:</strong> {deal.website}</p>
+      <p><strong>Stage:</strong> {deal.stage}</p>
+      <p><strong>Deal Source:</strong> {deal.deal_source}</p>
+      <p><strong>Industry:</strong> {deal.industry}</p>
+      <p><strong>Currency:</strong> {deal.currency}</p>
+      <p><strong>Country:</strong> {deal.country}</p>
+      <p><strong>Value:</strong> {deal.value}</p>
+      <p><strong>Probability:</strong> {deal.probability}%</p>
+      <p><strong>Close Date:</strong> {new Date(deal.close_date).toLocaleDateString()}</p>
+      <p><strong>Description:</strong> {deal.description}</p>
+      <p><strong>Tags:</strong> {deal.tags.join(', ')}</p>
+    </div>
   );
 };
 
