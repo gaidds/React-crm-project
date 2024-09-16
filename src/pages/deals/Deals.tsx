@@ -306,11 +306,12 @@ export default function Deals(props: any) {
                         variant={tab === 'card-view' ? 'contained' : 'outlined'}
                         onClick={() => handleChangeTab('card-view')}
                         sx={{
-                        backgroundColor: tab === 'card-view' ? 'white' : '#E2E7EB',
+                        backgroundColor: tab === 'card-view' ? '#FEF7FF' : '#E2E7EB',
                         color: 'black',
                         border: '1px solid black',
                         borderRadius: 2,
-                        mr: '5px', // Adds spacing between buttons
+                        mr: '5px',
+                        height: '36px',
                         }}
                     >
                         Card View
@@ -319,10 +320,11 @@ export default function Deals(props: any) {
                         variant={tab === 'list-view' ? 'contained' : 'outlined'}
                         onClick={() => handleChangeTab('list-view')}
                         sx={{
-                        backgroundColor: tab === 'list-view' ? 'white' : '#E2E7EB',
+                        backgroundColor: tab === 'list-view' ? '#FEF7FF' : '#E2E7EB',
                         color: 'black',
                         border: '1px solid black',
                         borderRadius: 2,
+                        height: '36px',
                         }}
                     >
                         List View
