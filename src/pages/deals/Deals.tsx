@@ -335,10 +335,8 @@ export default function Deals(props: any) {
                                                     <TableCell className='tableCell'>
                                                         {deal.probability || '---'}
                                                     </TableCell>
-                                                    <TableCell className='table-cell-stage' >
-                                                      <Box className= {styleStage(deal.stage)}>
-                                                        {deal.stage || '---'}
-                                                      </Box>
+                                                    <TableCell className='tableCell'>
+                                                    <Label tags={deal.stage} />
                                                     </TableCell>
                                                     <TableCell className='tableCell'>
                                                         {deal.country || '---'}
