@@ -21,7 +21,7 @@ import { AccountDetails } from '../pages/accounts/AccountDetails';
 import { AddUsers } from '../pages/users/AddUsers';
 import { EditUser } from '../pages/users/EditUser';
 import UserDetails from '../pages/users/UserDetails';
-import { DealDetails } from '../pages/deals/DealDetails';
+import DealDetails from '../pages/deals/DealDetails';
 import { AddCase } from '../pages/cases/AddCase';
 import { EditCase } from '../pages/cases/EditCase';
 import { CaseDetails } from '../pages/cases/CaseDetails';

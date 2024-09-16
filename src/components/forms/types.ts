@@ -1,6 +1,7 @@
 import { DealFormData } from "../modal/types";
 import { SelectChangeEvent } from "@mui/material";
 import { DealFormErrors } from "../modal/types";
+import { Deal } from "../../pages/deals/Deals";
 
 export type DealsFormProps = {
     mode: 'add' | 'edit';
@@ -22,6 +23,7 @@ export type DealsFormProps = {
       industries: any[];
       stage: any[];
       users: any[];
+      deals: Deal[];
     };
   }; 
 

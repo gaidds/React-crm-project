@@ -1,10 +1,15 @@
 import * as React from 'react';
 import { TextField, MenuItem, Select, InputLabel, FormHelperText, FormControl, Box, Grid, Autocomplete, Avatar} from '@mui/material';
 import { DealsFormProps } from './types';
+import { useMyContext } from '../../context/Context';
+import { Deal } from '../../pages/deals/Deals';
 
 
 
 const DealsForm = ({ mode, handleInputChange, handleAutocompleteChange, formData, data, errors }: DealsFormProps) => {
+
+  const { userRole, setUserRole , userId} = useMyContext();
+  const myDeal: Deal | undefined = data.deals.find((deal: any) => deal.name === formData.name);
 
   return (
     <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 2 }}>
@@ -56,18 +61,19 @@ const DealsForm = ({ mode, handleInputChange, handleAutocompleteChange, formData
   {errors?.account?.[0] ? errors?.account[0] : ''}
 </FormHelperText>
       </FormControl>
-
       <FormControl fullWidth sx={{ mb: 2 }} size='small'>
-        <Autocomplete
-          multiple
-          value={data.users.filter(user => formData.assigned_to.includes(user.id))}
-          onChange={handleAutocompleteChange} // Use the new handler
-          options={data.users}
-          getOptionLabel={(option) => option.user__email}
-          renderInput={(params) => <TextField {...params} label="Select Users" variant="outlined" />}
-          size = 'small'
-        />
-      </FormControl>
+  {(mode === 'add' || (mode === 'edit' && (userRole === 'ADMIN' || myDeal?.created_by?.id === userId))) && (
+    <Autocomplete
+      multiple
+      value={data.users.filter(user => formData.assigned_to.includes(user.id))}
+      onChange={handleAutocompleteChange}
+      options={data.users}
+      getOptionLabel={(option) => option.user__email}
+      renderInput={(params) => <TextField {...params} label="Assign to" variant="outlined" />}
+      size='small'
+    />
+  )}
+</FormControl>
       <FormControl fullWidth size='small' sx={{ mb: 2 }}>
         <InputLabel>Deal Source</InputLabel>
         <Select
