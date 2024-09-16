@@ -83,7 +83,7 @@ interface AssignedTo {
 }
 
 
-interface Deal {
+export interface Deal {
     id: string;
     name: string;
     probability: number;
