@@ -106,7 +106,7 @@ console.log(deals,'deals')
 
     return (
 
-      <Box sx={{ mt: '60px', height: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ mt: '60px', height: '100%', display: 'flex', flexDirection: 'column' }}>
             <CustomToolbar sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', mb: 3, }}>
                 <Stack direction="row" spacing={2} alignItems="center">
                     {showAddButton && (
