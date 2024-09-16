@@ -1,5 +1,5 @@
 import { DealUrl } from '../../services/ApiUrls';
-import { Box, IconButton, Stack, Tabs } from '@mui/material'
+import { Box, IconButton, Stack, Paper, Container, Tabs } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { CustomTab, CustomToolbar} from '../../styles/CssStyled';
 import { useNavigate } from 'react-router-dom';
@@ -39,8 +39,8 @@ export default function DealsCardView(props: any) {
     const [data,setData] = useState<any[]>([]);
     const [tab, setTab] = useState('card-view');
     const navigate = useNavigate();
-  
 
+    
     const stagesData = [
         { name: 'ASSIGNED LEAD', color: '#004E85' },
         { name: 'IN PROCESS', color: '#1C7EC3' },
@@ -145,19 +145,12 @@ console.log(deals,'deals')
                     </Tabs>
                 </Box>
             </CustomToolbar>
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    flexGrow: 1,
-                    width: '95%',
-                    margin: '0 auto',
-                    mt: 4
-                }}
-            >
-                <Box sx={{ flexShrink: 0 }}>
-                    <StagesBar stages={stagesData} />
-                </Box>
+            <Container sx={{ width: '100%', maxWidth: '100%', minWidth: '100%' }}>
+                <Box sx={{ width: '100%', minWidth: '100%', m: '15px 0px 0px 0px' }}>
+                    <Paper sx={{ width: 'calc(100% - 15px)', mb: 2, p: '0px 15px 15px 15px', borderRadius:'16px'}}>
+                        <Box sx={{pt:3, flexShrink: 0 }}>
+                            <StagesBar stages={stagesData} />
+                        </Box>
                 <Box
                     sx={{
                         display: 'flex',
@@ -176,6 +169,7 @@ console.log(deals,'deals')
                                 p: 1,
                                 display: 'flex',
                                 flexDirection: 'column',
+                                overflowY: 'auto',
                                 height: '100%',
                                 overflowX: 'hidden',
                                 alignItems: 'center',
@@ -196,8 +190,10 @@ console.log(deals,'deals')
                             ))}
                         </Box>
                     ))}
+                    </Box>
+                    </Paper>
                 </Box>
+            </Container>
             </Box>
-        </Box>
     );
 }
