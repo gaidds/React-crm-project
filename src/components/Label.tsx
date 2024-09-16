@@ -67,9 +67,9 @@ export const Label = (props: any) => {
         sx={{
           backgroundColor: hexToRgba(tagsColor, 0.1), // 10% opacity fill
           borderRadius: '4px',
-          fontSize: '16px',
-          height: '25px',
-          width: '150px',
+          fontSize: '12px',
+          height: '20px',
+          width: '130px',
           color: tagsColor, // Solid text color
           border: `2px solid ${tagsColor}`, // Solid border color
           marginLeft: '5px',
