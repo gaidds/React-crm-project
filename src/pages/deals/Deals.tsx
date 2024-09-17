@@ -1,5 +1,5 @@
 import { DealUrl } from '../../services/ApiUrls';
-import { Avatar, AvatarGroup, Box, Button, IconButton, Stack, Typography, Select, MenuItem, TableContainer, Table, TableCell, TableRow, Paper, TableBody, Container } from '@mui/material'
+import { Avatar, AvatarGroup, Box, Button, IconButton, Stack, Typography, Select, MenuItem, TableContainer, Table, TableCell, TableRow, Paper, TableBody, Container, Tabs } from '@mui/material'
 import React, { SyntheticEvent, useEffect, useState } from 'react'
 import { Spinner } from '../../components/Spinner';
 import { FiPlus } from "@react-icons/all-files/fi/FiPlus";
@@ -10,13 +10,14 @@ import { useNavigate } from 'react-router-dom';
 import { fetchData } from '../../components/FetchData';
 import { getComparator, stableSort } from '../../components/Sorting';
 import { Label } from '../../components/Label';
-import { FaTrashAlt } from 'react-icons/fa';
+import { FaFilter, FaTrashAlt } from 'react-icons/fa';
 import DynamicModal from '../../components/modal/modal';
 import { DeleteModal } from '../../components/DeleteModal';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { EnhancedTableHead } from '../../components/EnchancedTableHead';
 import MyContext, { useMyContext } from '../../context/Context'
+// import "./styles.css"
 
 
 // Define TypeScript interfaces for your data
@@ -36,13 +37,13 @@ interface HeadCell {
     },
     {
       id: 'probability',
-      numeric: true,
+      numeric: false,
       disablePadding: false,
       label: 'Probability'
     },
     {
       id: 'stage',
-      numeric: false,
+      numeric: true,
       disablePadding: false,
       label: 'Stage'
     },
@@ -75,12 +76,14 @@ interface HeadCell {
 // Define the interfaces
 interface AssignedTo {
     user_details: {
+        id: string;
         email: string;
         profile_pic: string;
     };
 }
 
-interface Deal {
+
+export interface Deal {
     id: string;
     name: string;
     probability: number;
@@ -109,6 +112,7 @@ export default function Deals(props: any) {
 
     const [selectOpen, setSelectOpen] = useState(false);
     const [data,setData] = useState<any[]>([]);
+    const [tab, setTab] = useState('list-view');
     useEffect(() => {
         getDeals();
     }, [currentPage, recordsPerPage]);
@@ -139,6 +143,16 @@ export default function Deals(props: any) {
             console.error('Error fetching data:', error);
         }
     };
+
+    const handleChangeTab = (newValue: string) => {
+      setTab(newValue);
+      if (newValue === 'card-view') {
+        navigate('/app/deals/card-view'); // Navigate to Card View
+      } else if (newValue === 'list-view') {
+        navigate('/app/deals'); // Navigate to List View
+      }
+    };
+
 
     const handleRequestSort = (event: any, property: any) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -212,7 +226,6 @@ export default function Deals(props: any) {
       const navigate = useNavigate();
       const handleItemClick = (id:string) => {
         navigate(`/app/deals/${id}`);
-        console.log("MAN INJAAM", id)
       }
 
       const modalDialog = 'Are You Sure You want to delete selected Deal?'
@@ -221,11 +234,40 @@ export default function Deals(props: any) {
     
       const recordsList = [[10, '10 Records per page'], [20, '20 Records per page'], [30, '30 Records per page'], [40, '40 Records per page'], [50, '50 Records per page']]
 
+    const styleStage = (stage: string) => {
+      let result = ""
+      switch (stage) {
+        case "ASSIGNED LEAD" :
+          result ="bg-red"
+          break;
+          case "QUALIFCATION" :
+            result ="#004E85"
+            break;
+        case "IN PROCESS":
+           result = "bg-black" 
+           break;
+        default:
+           result = ""
+      }
+      return result
+    }
     return (
 
         <Box sx={{ mt: '60px' }}>
-        <CustomToolbar sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+        <CustomToolbar sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+        <Stack direction="row" spacing={2} alignItems="center">
+          <IconButton color="primary" >
+                            <FaFilter style={{ color: '#333F49' }} />
+          </IconButton>
+                    {showAddButton && (
+                        <>
+                            <DynamicModal mode='add' page='Deals' data={data} onSaveSuccess={async () => {
+                                                                                                  await getDeals();
+                                                                                                }}/>
+                        </>
+                    )}
+                </Stack>
+                <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 2, ml: 1 }}>
               <Select
                 value={recordsPerPage}
                 onChange={(e: any) => handleRecordsPerPage(e)}
@@ -261,15 +303,45 @@ export default function Deals(props: any) {
                   <FiChevronRight style={{ height: '15px' }} />
                 </FabRight>
               </Box>
-              {showAddButton && ( <DynamicModal mode='add' page='Deals' data={data}></DynamicModal>
-              )}
             </Stack>
+            <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'right', mt: '26px' }}>
+                    <Button
+                        variant={tab === 'card-view' ? 'contained' : 'outlined'}
+                        onClick={() => handleChangeTab('card-view')}
+                        sx={{
+                        backgroundColor: tab === 'card-view' ? '#FEF7FF' : '#E2E7EB',
+                        color: 'black',
+                        border: '1px solid black',
+                        borderRadius: 2,
+                        mr: '5px',
+                        height: '36px',
+                        }}
+                    >
+                        Card View
+                    </Button>
+                    <Button
+                        variant={tab === 'list-view' ? 'contained' : 'outlined'}
+                        onClick={() => handleChangeTab('list-view')}
+                        sx={{
+                        backgroundColor: tab === 'list-view' ? '#FEF7FF' : '#E2E7EB',
+                        color: 'black',
+                        border: '1px solid black',
+                        borderRadius: 2,
+                        height: '36px',
+                        }}
+                    >
+                        List View
+                    </Button>
+                </Box>
         </CustomToolbar>
-            <Container sx={{ width: '100%', maxWidth: '100%', minWidth: '100%' }}>
+        <Container sx={{ width: '100%', maxWidth: '100%', minWidth: '100%' }}>
                 <Box sx={{ width: '100%', minWidth: '100%', m: '15px 0px 0px 0px' }}>
-                    <Paper sx={{ width: 'calc(100% - 15px)', mb: 2, p: '0px 15px 15px 15px' }}>
-                        <TableContainer>
-                            <Table>
+                    <Paper sx={{ width: 'calc(100% - 15px)', mb: 2, p: '15px 15px 15px 15px', borderRadius:'16px'}}>
+                        <TableContainer sx={{borderRadius: '16px'}}>
+                            <Table    sx={{"& .MuiTableCell-head": {
+                                      color: "white",
+                                      backgroundColor: "#6B778C",
+                                  }}}>
                                 <EnhancedTableHead
                                     numSelected={selected.length}
                                     order={order}
@@ -311,7 +383,7 @@ export default function Deals(props: any) {
                                                         {deal.probability || '---'}
                                                     </TableCell>
                                                     <TableCell className='tableCell'>
-                                                        {deal.stage || '---'}
+                                                    <Label tags={deal.stage} />
                                                     </TableCell>
                                                     <TableCell className='tableCell'>
                                                         {deal.country || '---'}
@@ -331,19 +403,20 @@ export default function Deals(props: any) {
                                                         {deal.value || '---'}
                                                     </TableCell>
                                                     <TableCell className="tableCell">
-                                                      {(userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && deal.created_by.id === userId)) ? (
-                                                        <>
-                                                          {/* Edit Icon */}
-                                                          <DynamicModal mode='edit' page='Deals' id={deal.id} data={data} icon={true}></DynamicModal>
-                                                          {/* Delete Icon */}
-                                                          <IconButton key={`delete-${deal.id}`}>
+                                                    {(userRole === 'ADMIN' || 
+                                                                    deal.created_by.id === userId || 
+                                                                    deal.assigned_to.some((assignee: any) => assignee.user_details.id === userId)) && (
+                                                          <DynamicModal mode='edit'
+                                                           page='Deals' id={deal.id} 
+                                                           data={data} icon={true} 
+                                                           onSaveSuccess={async () => {await getDeals();}}/>
+                                                          )}
+                                                    {(userRole === 'ADMIN' || deal.created_by.id === userId) && (
                                                             <FaTrashAlt
                                                               onClick={() => deleteRow(deal.id)}
-                                                              style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }}
+                                                              style={{fill: '#1A3353', cursor: 'pointer', marginRight: '10px'}}
                                                             />
-                                                          </IconButton>
-                                                        </>
-                                                      ) : null}
+                                                    )}
                                                     </TableCell>
                                                 </TableRow>
                                             );

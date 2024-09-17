@@ -160,7 +160,7 @@ export default function ContactDetails() {
                 <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} editHandle={showEditButton ? editHandle : null} />
                 <Box sx={{ mt: '110px', p: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Box sx={{ width: '65%' }}>
-                        <Card sx={{ borderRadius: '7px' }}>
+                        <Card sx={{ borderRadius: '16px' }}>
                             <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <div style={{ fontWeight: 600, fontSize: '18px', color: '#1a3353f0' }}>
                                     Contact Information
@@ -333,7 +333,7 @@ export default function ContactDetails() {
                         </Card>
                     </Box>
                     <Box sx={{ width: '34%' }}>
-                        <Card sx={{ borderRadius: '7px', p: '20px' }}>
+                        <Card sx={{ borderRadius: '16px', p: '20px'}}>
                             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ fontWeight: 600, fontSize: '16px', color: '#1a3353f0' }}>
                                     Social
