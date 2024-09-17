@@ -9,9 +9,10 @@ interface ContactDetailsProps {
   email: string;
   phone: string;
   address: string;
+  department: string;
 }
 
-const ContactDetails: React.FC<ContactDetailsProps> = ({ profilePic, fullName, email, phone, address }) => {
+const ContactDetails: React.FC<ContactDetailsProps> = ({ profilePic, fullName, email, phone, address, department }) => {
   return (
     <Box sx={{ flex: 1, marginRight: '20px', backgroundColor: '#E5E5E5', borderRadius: '30px', padding: '20px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
       <Box sx={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -30,7 +31,7 @@ const ContactDetails: React.FC<ContactDetailsProps> = ({ profilePic, fullName, e
           {email}
         </Typography>
         <Typography variant="body1" sx={{ marginTop: '10px' }}>
-          Marketing Advisor
+          {department}
         </Typography>
         {/* Phone Icon and Number */}
         <Box sx={{ display: 'flex', textAlign: 'center', alignItems: 'center', justifyContent: 'center', marginTop: '10px' }}>
