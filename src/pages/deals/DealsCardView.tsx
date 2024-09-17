@@ -109,11 +109,11 @@ console.log(deals,'deals')
       <Box sx={{ mt: '60px', height: '100%', display: 'flex', flexDirection: 'column' }}>
             <CustomToolbar sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', mb: 3, }}>
                 <Stack direction="row" spacing={2} alignItems="center">
+                    <IconButton color="primary" >
+                            <FaFilter style={{ color: '#333F49' }} />
+                    </IconButton>
                     {showAddButton && (
                         <>
-                        <IconButton color="primary" >
-                            <FaFilter style={{ color: '#333F49' }} />
-                        </IconButton>
                         <DynamicModal mode='add' page='Deals' data={data} onSaveSuccess={async () => {
                                                                                                   await getDeals();
                                                                                                 }}/>
