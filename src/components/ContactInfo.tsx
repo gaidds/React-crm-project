@@ -4,7 +4,7 @@ import { FaMapMarkerAlt, FaPhone } from 'react-icons/fa';
 import Image from './Image/Image';
 
 interface ContactDetailsProps {
-  profilePic: string;
+  src: string;
   fullName: string;
   email: string;
   phone: string;
@@ -12,18 +12,19 @@ interface ContactDetailsProps {
   department: string;
 }
 
-const ContactDetails: React.FC<ContactDetailsProps> = ({ profilePic, fullName, email, phone, address, department }) => {
+const ContactDetails: React.FC<ContactDetailsProps> = ({ src, fullName, email, phone, address, department }) => {
   return (
     <Box sx={{ flex: 1, marginRight: '20px', backgroundColor: '#E5E5E5', borderRadius: '30px', padding: '20px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
       <Box sx={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Typography variant="h6" sx={{ fontFamily: 'Poppins', fontSize: '24px', fontWeight: 400, lineHeight: '16.8px', textAlign: 'left', marginBottom: '10px', padding: '20px' }}>
           Contact Details
         </Typography>
-        <Avatar
-          src={profilePic}
+        <Box sx={{ width: 130, height: 130, marginBottom: '20px'}}>
+          <Image
+          src={src}
           alt={email}
-          sx={{ width: 120, height: 120, marginBottom: '20px', border: '2px solid white' }}
-        />
+          />
+        </Box>
         <Typography variant="h5" sx={{ fontWeight: 600, color: '#1a3353f0' }}>
           {fullName}
         </Typography>
