@@ -102,22 +102,22 @@ const DealDetails: React.FC = () => {
   const handleSaveDescription = (updatedDescription: string) => {
     const submitForm = async () => {
       const data = {
-        description: updatedDescription,  // Pass the updated description
+        description: updatedDescription,  // Only updating the description field
       };
-      console.log("NEW DESC", data)
+  
       const Header = {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        Authorization: localStorage.getItem('Token') ?? '', // Ensure token is not null
-        org: localStorage.getItem('org') ?? '', // Ensure org is not null
+        Authorization: localStorage.getItem('Token') ?? '',
+        org: localStorage.getItem('org') ?? '',
       };
   
       try {
-        const res = await fetchData(`${DealUrl}/${dealId}/`, 'PUT', JSON.stringify(data), Header);
+        // Using PATCH for partial update
+        const res = await fetchData(`${DealUrl}/${dealId}/`, 'PATCH', JSON.stringify(data), Header);
         if (!res.error) {
           console.log('Description updated successfully:', res);
-          // Re-fetch the deal to update the state
-          fetchDeal();  // This will re-fetch the deal and update the state with the new description
+          await fetchDeal();  // Re-fetch the updated deal
         } else {
           console.error('Error updating description:', res.error);
         }
@@ -126,10 +126,9 @@ const DealDetails: React.FC = () => {
       }
     };
   
-    // Call the submit form function
     submitForm();
   };
-
+  
   return (
     <Box sx={{ mt: '60px' }}>
       <CustomToolbar sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -206,7 +205,7 @@ const DealDetails: React.FC = () => {
                 </Grid>
                 <Grid container>
                   <Grid item paddingRight={10}>
-                  <p><strong>Description</strong> {deal.description}</p>
+                  <p><strong>Description</strong></p>
                   <DescriptionEditor
                   initialDescription={deal.description}
                   onSave={handleSaveDescription}
