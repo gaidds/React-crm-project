@@ -6,9 +6,10 @@ import { Box, Container, Paper, Grid } from '@mui/material';
 import { CustomToolbar } from '../../styles/CssStyled';
 import DynamicModal from '../../components/modal/modal';
 import { useMyContext } from '../../context/Context';
-import DescriptionEditor from '../../components/Description';
 import ProgressBar from '../../components/progress-bar/ProgressBar';
 import ContactDetails from '../../components/ContactInfo';
+import ButtonsComponent from '../../components/Notesattachments';
+import DescriptionComponent from '../../components/DealsDescription';
 
   const stages = [
     { state: 'ASSIGNED LEAD', color: '#004E85' },
@@ -200,13 +201,12 @@ const DealDetails: React.FC = () => {
               <Grid item xs={12} sm={4}>
                 <Grid container mb={5}>
                 <Box height={300} borderColor={'black'}>
-                  <Grid item> Notes and Attachmend Component's Place</Grid>
+                  <Grid item> <ButtonsComponent/> </Grid>
                   </Box>
                 </Grid>
                 <Grid container >
                   <Grid item paddingRight={10}>
-                  <p><strong>Description</strong></p>
-                  <DescriptionEditor
+                  <DescriptionComponent
                   initialDescription={deal.description}
                   onSave={handleSaveDescription}
                 />

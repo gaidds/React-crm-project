@@ -1,6 +1,6 @@
 import React from "react";
-import ButtonsComponent from "./notesattachments";
-import DescriptionComponent from "./deals-description";
+import ButtonsComponent from "./Notesattachments";
+import DescriptionComponent from "./DealsDescription";
 
 const LeftSide = () => {
   return (
@@ -9,7 +9,7 @@ const LeftSide = () => {
         <ButtonsComponent />
       </div>
       <div>
-        <DescriptionComponent />
+        {/* <DescriptionComponent /> */}
       </div>
     </>
   );

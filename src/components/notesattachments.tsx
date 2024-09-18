@@ -13,7 +13,7 @@ const ButtonsComponent = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
+        height:'250px'
       }}
     >
       {/* Notes and Attachments buttons */}

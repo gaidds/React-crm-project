@@ -22,7 +22,7 @@ interface DescriptionEditorProps {
   onSave: (updatedDescription: string) => void;
 }
 
-const DescriptionEditor: React.FC<DescriptionEditorProps> = ({ initialDescription, onSave }) => {
+const DescriptionComponent: React.FC<DescriptionEditorProps> = ({ initialDescription, onSave }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [description, setDescription] = useState(initialDescription);
   const [tempDescription, setTempDescription] = useState(initialDescription);
@@ -44,9 +44,28 @@ const DescriptionEditor: React.FC<DescriptionEditorProps> = ({ initialDescriptio
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', width: '100%' }}>
+    <Box
+      sx={{
+        width: 300,
+        padding: 3,
+        backgroundColor: '#fff',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+      }}
+    >
       {isEditing ? (
         <Box sx={{ width: '100%' }}>
+          <Typography
+            variant="body2"
+            sx={{
+              color: '#333', // Darker color
+              fontWeight: 'bold', // Bolder text
+              marginBottom: 1,
+            }}
+          >
+            Description
+          </Typography>
           <TextField
             fullWidth
             multiline
@@ -54,12 +73,13 @@ const DescriptionEditor: React.FC<DescriptionEditorProps> = ({ initialDescriptio
             value={tempDescription}
             onChange={(e) => setTempDescription(e.target.value)}
             variant="outlined"
+            sx={{ marginBottom: 2 }}
           />
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', mt: 1 }}>
-            <Button variant="outlined" color="secondary" onClick={handleSaveClick} style={{ borderRadius: '30px' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+            <Button variant="text" color="primary" onClick={handleSaveClick}>
               Save
             </Button>
-            <Button variant="outlined" onClick={handleCancelClick} style={{ borderRadius: '30px' }}>
+            <Button variant="text" onClick={handleCancelClick}>
               Cancel
             </Button>
           </Box>
@@ -67,16 +87,27 @@ const DescriptionEditor: React.FC<DescriptionEditorProps> = ({ initialDescriptio
       ) : (
         <Box sx={{ width: '100%' }}>
           <Typography
-            variant="body1"
+            variant="body2"
             sx={{
-              mb: 2,
+              color: '#333', // Darker color
+              fontWeight: 'bold', // Bolder text
+              marginBottom: 1,
+            }}
+          >
+            Description
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              color: '#666',
+              marginBottom: 2,
               width: '100%', // Ensures the width of the description matches the container
               wordBreak: 'break-word', // Ensures long text wraps properly
             }}
           >
             {description}
           </Typography>
-          <Button variant="outlined" onClick={handleEditClick} style={{ borderRadius: '30px' }}>
+          <Button variant="text" color="primary" onClick={handleEditClick}>
             Edit
           </Button>
         </Box>
@@ -85,4 +116,4 @@ const DescriptionEditor: React.FC<DescriptionEditorProps> = ({ initialDescriptio
   );
 };
 
-export default DescriptionEditor;
+export default DescriptionComponent;
