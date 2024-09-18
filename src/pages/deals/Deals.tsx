@@ -17,7 +17,7 @@ import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { EnhancedTableHead } from '../../components/EnchancedTableHead';
 import MyContext, { useMyContext } from '../../context/Context'
-// import "./styles.css"
+import FilterComponent from '../../components/filters/DealsFIlter';
 
 
 // Define TypeScript interfaces for your data
@@ -73,8 +73,7 @@ interface HeadCell {
     }
   ]
 
-// Define the interfaces
-interface AssignedTo {
+export interface AssignedTo {
     user_details: {
         id: string;
         email: string;
@@ -85,6 +84,7 @@ interface AssignedTo {
 
 export interface Deal {
     id: string;
+    deal_source: string;
     name: string;
     probability: number;
     stage: string;
@@ -113,6 +113,7 @@ export default function Deals(props: any) {
     const [selectOpen, setSelectOpen] = useState(false);
     const [data,setData] = useState<any[]>([]);
     const [tab, setTab] = useState('list-view');
+    const [filteredDeals, setFilteredDeals] = useState<Deal[]>([]);
     useEffect(() => {
         getDeals();
     }, [currentPage, recordsPerPage]);
@@ -134,9 +135,11 @@ export default function Deals(props: any) {
             ).then((res) => {
                 console.log(res, 'deals');
                 if (!res.error) {
-                    setDeals(res?.deals || []);
-                    setData(res || []);
-                    setTotalPages(Math.ceil(res?.deals_count / recordsPerPage));
+                  const fetchedDeals: Deal[] = res.deals || [];
+                  setDeals(fetchedDeals);
+                  setFilteredDeals(fetchedDeals);
+                  setData(res || []);
+                  setTotalPages(Math.ceil(res?.deals_count / recordsPerPage));
                 }
             });
         } catch (error) {
@@ -152,6 +155,9 @@ export default function Deals(props: any) {
         navigate('/app/deals'); // Navigate to List View
       }
     };
+    const handleApplyFilters = (filteredDeals: Deal[]) => {
+      setFilteredDeals(filteredDeals);
+  };
 
 
     const handleRequestSort = (event: any, property: any) => {
@@ -256,9 +262,7 @@ export default function Deals(props: any) {
         <Box sx={{ mt: '60px' }}>
         <CustomToolbar sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
         <Stack direction="row" spacing={2} alignItems="center">
-          <IconButton color="primary" >
-                            <FaFilter style={{ color: '#333F49' }} />
-          </IconButton>
+        <FilterComponent deals={deals} onApplyFilters={handleApplyFilters} />
                     {showAddButton && (
                         <>
                             <DynamicModal mode='add' page='Deals' data={data} onSaveSuccess={async () => {
@@ -353,8 +357,8 @@ export default function Deals(props: any) {
                                     headCells={headCells}
                                 />
                                 <TableBody>
-                                    {deals.length > 0
-                                        ? deals.map((deal, index) => {
+                                    {filteredDeals.length > 0
+                                        ? filteredDeals.map((deal, index) => {
                                             const labelId = `enhanced-table-checkbox-${index}`;
                                             const rowIndex = selectedId.indexOf(deal.id);
                                             return (
