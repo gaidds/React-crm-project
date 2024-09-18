@@ -161,7 +161,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ deals, onApplyFilters
                 style={{color: '#65558F'}}
               />
             }
-            label="Opened"
+            label="OPEN"
           />
           <FormControlLabel
             control={
@@ -172,7 +172,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ deals, onApplyFilters
                 style={{color: '#65558F'}}
               />
             }
-            label="Won"
+            label="WON"
           />
           <FormControlLabel
             control={
@@ -183,7 +183,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ deals, onApplyFilters
                 style={{color: '#65558F'}}
               />
             }
-            label="Lost"
+            label="LOST"
           />
         <Box sx={{mt: 5}}>
           <Button variant="contained" color="primary" onClick={handleApplyFilters}  sx={buttonStyle}>
