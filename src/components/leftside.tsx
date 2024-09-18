@@ -1,5 +1,5 @@
 import React from "react";
-import ButtonsComponent from "./Notesattachments";
+import ButtonsComponent from "./notesattachments";
 import DescriptionComponent from "./DealsDescription";
 
 const LeftSide = () => {

@@ -35,12 +35,21 @@ const ContactDetails: React.FC<ContactDetailsProps> = ({ src, fullName, email, p
           {department}
         </Typography>
         {/* Phone Icon and Number */}
-        <Box sx={{ display: 'flex', textAlign: 'center', alignItems: 'center', justifyContent: 'center', marginTop: '10px' }}>
-          <FaPhone style={{ marginRight: '8px', color: '#1a3353f0', fontSize: '14px' }} />
-          <Typography variant="body1">
-            {phone}
-          </Typography>
-        </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              textAlign: 'center',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: '10px',
+            }}
+          >
+            <FaPhone style={{ marginRight: '8px', color: '#1a3353f0', fontSize: '14px' }} />
+            <Typography variant="body1">
+              {phone ? `${phone.slice(0, 3)} ${phone.slice(3)}` : ''}
+            </Typography>
+          </Box>
+
         {/* Location Icon and Address */}
         <Box sx={{ display: 'flex', textAlign: 'center', alignItems: 'center', justifyContent: 'center', marginTop: '10px' }}>
           <FaMapMarkerAlt style={{ marginRight: '8px', color: '#1a3353f0', fontSize: '14px' }} />
