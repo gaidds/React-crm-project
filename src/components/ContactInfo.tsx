@@ -14,8 +14,8 @@ interface ContactDetailsProps {
 
 const ContactDetails: React.FC<ContactDetailsProps> = ({ src, fullName, email, phone, address, department }) => {
   return (
-    <Box sx={{ flex: 1, marginRight: '20px', backgroundColor: '#E5E5E5', borderRadius: '30px', padding: '20px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
-      <Box sx={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <Box sx={{ flex: 1, marginRight: '20px', backgroundColor: '#E5E5E5', borderRadius: '30px', padding: '20px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)',  height:'100%', maxWidth:'400px'}}>
+      <Box sx={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center'}} paddingTop={3}>
         <Typography variant="h6" sx={{ fontFamily: 'Poppins', fontSize: '24px', fontWeight: 400, lineHeight: '16.8px', textAlign: 'left', marginBottom: '10px', padding: '20px' }}>
           Contact Details
         </Typography>
