@@ -10,13 +10,13 @@ export const Label = (props: any) => {
   }, [tags]);
 
   const colorMap: { [key: string]: string } = {
-    "ASSIGNED LEAD": '#004E85',
-    "IN PROCESS": '#1C7EC3',
-    "OPPORTUNITY": '#1CBEC3',
-    "QUALIFICATION": '#EBDA25',
-    "NEGOTIATION": '#94C31C',
-    "CLOSED WON": '#075F18 ',
-    "CLOSED LOST": '#CA1D1F',
+    'ASSIGNED LEAD': '#004E85',
+    'IN PROCESS': '#1C7EC3',
+    OPPORTUNITY: '#1CBEC3',
+    QUALIFICATION: '#EBDA25',
+    NEGOTIATION: '#94C31C',
+    'CLOSED WON': '#075F18 ',
+    'CLOSED LOST': '#CA1D1F',
     new: '#FF2400',
     tagtest: '#ffff00',
     assigning: '#E0115F',
@@ -38,13 +38,15 @@ export const Label = (props: any) => {
 
   // Corrected hex to rgba conversion
   const hexToRgba = (hex: string, opacity: number) => {
-    let r = 0, g = 0, b = 0;
+    let r = 0,
+      g = 0,
+      b = 0;
     // Handle shorthand hex (e.g. #abc)
     if (hex.length === 4) {
       r = parseInt(hex[1] + hex[1], 16);
       g = parseInt(hex[2] + hex[2], 16);
       b = parseInt(hex[3] + hex[3], 16);
-    } 
+    }
     // Handle full hex (e.g. #aabbcc)
     else if (hex.length === 7) {
       r = parseInt(hex[1] + hex[2], 16);
@@ -59,24 +61,26 @@ export const Label = (props: any) => {
     return `rgba(${r}, ${g}, ${b}, ${opacity})`;
   };
 
-  return (
-    tags ? (
-      <Chip
-        label={tags}
-        key={tags}
-        sx={{
-          backgroundColor: hexToRgba(tagsColor, 0.1), // 10% opacity fill
-          borderRadius: '4px',
-          fontSize: '12px',
-          height: '20px',
-          width: '130px',
-          color: tagsColor, // Solid text color
-          border: `2px solid ${tagsColor}`, // Solid border color
-          marginLeft: '5px',
-          fontWeight: '500',
-          pb: '2px'
-        }}
-      />
-    ) : null
-  );
+  return tags ? (
+    <Chip
+      label={tags}
+      key={tags}
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: hexToRgba(tagsColor, 0.1), // 10% opacity fill
+        borderRadius: '4px',
+        fontSize: '12px',
+        height: '20px',
+        width: '130px',
+        color: tagsColor, // Solid text color
+        border: `2px solid ${tagsColor}`, // Solid border color
+        marginLeft: '5px',
+        fontWeight: '500',
+        p: '4px',
+        overflow: 'hidden',
+      }}
+    />
+  ) : null;
 };
