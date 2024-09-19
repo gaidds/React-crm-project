@@ -69,7 +69,7 @@ const DealsCard: React.FC<DealsCardProps> = ({ id, name, country, assignedUsers,
 
       <Box><Typography variant="h6">Assigned to</Typography></Box>
       <Box display="flex" flexWrap="wrap" sx={{ height: 45, overflow: 'hidden' }}>
-          <AvatarGroup max={4}>
+          <AvatarGroup max={3} spacing="small" sx={{ '& .MuiAvatar-root': { width: 33, height: 33 } }}>
             {assignedUsers.length > 0 ? (
               assignedUsers.map((user, index) => (
                 <Avatar
