@@ -112,7 +112,7 @@ const DealDetails: React.FC = () => {
               {
                 state: lastStage,
                 color:
-                  res?.deal_obj.stage === 'CLOSED LOST' ? 'red' : '#075F18',
+                  res?.deal_obj.stage === 'CLOSED LOST' ? '#CA1D1F' : '#075F18',
               },
             ]);
           }
