@@ -94,11 +94,6 @@ export default function Users() {
     const [loading, setLoading] = useState(true);
     const [order, setOrder] = useState('asc')
     const [orderBy, setOrderBy] = useState('Website')
-    // const [selected, setSelected] = useState([])
-    // const [selected, setSelected] = useState<string[]>([]);
-
-    // const [selectedId, setSelectedId] = useState([])
-    // const [isSelectedId, setIsSelectedId] = useState([])
     const [deleteItems, setDeleteItems] = useState([])
     const [page, setPage] = useState(0)
     const [values, setValues] = useState(10)
@@ -592,16 +587,16 @@ export default function Users() {
                                                         </TableCell> */}
                                                                 <TableCell className='tableCell'>
                                                                     {(userRole === 'ADMIN' || item?.user_details?.id === userId) && (
-                                                                        <IconButton>
-                                                                        <FaEdit
-                                                                            onClick={() => EditItem(item.id)}
-                                                                            style={{ fill: '#1A3353', cursor: 'pointer', width: '18px' }}
-                                                                        />
-                                                                        {/* <FaAd
-                                                                    onClick={() => EditItemBox(item)}
-                                                                    style={{ fill: '#1A3353', cursor: 'pointer' }}
-                                                                /> */}
-                                                                    </IconButton>
+                                                                     <DynamicModal
+                                                                     mode="edit"
+                                                                     page="Users"
+                                                                     id={item.user_details.id}
+                                                                     data={data}
+                                                                     icon={true}
+                                                                     onSaveSuccess={async () => {
+                                                                       await getUsers();
+                                                                     }}
+                                                                   />
                                                                     )}
                                                                     {userRole === 'ADMIN' && (
                                                                         <IconButton>

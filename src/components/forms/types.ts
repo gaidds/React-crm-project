@@ -1,4 +1,4 @@
-import { DealFormData } from "../modal/types";
+import { DealFormData, UserFormData } from "../modal/types";
 import { SelectChangeEvent } from "@mui/material";
 import { FormErrors } from "../modal/types";
 import { Deal } from "../../pages/deals/Deals";
@@ -12,7 +12,7 @@ export type DealsFormProps = {
       event: React.ChangeEvent<{}>,
       newValue: User[]
     ) => void;
-    formData: DealFormData ;
+    formData: DealFormData;
     errors?: FormErrors;
     data: {
       accounts_list: any[];
@@ -38,7 +38,7 @@ export type DealsFormProps = {
     handleInputChange: (
       e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<any>
     ) => void;
-    formData: any;
+    formData: UserFormData;
     data: {
       countries: any[];
       roles: any[];

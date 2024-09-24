@@ -67,25 +67,54 @@ export interface DealFormData {
     name: string;
   }
 
-  export interface UserFormData{
-      first_name: string,
-      last_name: string,
-      email: string,
-      role: string,
-      phone: string,
-      alternate_phone: string,
-      address_line: string,
-      street: string,
-      city: string,
-      state: string,
-      postcode: string,
-      country: string,
-      profile_pic: string | null,
-      has_sales_access: boolean,
-      has_marketing_access: boolean,
-      is_organization_admin: boolean
+  export interface UserDetails {
+    first_name: string;
+    last_name: string;
+    email: string;
+    id?: string;
+    is_active?: boolean;
+    profile_pic: string | null;
+  }
+  
+  export interface Address {
+    address_line: string;
+    street: string;
+    city: string;
+    state: string;
+    postcode: string;
+    country: string;
+  }
+  
+  export interface Profile {
+    id?: string;
+    user_details: UserDetails;
+    role: string;
+    address: Address;
+    has_marketing_access: boolean;
+    has_sales_access: boolean;
+    phone: string;
+    date_of_joining?: string;
+    is_active?: boolean;
   }
 
+  export interface UserFormData{
+    first_name: string,
+    last_name: string,
+    email: string,
+    role: string,
+    phone: string,
+    alternate_phone?: string,
+    address_line: string,
+    street: string,
+    city: string,
+    state: string,
+    postcode: string,
+    country: string,
+    profile_pic: string | null,
+    has_sales_access?: boolean,
+    has_marketing_access?: boolean,
+    is_organization_admin?: boolean
+}
 
   export type ModalProps = {
     mode: 'add' | 'edit';

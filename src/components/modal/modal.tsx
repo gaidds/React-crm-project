@@ -11,7 +11,7 @@ import { fetchData, Header } from '../FetchData';
 import { DealUrl, UsersUrl, AccountsUrl, ContactUrl } from '../../services/ApiUrls';
 import { SelectChangeEvent } from '@mui/material';
 import { FaEdit } from 'react-icons/fa';
-import { DealFormData, ContactFormData, AccountFormData, UserFormData , ModalProps, Deals, convertCountryNameToCode, FormErrors} from './types';
+import { DealFormData, ContactFormData, AccountFormData, UserFormData , ModalProps, Deals, convertCountryNameToCode, FormErrors, Profile} from './types';
 import { useState, useEffect } from 'react';
 import { User } from '../forms/types';
 
@@ -66,23 +66,22 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
   });
 
   const [userFormData, setUserFormData] = useState<UserFormData>({ 
-    first_name: '',
-    last_name: '',
-    email: '',
-    role: 'USER',
-    phone: '',
-    alternate_phone: '',
-    address_line: '',
-    street: '',
-    city: '',
-    state: '',
-    postcode: '',
-    country: 'US',
-    profile_pic: null,
-    has_sales_access: false,
-    has_marketing_access: false,
-    is_organization_admin: false,
+      first_name: '',
+      last_name: '',
+      email: '',
+      profile_pic: null,
+      role: 'USER',
+      address_line: '',
+      street: '',
+      city: '',
+      state: '',
+      postcode: '',
+      country: 'US',
+      has_marketing_access: false,
+      has_sales_access: false,
+      phone: '',
   });
+
   const [contactFormData, setConactFormData] = useState<ContactFormData>({ name: '' });
   const [accountFormData, setAccountFormData] = useState<AccountFormData>({ name: '' });
   const [open, setOpen] = useState(false);
@@ -92,35 +91,62 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
 
   const handleOpen = () => {
     if (mode === 'edit') {
-      const deals: Deals = data.deals;
-      const myDeal: DealFormData | undefined = data.deals.find((deal: any) => deal.id === id);
-      if (myDeal) {
-        console.log('Pre-populating form with data:', myDeal);
-        const filteredDeal: DealFormData = {
-          name: myDeal.name,
-          account: myDeal.account,
-          assigned_to: myDeal.assigned_to.map(user => user.id),
-          contacts: myDeal.contacts.map(contact => contact.id),
-          website: myDeal.website,
-          stage: myDeal.stage,
-          deal_source: myDeal.deal_source,
-          industry: myDeal.industry,
-          currency: myDeal.currency,
-          country: convertCountryNameToCode(myDeal.country),
-          value: myDeal.value,
-          probability: myDeal.probability,
-          close_date: myDeal.close_date,
-          description: myDeal.description,
-          tags: myDeal.tags
-        };
-        
-        setDealFormData(filteredDeal);
-      } else {
-        console.error('Deal not found!');
-      }
-    }
+      if ( page === 'Deals'){
+        const deals: Deals = data.deals;
+        const myDeal: DealFormData | undefined = data.deals.find((deal: any) => deal.id === id);
+        if (myDeal) {
+          console.log('Pre-populating form with data:', myDeal);
+          const filteredDeal: DealFormData = {
+            name: myDeal.name,
+            account: myDeal.account,
+            assigned_to: myDeal.assigned_to.map(user => user.id),
+            contacts: myDeal.contacts.map(contact => contact.id),
+            website: myDeal.website,
+            stage: myDeal.stage,
+            deal_source: myDeal.deal_source,
+            industry: myDeal.industry,
+            currency: myDeal.currency,
+            country: convertCountryNameToCode(myDeal.country),
+            value: myDeal.value,
+            probability: myDeal.probability,
+            close_date: myDeal.close_date,
+            description: myDeal.description,
+            tags: myDeal.tags
+          };
+          setDealFormData(filteredDeal);
+        } else {
+          console.error('Deal not found!');
+        }
+       };
+       if( page === 'Users'){
+          const myUser: Profile | undefined = data.active_users.active_users.find((user: any) => user.user_details.id === id);
+          if (myUser) {
+            console.log('Pre-populating form with data:', myUser);
+            const filteredUser: UserFormData = {
+                first_name: myUser.user_details.first_name,
+                last_name: myUser.user_details.last_name,
+                email: myUser.user_details.email,
+                profile_pic: myUser.user_details.profile_pic,
+                role: myUser.role,
+                address_line: myUser.address.address_line,
+                street: myUser.address.street,
+                city: myUser.address.city,
+                state: myUser.address.state,
+                postcode: myUser.address.postcode,
+                country: convertCountryNameToCode(myUser.address.country),
+                has_marketing_access: myUser.has_marketing_access,
+                has_sales_access: myUser.has_sales_access,
+                phone: myUser.phone,
+            };
+            setUserFormData(filteredUser);
+          } else {
+            console.error('User not found!');
+          }
+       };
+    };
     setOpen(true);
   };
+
   const handleClose = () => setOpen(false);
 
   useEffect(() => {
