@@ -15,6 +15,7 @@ import { fetchData } from '../../components/FetchData';
 import { UsersUrl, UserUrl } from '../../services/ApiUrls';
 import { CustomTab, CustomToolbar, FabLeft, FabRight } from '../../styles/CssStyled';
 import MyContext, { useMyContext } from '../../context/Context'
+import DynamicModal from '../../components/modal/modal';
 
 interface HeadCell {
     disablePadding: boolean;
@@ -103,7 +104,7 @@ export default function Users() {
     const [values, setValues] = useState(10)
     const [dense] = useState(false)
     const [rowsPerPage, setRowsPerPage] = useState(10)
-    const [usersData, setUsersData] = useState([])
+    const [data, setData] = useState<any[]>([]);
     const [deleteItemId, setDeleteItemId] = useState('')
     const [loader, setLoader] = useState(true)
     const [isDelete, setIsDelete] = useState(false)
@@ -159,7 +160,8 @@ export default function Users() {
                 // fetchData(`${UsersUrl}/`, 'GET', null as any, Header)
                 .then((res: any) => {
                     if (!res.error) {
-                        // console.log(res, 'users')
+                        console.log(res, 'users')
+                        setData(res || []);
                         setActiveUsers(res?.active_users?.active_users)
                         setActiveTotalPages(Math.ceil(res?.active_users?.active_users_count / activeRecordsPerPage));
                         setActiveUsersOffset(res?.active_users?.offset)
@@ -339,7 +341,7 @@ export default function Users() {
                                 street: data?.address?.street,
                                 city: data?.address?.city,
                                 state: data?.address?.state,
-                                pincode: data?.address?.postcode,
+                                postcode: data?.address?.postcode,
                                 country: data?.address?.country,
                                 profile_pic: data?.user_details?.profile_pic,
                                 has_sales_access: data?.has_sales_access,
@@ -492,14 +494,14 @@ export default function Users() {
                         </FabRight>
                     </Box>
                     {showAddButton && (
-                        <Button
-                            variant='contained'
-                            startIcon={<FiPlus className='plus-icon' />}
-                            onClick={onAddUser}
-                            className={'add-button'}
-                        >
-                            Add User
-                        </Button>
+                                      <DynamicModal
+                                      mode="add"
+                                      page="Users"
+                                      data={data}
+                                      onSaveSuccess={async () => {
+                                        await getUsers();
+                                      }}
+                                    />
             )}
                 </Stack>
             </CustomToolbar>
