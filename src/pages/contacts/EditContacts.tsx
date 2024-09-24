@@ -180,7 +180,7 @@ const { state } = location;
   const handleSubmit = (e: any) => {
     e.preventDefault();
     // Update formData's description field with the Quill editor's current content
-    setFormData({ ...formData, description: quill.root.innerHTML });
+    setFormData({ ...formData, description: quill?.root.innerHTML });
     submitForm();
   };
   
