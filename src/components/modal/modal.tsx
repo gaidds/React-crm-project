@@ -133,7 +133,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
                 city: myUser.address.city,
                 state: myUser.address.state,
                 postcode: myUser.address.postcode,
-                country: convertCountryNameToCode(myUser.address.country),
+                country: myUser.address.country,
                 has_marketing_access: myUser.has_marketing_access,
                 has_sales_access: myUser.has_sales_access,
                 phone: myUser.phone,
