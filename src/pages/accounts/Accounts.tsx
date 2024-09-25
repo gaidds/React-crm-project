@@ -594,9 +594,15 @@ export default function Accounts() {
                                                                 {(userRole === 'ADMIN' || 
                                                                     item.created_by.id === userId || 
                                                                     item.assigned_to.some((assignee: any) => assignee.id === profileId)) && (
-                                                                        <FaEdit
-                                                                            style={{ cursor: 'pointer', marginRight: '10px' }}
-                                                                            onClick={() => EditItem(item.id)}
+                                                                        <DynamicModal
+                                                                            mode="edit"
+                                                                            page="Accounts"
+                                                                            id={item.id}
+                                                                            data={data}
+                                                                            icon={true}
+                                                                            onSaveSuccess={async () => {
+                                                                            await getAccounts();
+                                                                            }}
                                                                         />
                                                                     )}
                                                                     {(userRole === 'ADMIN' || item.created_by.id === userId) && (

@@ -60,12 +60,13 @@ export interface DealFormData {
     billing_country: string;
     contact_name: string;
     teams: string[];
-    assigned_to: string[];
+    assigned_to: any[];
     tags: string[];
     account_attachment: string[];
     website: string;
     status: 'open' | 'closed';
     deal: string;
+    description?: string;
   }
   
 
