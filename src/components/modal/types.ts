@@ -1,4 +1,4 @@
-export type DealFormErrors = {
+export type FormErrors = {
   name?: string[],
   account?: string[],
   assigned_to?: string[],
@@ -19,6 +19,7 @@ export type DealFormErrors = {
   close_date?: string[],
   probability?: number[],
   file?: string[],
+  deal?:string[],
 };
 
 export interface DealFormData {
@@ -47,9 +48,26 @@ export interface DealFormData {
     name: string;
   }
 
-  export interface AccountFormData{
+ export interface AccountFormData {
     name: string;
+    phone: string;
+    email: string;
+    billing_address_line: string;
+    billing_street: string;
+    billing_city: string;
+    billing_state: string;
+    billing_postcode: string;
+    billing_country: string;
+    contact_name: string;
+    teams: string[];
+    assigned_to: string[];
+    tags: string[];
+    account_attachment: string[];
+    website: string;
+    status: 'open' | 'closed';
+    deal: string;
   }
+  
 
   export interface UserFormData{
     name: string;

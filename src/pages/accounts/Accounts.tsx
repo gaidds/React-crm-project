@@ -18,6 +18,7 @@ import styled from '@emotion/styled';
 import '../../styles/style.css';
 import { EnhancedTableHead } from '../../components/EnchancedTableHead';
 import MyContext, { useMyContext } from '../../context/Context'
+import DynamicModal from '../../components/modal/modal';
 
 interface HeadCell {
     disablePadding: boolean;
@@ -185,6 +186,8 @@ export default function Accounts() {
     const [closedRecordsPerPage, setClosedRecordsPerPage] = useState<number>(10);
     const [closedTotalPages, setClosedTotalPages] = useState<number>(0);
     const [closedLoading, setClosedLoading] = useState(true);
+    const [data, setData] = useState<any[]>([]);
+
 
     useEffect(() => {
         getAccounts()
@@ -207,7 +210,7 @@ export default function Accounts() {
             await fetchData(`${AccountsUrl}/?offset=${tab === "open" ? openOffset : closeOffset}&limit=${tab === "open" ? openRecordsPerPage : closedRecordsPerPage}`, 'GET', null as any, Header)
                 .then((res: any) => {
                     if (!res.error) {
-                        // console.log(res, 'accounts')
+                        console.log(res, 'accounts');
                         setOpenAccounts(res?.active_accounts?.open_accounts)
                         // setOpenAccountsCount(res?.active_accounts?.active_users_count)
                         // setOpenAccountsOffset(res?.active_accounts?.offset)
@@ -222,6 +225,7 @@ export default function Accounts() {
                         setLeads(res?.leads)
                         setTags(res?.tags)
                         setTeams(res?.teams)
+                        setData(res || []);
                         setLoading(false)
                     }
                 })
@@ -504,15 +508,17 @@ export default function Accounts() {
                         </FabRight>
                     </Box>
                     {showAddButton && (
-                        <Button
-                            variant='contained'
-                            startIcon={<FiPlus className='plus-icon' />}
-                            onClick={onAddAccount}
-                            className={'add-button'}
-                        >
-                            Add Account
-                        </Button>
-            )}
+            <>
+              <DynamicModal
+                mode="add"
+                page="Accounts"
+                data={data}
+                onSaveSuccess={async () => {
+                  await getAccounts();
+                }}
+              />
+            </>
+          )}
                 </Stack>
             </CustomToolbar>
             <Container sx={{ width: '100%', maxWidth: '100%', minWidth: '100%' }}>

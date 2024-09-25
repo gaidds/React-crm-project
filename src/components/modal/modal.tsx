@@ -11,7 +11,7 @@ import { fetchData, Header } from '../FetchData';
 import { DealUrl, UserUrl, UsersUrl, AccountsUrl, ContactUrl } from '../../services/ApiUrls';
 import { SelectChangeEvent } from '@mui/material';
 import { FaEdit } from 'react-icons/fa';
-import { DealFormData, ContactFormData, AccountFormData, UserFormData , ModalProps, Deals, convertCountryNameToCode, DealFormErrors} from './types';
+import { DealFormData, ContactFormData, AccountFormData, UserFormData , ModalProps, Deals, convertCountryNameToCode, FormErrors} from './types';
 import { useState, useEffect } from 'react';
 import { User } from '../forms/types';
 
@@ -66,9 +66,27 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
   });
   const [userFormData, setUserFormData] = useState<UserFormData>({ name: '' });
   const [contactFormData, setConactFormData] = useState<ContactFormData>({ name: '' });
-  const [accountFormData, setAccountFormData] = useState<AccountFormData>({ name: '' });
+  const [accountFormData, setAccountFormData] = useState<AccountFormData>({
+      name: '',
+      phone: '',
+      email: '', // Default value from your structure
+      billing_address_line: '',
+      billing_street: '',
+      billing_city: '',
+      billing_state: '',
+      billing_postcode: '',
+      billing_country: 'GB', // Default value from your structure
+      contact_name: '',
+      teams: [],
+      assigned_to: [],
+      tags: [],
+      account_attachment: [],
+      website: '',
+      status: 'open', // Default value from your structure
+      deal: ''
+   });
   const [open, setOpen] = useState(false);
-  const [errors, setErrors] = useState<DealFormErrors>({});
+  const [errors, setErrors] = useState<FormErrors>({});
   const [error, setError] = useState(false);
 
   const handleOpen = () => {
@@ -158,7 +176,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
       case 'Accounts':
         setAccountFormData((prevState) => ({
           ...prevState,
-          [name]: value,
+          [name]: name === 'contacts' ? [value] : value,
         }));
         break;
       case 'Users':
@@ -278,7 +296,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
       case 'Contacts':
         return <ContactsForm mode={mode} handleInputChange={handleInputChange} formData={contactFormData} data={data} />;
       case 'Accounts':
-        return <AccountsForm mode={mode} handleInputChange={handleInputChange} formData={accountFormData} data={data} />;
+        return <AccountsForm mode={mode} handleInputChange={handleInputChange} handleAutocompleteChange={handleAutocompleteChange} formData={accountFormData} data={data} errors={errors} />;
       case 'Deals':
         return <DealsForm mode={mode} handleInputChange={handleInputChange} handleAutocompleteChange={handleAutocompleteChange} formData={dealFormData} data={data} errors={errors}/>;
       default:
