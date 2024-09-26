@@ -590,7 +590,7 @@ export default function Users() {
                                                                      <DynamicModal
                                                                      mode="edit"
                                                                      page="Users"
-                                                                     id={item.user_details.id}
+                                                                     id={item.id}
                                                                      data={data}
                                                                      icon={true}
                                                                      onSaveSuccess={async () => {

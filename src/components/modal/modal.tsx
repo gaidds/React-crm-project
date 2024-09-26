@@ -8,7 +8,7 @@ import DealsForm from '../forms/DealsForm';
 import AccountsForm from '../forms/AccountsForm';
 import ContactsForm from '../forms/ContactsForm';
 import { fetchData, Header } from '../FetchData';
-import { DealUrl, UsersUrl, AccountsUrl, ContactUrl } from '../../services/ApiUrls';
+import { DealUrl, UsersUrl, UserUrl, AccountsUrl, ContactUrl } from '../../services/ApiUrls';
 import { SelectChangeEvent } from '@mui/material';
 import { FaEdit } from 'react-icons/fa';
 import { DealFormData, ContactFormData, AccountFormData, UserFormData , ModalProps, Deals, convertCountryNameToCode, FormErrors, Profile} from './types';
@@ -80,6 +80,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
       has_marketing_access: false,
       has_sales_access: false,
       phone: '',
+      alternate_phone: '',
   });
 
   const [contactFormData, setConactFormData] = useState<ContactFormData>({ name: '' });
@@ -119,7 +120,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
         }
        };
        if( page === 'Users'){
-          const myUser: Profile | undefined = data.active_users.active_users.find((user: any) => user.user_details.id === id);
+          const myUser: Profile | undefined = data.active_users.active_users.find((user: any) => user.id === id);
           if (myUser) {
             console.log('Pre-populating form with data:', myUser);
             const filteredUser: UserFormData = {
@@ -137,6 +138,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
                 has_marketing_access: myUser.has_marketing_access,
                 has_sales_access: myUser.has_sales_access,
                 phone: myUser.phone,
+                alternate_phone: myUser.alternate_phone,
             };
             setUserFormData(filteredUser);
           } else {
@@ -262,7 +264,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
       Deals: DealUrl,
       Contacts: ContactUrl,
       Accounts: AccountsUrl,
-      Users: UsersUrl,
+      Users: mode === 'add' ? UsersUrl : UserUrl,
     }[page];
   
     // Define the URL and HTTP method based on mode (add or edit)

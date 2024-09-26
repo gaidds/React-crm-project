@@ -93,6 +93,7 @@ export interface DealFormData {
     has_marketing_access: boolean;
     has_sales_access: boolean;
     phone: string;
+    alternate_phone?: string;
     date_of_joining?: string;
     is_active?: boolean;
   }
