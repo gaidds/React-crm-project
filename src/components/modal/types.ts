@@ -1,4 +1,4 @@
-export type DealFormErrors = {
+export type FormErrors = {
   name?: string[],
   account?: string[],
   assigned_to?: string[],
@@ -19,6 +19,22 @@ export type DealFormErrors = {
   close_date?: string[],
   probability?: number[],
   file?: string[],
+
+  first_name?: string[];
+  last_name?: string[];
+  role?: string[];
+  alternate_phone?: string[];
+  address_line?: string[];
+  street?: string[];
+  city?: string[];
+  state?: string[];
+  postcode?: string[];
+  profile_pic?: string[];
+  salutation?: string[];
+  language?: string[];
+  mobile_number?:string[];
+  primary_email?:string[];
+  department?: string[];
 };
 
 export interface DealFormData {
@@ -44,9 +60,37 @@ export interface DealFormData {
   }
 
   export interface ContactFormData{
-    name: string;
-  }
+      salutation: string;
+      first_name: string;
+      last_name: string;
+      organization: string | null;
+      title: string;
+      website: string;
+      profile_pic: string;
+      primary_email: string;
+      secondary_email?: string; // Optional as some contacts might not have a secondary email
+      mobile_number: string;
+      secondary_number?: string; // Optional as some contacts might not have a secondary number
+      department: string; // Optional as department might not be applicable for all contacts
+      country: string;
+      language?: string; // Optional as language might not always be provided
+      do_not_call?: boolean;
+      description?: string; // Optional as description might not always be provided
+      linked_in_url?: string; // Optional as not all contacts may have a LinkedIn URL
+      facebook_url?: string; // Optional as not all contacts may have a Facebook URL
+      twitter_username?: string; // Optional as not all contacts may have a Twitter username
+      address: Address;
+    }
 
+    export interface Address {
+      address_line: string;
+      street: string;
+      city: string;
+      state: string;
+      postcode: string;
+      country: string;
+    }
+    
   export interface AccountFormData{
     name: string;
   }

@@ -1,6 +1,6 @@
-import { DealFormData } from "../modal/types";
+import { DealFormData, ContactFormData } from "../modal/types";
 import { SelectChangeEvent } from "@mui/material";
-import { DealFormErrors } from "../modal/types";
+import { FormErrors } from "../modal/types";
 import { Deal } from "../../pages/deals/Deals";
 
 export type DealsFormProps = {
@@ -13,7 +13,7 @@ export type DealsFormProps = {
       newValue: User[]
     ) => void;
     formData: DealFormData ;
-    errors?: DealFormErrors;
+    errors?: FormErrors;
     data: {
       accounts_list: any[];
       contacts_list: any[];
@@ -32,3 +32,16 @@ export type DealsFormProps = {
     id: string;
     user__email: string;
   };
+
+  export type ContactFormProps = {
+    mode: 'add' | 'edit';
+    handleInputChange: (
+      e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<any>
+    ) => void;
+    formData: ContactFormData;
+    data: {
+      countries: any[];
+      accounts: any[];
+    };
+    errors?: FormErrors;
+  }; 

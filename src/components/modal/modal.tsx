@@ -11,7 +11,7 @@ import { fetchData, Header } from '../FetchData';
 import { DealUrl, UserUrl, UsersUrl, AccountsUrl, ContactUrl } from '../../services/ApiUrls';
 import { SelectChangeEvent } from '@mui/material';
 import { FaEdit } from 'react-icons/fa';
-import { DealFormData, ContactFormData, AccountFormData, UserFormData , ModalProps, Deals, convertCountryNameToCode, DealFormErrors} from './types';
+import { DealFormData, ContactFormData, AccountFormData, UserFormData , ModalProps, Deals, convertCountryNameToCode, FormErrors} from './types';
 import { useState, useEffect } from 'react';
 import { User } from '../forms/types';
 
@@ -65,10 +65,42 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
     tags: [],
   });
   const [userFormData, setUserFormData] = useState<UserFormData>({ name: '' });
-  const [contactFormData, setConactFormData] = useState<ContactFormData>({ name: '' });
+
+
+  const organization = localStorage.getItem('org');
+
+  const [contactFormData, setConactFormData] = useState<ContactFormData>({ 
+    salutation: '',
+    first_name: '',
+    last_name: '',
+    organization: organization,
+    title: '',
+    website: '',
+    profile_pic: '',
+    primary_email: '',
+    secondary_email: '', // Optional field, can be left as an empty string
+    mobile_number: '',
+    secondary_number: '', // Optional field, can be left as an empty string
+    department: '', // Optional field, can be left as an empty string
+    country: '',
+    language: '', // Optional field, can be left as an empty string
+    do_not_call: false, // Optional field, default to false
+    description: '', // Optional field, can be left as an empty string
+    linked_in_url: '', // Optional field, can be left as an empty string
+    facebook_url: '', // Optional field, can be left as an empty string
+    twitter_username: '', // Optional field, can be left as an empty string
+    address: {
+      address_line: '',
+      street: '',
+      city: '',
+      state: '',
+      postcode: '',
+      country: ''
+    }
+   });
   const [accountFormData, setAccountFormData] = useState<AccountFormData>({ name: '' });
   const [open, setOpen] = useState(false);
-  const [errors, setErrors] = useState<DealFormErrors>({});
+  const [errors, setErrors] = useState<FormErrors>({});
   const [error, setError] = useState(false);
 
   const handleOpen = () => {
@@ -254,9 +286,15 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
       if (data.error) {
         setError(true);
         console.error('Error:', data.error);
-        setErrors(data.errors);
-        return;
+        if (page === "Contacts") {
+          setErrors(data?.errors?.contact_errors);
       }
+      else {
+        setErrors(data?.errors);
+    }
+    console.log(errors)
+    return;
+  }
   
       if (typeof onSaveSuccess === 'function') {
         await onSaveSuccess();
@@ -276,7 +314,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
       case 'Users':
         return <UsersForm mode={mode} handleInputChange={handleInputChange} formData={userFormData} data={data} />;
       case 'Contacts':
-        return <ContactsForm mode={mode} handleInputChange={handleInputChange} formData={contactFormData} data={data} />;
+        return <ContactsForm mode={mode} handleInputChange={handleInputChange} formData={contactFormData} data={data} errors={errors} />;
       case 'Accounts':
         return <AccountsForm mode={mode} handleInputChange={handleInputChange} formData={accountFormData} data={data} />;
       case 'Deals':
