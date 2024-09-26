@@ -421,9 +421,16 @@ export default function Contacts() {
                                                             <TableCell className='tableCell'>
                                                                 {userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && item.created_by === userId) ? (
                                                                     <>
-                                                                        <FaEdit
-                                                                            style={{ cursor: 'pointer', marginRight: '10px' }}
-                                                                            onClick={() => handleEditContact(item.id)}/>
+                                                                        <DynamicModal
+                                                                            mode="edit"
+                                                                            page="Contacts"
+                                                                            id={item.id}
+                                                                            data={data}
+                                                                            icon={true}
+                                                                            onSaveSuccess={async () => {
+                                                                            await getContacts();
+                                                                            }}
+                                                                        />
                                                                         <FaTrashAlt
                                                                             style={{ cursor: 'pointer' }}
                                                                             onClick={() => deleteRow(item.id)}

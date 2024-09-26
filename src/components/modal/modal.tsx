@@ -11,7 +11,7 @@ import { fetchData, Header } from '../FetchData';
 import { DealUrl, UserUrl, UsersUrl, AccountsUrl, ContactUrl } from '../../services/ApiUrls';
 import { SelectChangeEvent } from '@mui/material';
 import { FaEdit } from 'react-icons/fa';
-import { DealFormData, ContactFormData, AccountFormData, UserFormData , ModalProps, Deals, convertCountryNameToCode, FormErrors} from './types';
+import { DealFormData, ContactFormData, AccountFormData, UserFormData , ModalProps, Deals, convertCountryNameToCode, FormErrors, ContactProfile} from './types';
 import { useState, useEffect } from 'react';
 import { User } from '../forms/types';
 
@@ -69,7 +69,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
 
   const organization = localStorage.getItem('org');
 
-  const [contactFormData, setConactFormData] = useState<ContactFormData>({ 
+  const [contactFormData, setContactFormData] = useState<ContactFormData>({ 
     salutation: '',
     first_name: '',
     last_name: '',
@@ -102,6 +102,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
 
   const handleOpen = () => {
     if (mode === 'edit') {
+      if(page === 'Deals'){
       const deals: Deals = data.deals;
       const myDeal: DealFormData | undefined = data.deals.find((deal: any) => deal.id === id);
       if (myDeal) {
@@ -129,6 +130,42 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
         console.error('Deal not found!');
       }
     }
+    if (page === 'Contacts'){
+      const myContact: ContactProfile | undefined = data.contact_obj_list.find((contact: any) => contact.id === id);
+      if (myContact) {
+        console.log('Pre-populating form with data:', myContact);
+        const filteredContact: ContactFormData = {
+          salutation: myContact.salutation,
+          first_name: myContact.first_name,
+          last_name: myContact.last_name,
+          organization: myContact.organization,
+          title: myContact.title,
+          website: myContact.website,
+          profile_pic: myContact.profile_pic,
+          primary_email: myContact.primary_email,
+          secondary_email: myContact.secondary_email, // Optional
+          mobile_number: myContact.mobile_number,
+          secondary_number: myContact.secondary_number, // Optional
+          department: myContact.department, // Optional
+          country: myContact.address.country,
+          language: myContact.language, // Optional
+          do_not_call: myContact.do_not_call, // Optional
+          description: myContact.description, // Optional
+          linked_in_url: myContact.linked_in_url, // Optional
+          facebook_url: myContact.facebook_url, // Optional
+          twitter_username: myContact.twitter_username, // Optional
+          address_line: myContact.address.address_line,
+          street: myContact.address.street,
+          city: myContact.address.city,
+          state: myContact.address.state,
+          postcode: myContact.address.postcode,
+      };
+      setContactFormData(filteredContact);
+      } else {
+        console.error('Contact not found!');
+      }
+    }
+    }
     setOpen(true);
   };
   const handleClose = () => setOpen(false);
@@ -143,7 +180,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
           }));
           break;
         case 'Contacts':
-          setConactFormData((prevState) => ({
+          setContactFormData((prevState) => ({
             ...prevState,
             ...data,
           }));
@@ -179,7 +216,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
         }));
         break;
       case 'Contacts':
-        setConactFormData((prevState) => ({
+        setContactFormData((prevState) => ({
           ...prevState,
           [name]: value,
         }));
@@ -217,7 +254,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
         }));
         break;
       case 'Contacts':
-        setConactFormData((prevState) => ({
+        setContactFormData((prevState) => ({
           ...prevState,
           assigned_to: selectedUserIds,
         }));

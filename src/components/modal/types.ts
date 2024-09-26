@@ -86,6 +86,29 @@ export interface DealFormData {
       postcode: string;
     }
 
+export interface ContactProfile{
+  salutation: string;
+  first_name: string;
+  last_name: string;
+  organization: string | null;
+  title: string;
+  website: string;
+  profile_pic: string;
+  primary_email: string;
+  secondary_email?: string; // Optional as some contacts might not have a secondary email
+  mobile_number: string;
+  secondary_number?: string; // Optional as some contacts might not have a secondary number
+  department: string; // Optional as department might not be applicable for all contacts
+  country: string;
+  language?: string; // Optional as language might not always be provided
+  do_not_call?: boolean;
+  description?: string; // Optional as description might not always be provided
+  linked_in_url?: string; // Optional as not all contacts may have a LinkedIn URL
+  facebook_url?: string; // Optional as not all contacts may have a Facebook URL
+  twitter_username?: string; // Optional as not all contacts may have a Twitter username
+  address: Address;
+}
+
     export interface Address {
       address_line: string;
       street: string;
