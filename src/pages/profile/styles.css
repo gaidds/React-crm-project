@@ -2,6 +2,40 @@
     width: 100%;
     height: calc(100vh - 60px);
     margin-top: 60px;
-    padding: 32px;
+    padding: 24px;
     box-sizing: border-box;
+}
+
+.profile-page-header {
+    box-sizing: border-box;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding-right: 32px;
+    justify-content: flex-end;
+    margin-bottom: 12px;
+    height: 36px;
+}
+
+.profile-page-body {
+    border-radius: 16px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #FFFFFF;
+    height: calc(100% - 36px);
+    overflow: hidden;
+}
+
+.profile-page-right-section, .profile-page-left-section {
+    box-sizing: border-box;
+    padding: 16px;
+    width: 50%;
+    height: 100px;
+}
+
+.profile-page-left-section {
+    display: flex;
+    justify-content: center;
 }
