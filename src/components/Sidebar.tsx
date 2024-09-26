@@ -586,7 +586,10 @@ export default function Sidebar(props: any) {
             <Route path="/app/cases/add-case" element={<AddCase />} />
             <Route path="/app/cases/edit-case" element={<EditCase />} />
             <Route path="/app/cases/case-details" element={<CaseDetails />} />
-            <Route path="/app/profile" element={<ProfilePage />} />
+            <Route
+              path="/app/profile"
+              element={<ProfilePage userData={userDetail} />}
+            />
           </Routes>
         </Box>
         {/* </MyContext.Provider> */}
