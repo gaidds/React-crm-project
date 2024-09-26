@@ -79,7 +79,11 @@ export interface DealFormData {
       linked_in_url?: string; // Optional as not all contacts may have a LinkedIn URL
       facebook_url?: string; // Optional as not all contacts may have a Facebook URL
       twitter_username?: string; // Optional as not all contacts may have a Twitter username
-      address: Address;
+      address_line: string;
+      street: string;
+      city: string;
+      state: string;
+      postcode: string;
     }
 
     export interface Address {

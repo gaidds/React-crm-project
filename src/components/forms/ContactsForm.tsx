@@ -181,7 +181,7 @@ const ContactsForm = ({
         <TextField
           label="Street"
           name="street"
-          value={formData.address.street || ''}
+          value={formData.street || ''}
           onChange={handleInputChange}
           size="small"
           fullWidth
@@ -195,7 +195,7 @@ const ContactsForm = ({
         <TextField
           label="Ctiry"
           name="city"
-          value={formData.address.city || ''}
+          value={formData.city || ''}
           onChange={handleInputChange}
           size="small"
           fullWidth
@@ -209,7 +209,7 @@ const ContactsForm = ({
         <TextField
           label="State"
           name="state"
-          value={formData.address.state || ''}
+          value={formData.state || ''}
           onChange={handleInputChange}
           size="small"
           fullWidth
@@ -223,7 +223,7 @@ const ContactsForm = ({
         <TextField
           label="Postcode"
           name="postcode"
-          value={formData.address.postcode || ''}
+          value={formData.postcode || ''}
           onChange={handleInputChange}
           size="small"
           fullWidth

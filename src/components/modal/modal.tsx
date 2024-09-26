@@ -82,21 +82,18 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
     mobile_number: '',
     secondary_number: '', // Optional field, can be left as an empty string
     department: '', // Optional field, can be left as an empty string
-    country: '',
+    country: 'NL',
     language: '', // Optional field, can be left as an empty string
     do_not_call: false, // Optional field, default to false
     description: '', // Optional field, can be left as an empty string
     linked_in_url: '', // Optional field, can be left as an empty string
     facebook_url: '', // Optional field, can be left as an empty string
     twitter_username: '', // Optional field, can be left as an empty string
-    address: {
-      address_line: '',
-      street: '',
-      city: '',
-      state: '',
-      postcode: '',
-      country: ''
-    }
+    address_line: '',
+    street: '',
+    city: '',
+    state: '',
+    postcode: '',
    });
   const [accountFormData, setAccountFormData] = useState<AccountFormData>({ name: '' });
   const [open, setOpen] = useState(false);
