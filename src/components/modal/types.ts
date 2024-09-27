@@ -35,6 +35,7 @@ export type FormErrors = {
   has_sales_access?: string[];
   has_marketing_access?: string[];
   is_organization_admin?: string[];
+  deal?:string[],
 };
 
 export interface DealFormData {
@@ -63,9 +64,27 @@ export interface DealFormData {
     name: string;
   }
 
-  export interface AccountFormData{
+ export interface AccountFormData {
     name: string;
+    phone: string;
+    email: string;
+    billing_address_line: string;
+    billing_street: string;
+    billing_city: string;
+    billing_state: string;
+    billing_postcode: string;
+    billing_country: string;
+    contact_name: string;
+    teams: string[];
+    assigned_to: any[];
+    tags: string[];
+    account_attachment: string[];
+    website: string;
+    status: 'open' | 'closed';
+    deal: string;
+    description?: string;
   }
+  
 
   export interface UserDetails {
     first_name: string;

@@ -84,7 +84,25 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
   });
 
   const [contactFormData, setConactFormData] = useState<ContactFormData>({ name: '' });
-  const [accountFormData, setAccountFormData] = useState<AccountFormData>({ name: '' });
+  const [accountFormData, setAccountFormData] = useState<AccountFormData>({
+      name: '',
+      phone: '',
+      email: '', // Default value from your structure
+      billing_address_line: '',
+      billing_street: '',
+      billing_city: '',
+      billing_state: '',
+      billing_postcode: '',
+      billing_country: 'GB', // Default value from your structure
+      contact_name: '',
+      teams: [],
+      assigned_to: [],
+      tags: [],
+      account_attachment: [],
+      website: '',
+      status: 'open', // Default value from your structure
+      deal: ''
+   });
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [error, setError] = useState(false);
@@ -92,60 +110,90 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
 
   const handleOpen = () => {
     if (mode === 'edit') {
-      if ( page === 'Deals'){
-        const deals: Deals = data.deals;
-        const myDeal: DealFormData | undefined = data.deals.find((deal: any) => deal.id === id);
-        if (myDeal) {
-          console.log('Pre-populating form with data:', myDeal);
-          const filteredDeal: DealFormData = {
-            name: myDeal.name,
-            account: myDeal.account,
-            assigned_to: myDeal.assigned_to.map(user => user.id),
-            contacts: myDeal.contacts.map(contact => contact.id),
-            website: myDeal.website,
-            stage: myDeal.stage,
-            deal_source: myDeal.deal_source,
-            industry: myDeal.industry,
-            currency: myDeal.currency,
-            country: convertCountryNameToCode(myDeal.country),
-            value: myDeal.value,
-            probability: myDeal.probability,
-            close_date: myDeal.close_date,
-            description: myDeal.description,
-            tags: myDeal.tags
+      if ( page === 'Deals') {
+      const deals: Deals = data.deals;
+      const myDeal: DealFormData | undefined = data.deals.find((deal: any) => deal.id === id);
+      if (myDeal) {
+        console.log('Pre-populating form with data:', myDeal);
+        const filteredDeal: DealFormData = {
+          name: myDeal.name,
+          account: myDeal.account,
+          assigned_to: myDeal.assigned_to.map(user => user.id),
+          contacts: myDeal.contacts.map(contact => contact.id),
+          website: myDeal.website,
+          stage: myDeal.stage,
+          deal_source: myDeal.deal_source,
+          industry: myDeal.industry,
+          currency: myDeal.currency,
+          country: convertCountryNameToCode(myDeal.country),
+          value: myDeal.value,
+          probability: myDeal.probability,
+          close_date: myDeal.close_date,
+          description: myDeal.description,
+          tags: myDeal.tags
+        };
+        
+        setDealFormData(filteredDeal);
+      } else {
+        console.error('Deal not found!');
+      }
+    }
+    if ( page === 'Accounts'){
+        const myAccount: AccountFormData | undefined = data.active_accounts.open_accounts.find((account: any) => account.id === id);
+        if (myAccount) {
+          console.log('Pre-populating form with data:', myAccount);
+          const filteredAccount: AccountFormData = {
+            name: myAccount.name,
+            deal: myAccount.deal,
+            assigned_to: myAccount.assigned_to.map(user => user.id),
+            contact_name: myAccount.contact_name,
+            website: myAccount.website,
+            status: myAccount.status,
+            description: myAccount.description,
+            tags: myAccount.tags,
+            phone:  myAccount.phone,
+            email:  myAccount.email,
+            billing_address_line:  myAccount.billing_address_line,
+            billing_street:  myAccount.billing_street,
+            billing_city:  myAccount.billing_city,
+            billing_state:  myAccount.billing_state,
+            billing_postcode:  myAccount.billing_postcode,
+            billing_country: myAccount.billing_country,
+            teams: myAccount.teams,
+            account_attachment: myAccount.account_attachment,
           };
-          setDealFormData(filteredDeal);
+          setAccountFormData(filteredAccount);
         } else {
-          console.error('Deal not found!');
-        }
-       };
-       if( page === 'Users'){
-          const myUser: Profile | undefined = data.active_users.active_users.find((user: any) => user.id === id);
-          if (myUser) {
-            console.log('Pre-populating form with data:', myUser);
-            const filteredUser: UserFormData = {
-                first_name: myUser.user_details.first_name,
-                last_name: myUser.user_details.last_name,
-                email: myUser.user_details.email,
-                profile_pic: myUser.user_details.profile_pic,
-                role: myUser.role,
-                address_line: myUser.address.address_line,
-                street: myUser.address.street,
-                city: myUser.address.city,
-                state: myUser.address.state,
-                postcode: myUser.address.postcode,
-                country: myUser.address.country,
-                has_marketing_access: myUser.has_marketing_access,
-                has_sales_access: myUser.has_sales_access,
-                phone: myUser.phone,
-                alternate_phone: myUser.alternate_phone,
-            };
-            setUserFormData(filteredUser);
-          } else {
-            console.error('User not found!');
-          }
-       };
-    };
+          console.error('Account not found!');
+        }   
+    }
+    if( page === 'Users'){
+      const myUser: Profile | undefined = data.active_users.active_users.find((user: any) => user.id === id);
+      if (myUser) {
+        console.log('Pre-populating form with data:', myUser);
+        const filteredUser: UserFormData = {
+            first_name: myUser.user_details.first_name,
+            last_name: myUser.user_details.last_name,
+            email: myUser.user_details.email,
+            profile_pic: myUser.user_details.profile_pic,
+            role: myUser.role,
+            address_line: myUser.address.address_line,
+            street: myUser.address.street,
+            city: myUser.address.city,
+            state: myUser.address.state,
+            postcode: myUser.address.postcode,
+            country: myUser.address.country,
+            has_marketing_access: myUser.has_marketing_access,
+            has_sales_access: myUser.has_sales_access,
+            phone: myUser.phone,
+            alternate_phone: myUser.alternate_phone,
+        };
+        setUserFormData(filteredUser);
+      } else {
+        console.error('User not found!');
+      }
+   };
+    }
     setOpen(true);
   };
 
@@ -205,8 +253,26 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
       case 'Accounts':
         setAccountFormData((prevState) => ({
           ...prevState,
-          [name]: value,
+          [name]: name === 'contacts' ? [value] : value,
         }));
+        if (name === 'contacts' && value) {
+          const selectedContact = data.contacts.find((contact: any) => contact.id === value);
+          
+          if (selectedContact) {
+            // Automatically populate phone, address, and email
+            setAccountFormData((prevData) => ({
+              ...prevData,
+              phone: selectedContact.phone || '',
+              email: selectedContact.email || '',
+              billing_address_line: selectedContact.address?.line || '',
+              billing_street: selectedContact.address?.street || '',
+              billing_city: selectedContact.address?.city || '',
+              billing_state: selectedContact.address?.state || '',
+              billing_postcode: selectedContact.address?.postcode || '',
+              billing_country: selectedContact.address?.country || 'GB',
+            }));
+          }
+        }
         break;
       case 'Users':
         setUserFormData((prevState) => ({
@@ -329,7 +395,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
       case 'Contacts':
         return <ContactsForm mode={mode} handleInputChange={handleInputChange} formData={contactFormData} data={data} />;
       case 'Accounts':
-        return <AccountsForm mode={mode} handleInputChange={handleInputChange} formData={accountFormData} data={data} />;
+        return <AccountsForm mode={mode} handleInputChange={handleInputChange} handleAutocompleteChange={handleAutocompleteChange} formData={accountFormData} data={data} errors={errors} />;
       case 'Deals':
         return <DealsForm mode={mode} handleInputChange={handleInputChange} handleAutocompleteChange={handleAutocompleteChange} formData={dealFormData} data={data} errors={errors}/>;
       default:
