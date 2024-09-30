@@ -23,6 +23,10 @@ import * as React from 'react';
   }: AccountsFormProps) => {
   
     const { userRole, setUserRole, userId } = useMyContext();
+
+    const myAccount: any | undefined = data.active_accounts.open_accounts.find(
+      (account: any) => account.name === formData.name
+    );
   
     const selectLable = (str: string) => (
       <InputLabel sx={{ backgroundColor: 'white', paddingX: '4px' }}>
@@ -83,7 +87,9 @@ import * as React from 'react';
             {errors?.deal?.[0] ? errors?.deal[0] : ''}
           </FormHelperText>
         </FormControl>
-  
+        {(mode === 'add' ||
+        (mode === 'edit' &&
+          (userRole === 'ADMIN' || myAccount?.created_by?.id === userId))) && (
         <FormControl fullWidth sx={{ mb: 2 }} size="small">
           <Autocomplete
             multiple
@@ -99,7 +105,7 @@ import * as React from 'react';
             size="small"
           />
         </FormControl>
-  
+          )}
         <FormControl fullWidth size="small" sx={{ mb: 2 }}>
           {selectLable('Contact')}
           <Select

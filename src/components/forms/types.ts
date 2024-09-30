@@ -53,6 +53,7 @@ export type DealsFormProps = {
     users: any[];
     deals: Deal[];
     countries: any[];
+    active_accounts: {open_accounts: any[];};
   };
 };
 
