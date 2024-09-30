@@ -172,6 +172,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
       if (myUser) {
         console.log('Pre-populating form with data:', myUser);
         const filteredUser: UserFormData = {
+            id: myUser.user_details.id,
             first_name: myUser.user_details.first_name,
             last_name: myUser.user_details.last_name,
             email: myUser.user_details.email,

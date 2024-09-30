@@ -181,6 +181,7 @@ const UsersForm = ({
           />
         </Grid>
       </FormControl>
+      {userRole === 'ADMIN' && (
       <FormControl fullWidth size="small" sx={{ mb: 2 }}>
         {selectLable('Role')}
         <Select
@@ -198,7 +199,7 @@ const UsersForm = ({
         <FormHelperText error={!!errors?.role?.[0]}>
           {errors?.role?.[0] ? errors?.role[0] : ''}
         </FormHelperText>
-      </FormControl>
+      </FormControl>)}
       <FormControl fullWidth size="small" sx={{ mb: 2 }}>
         {selectLable('Country')}
         <Select
@@ -218,15 +219,16 @@ const UsersForm = ({
         </FormHelperText>
       </FormControl>
     </Box>
+    {mode === 'edit' && userId === formData.id && (
     <FormControl>
-    <Grid item xs={12}>
-  <Button variant="contained" sx={buttonStyle} onClick={handleOpenPasswordModal}> Change Password </Button>
-    <ChangePasswordModal 
-    open={openPasswordModal} 
-    handleClose={handleClosePasswordModal}
-  />
-    </Grid>
-  </FormControl>  
+      <Grid item xs={12}>
+        <Button variant="contained" sx={buttonStyle} onClick={handleOpenPasswordModal}> Change Password </Button>
+        <ChangePasswordModal 
+            open={openPasswordModal} 
+            handleClose={handleClosePasswordModal}
+        />
+      </Grid>
+  </FormControl>)} 
   </>
   );
 };
