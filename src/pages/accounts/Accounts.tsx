@@ -1,5 +1,5 @@
 import React, { SyntheticEvent, useEffect, useState } from 'react'
-import { Box, Button, Card, Stack, Tab, Table, TableBody, TableContainer, TableHead, TablePagination, TableRow, Tabs, Toolbar, Typography, Paper, TableCell, IconButton, Checkbox, Tooltip, TableSortLabel, alpha, MenuItem, Select, Avatar, Fab, Container, TextField } from '@mui/material'
+import { Box, Button, Card, Stack, Tab, Table, TableBody, TableContainer, TableHead, TablePagination, TableRow, Tabs, Toolbar, Typography, Paper, TableCell, IconButton, Checkbox, Tooltip, TableSortLabel, alpha, MenuItem, Select, Avatar, Fab, Container, TextField, AvatarGroup } from '@mui/material'
 import { FiPlus } from "@react-icons/all-files/fi/FiPlus";
 import { FiChevronLeft } from "@react-icons/all-files/fi/FiChevronLeft";
 import { FiChevronRight } from "@react-icons/all-files/fi/FiChevronRight";
@@ -46,6 +46,12 @@ const headCells: readonly HeadCell[] = [
         label: 'Created By'
     },
     {
+        id: 'assigned_to',
+        numeric: false,
+        disablePadding: false,
+        label: 'Assigned To',
+      },
+    {
         id: 'country',
         numeric: true,
         disablePadding: false,
@@ -63,68 +69,6 @@ const headCells: readonly HeadCell[] = [
         label: 'Actions'
     }
 ]
-
-// function EnhancedTableHead(props: any) {
-//     const {
-//         onSelectAllClick, order, orderBy,
-//         numSelected, rowCount,
-//         numSelectedId, isSelectedId,
-//         onRequestSort
-//     } = props
-
-//     const createSortHandler =
-//         (property: any) => (event: React.MouseEvent<unknown>) => {
-//             onRequestSort(event, property);
-//         };
-
-//     return (
-//         <TableHead>
-//             <TableRow>
-//                 {/* <TableCell padding='checkbox'>
-//                     <Checkbox
-//                         onChange={onSelectAllClick}
-//                         checked={numSelected === rowCount}
-//                         sx={{ color: 'inherit' }}
-//                     />
-//                 </TableCell> */}
-//                 {
-//                     headCells.map((headCell) => (
-//                         headCell.label === 'Actions' || headCell.label === 'Tags' ?
-//                             <TableCell
-//                                 sx={{ fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}
-//                                 key={headCell.id}
-//                                 align={headCell.numeric ? 'left' : 'left'}
-//                                 padding={headCell.disablePadding ? 'none' : 'normal'}>{headCell.label}</TableCell>
-//                             : <TableCell
-//                                 sx={{ fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}
-//                                 key={headCell.id}
-//                                 align={headCell.numeric ? 'left' : 'left'}
-//                                 padding={headCell.disablePadding ? 'none' : 'normal'}
-//                                 sortDirection={orderBy === headCell.id ? order : false}
-//                             >
-//                                 <TableSortLabel
-//                                     active={orderBy === headCell.id}
-//                                     direction={orderBy === headCell.id ? order : 'asc'}
-//                                     onClick={createSortHandler(headCell.id)}
-//                                 >
-//                                     {headCell.label}
-//                                     {
-//                                         orderBy === headCell.id
-//                                             ? (
-//                                                 <Box component='span' sx={{ display: 'none' }}>
-//                                                     {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-//                                                 </Box>
-//                                             )
-//                                             : null
-//                                     }
-//                                 </TableSortLabel>
-//                             </TableCell>
-//                     ))
-//                 }
-//             </TableRow>
-//         </TableHead>
-//     )
-// }
 
 type Item = {
     id: string;
@@ -578,6 +522,19 @@ export default function Accounts() {
                                                                         <Avatar src={item?.created_by?.profile_pic} alt={item?.created_by?.email} /><Stack sx={{ ml: 1 }}>{item?.created_by?.email ? item?.created_by?.email : '---'}</Stack>
                                                                     </Stack>
                                                                 </TableCell>
+                                                            
+                                                                {/* Add the Assigned To Column */}
+                                                                <TableCell className='tableCell' sx={{display:"flex", justifyContent: "flex-start"}}>
+                                                                    <AvatarGroup max={4}>
+                                                                    {item?.assigned_to?.length ? item.assigned_to.map((assignee: any, i: any) => (
+                                                                        <Avatar
+                                                                        key={i}
+                                                                        src={assignee.user_details?.profile_pic || undefined}
+                                                                        alt={assignee.user_details?.email || 'Unknown'}
+                                                                        />
+                                                                    )) : '---'}
+                                                                    </AvatarGroup>
+                                                                </TableCell>
                                                                 <TableCell className='tableCell'>
                                                                     {item?.lead?.country ? item?.lead?.country : '---'}
                                                                 </TableCell>
@@ -658,6 +615,18 @@ export default function Accounts() {
                                                                 <Stack style={{ display: 'flex', flexDirection: 'row', alignItems: "center" }}>
                                                                     <Avatar src={item?.lead?.created_by?.profile_pic} alt={item?.lead?.created_by?.email} /><Stack sx={{ ml: 1 }}>{item?.lead?.account_name ? item?.lead?.account_name : '---'}</Stack>
                                                                 </Stack>
+                                                            </TableCell>
+                                                              {/* Add the Assigned To Column */}
+                                                            <TableCell className='tableCell'>
+                                                                <AvatarGroup max={4}>
+                                                                    {item?.assigned_to?.length ? item.assigned_to.map((assignee: any, i: any) => (
+                                                                        <Avatar
+                                                                            key={i}
+                                                                            src={assignee.user_details?.profile_pic || undefined}
+                                                                            alt={assignee.user_details?.email || 'Unknown'}
+                                                                        />
+                                                                    )) : '---'}
+                                                                </AvatarGroup>
                                                             </TableCell>
                                                             <TableCell className='tableCell'>
                                                                 {item?.lead?.country ? item?.lead?.country : '---'}
