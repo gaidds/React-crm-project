@@ -155,7 +155,7 @@ export default function Users() {
                 // fetchData(`${UsersUrl}/`, 'GET', null as any, Header)
                 .then((res: any) => {
                     if (!res.error) {
-                        console.log(res, 'users')
+                        //console.log(res, 'users')
                         setData(res || []);
                         setActiveUsers(res?.active_users?.active_users)
                         setActiveTotalPages(Math.ceil(res?.active_users?.active_users_count / activeRecordsPerPage));
@@ -322,7 +322,7 @@ export default function Users() {
           }
         fetchData(`${UserUrl}/${id}/`, 'GET', null as any, Header)
             .then((res) => {
-                console.log(res, 'res');
+                //console.log(res, 'res');
                 if (!res.error) {
                     const data = res?.data?.profile_obj
                     navigate('/app/users/edit-user', {
@@ -380,7 +380,7 @@ export default function Users() {
           }
         fetchData(`${UserUrl}/${selectedId}/`, 'DELETE', null as any, Header)
             .then((res: any) => {
-                console.log('delete:', res);
+                //console.log('delete:', res);
                 if (!res.error) {
                     deleteRowModalClose()
                     getUsers()
@@ -425,7 +425,7 @@ export default function Users() {
         setIsSelectedId(newIsSelectedId);
     };
     const handleDelete = (id: any) => {
-        console.log(id, 's;ected')
+        //console.log(id, 's;ected')
     }
     const showAddButton = userRole == 'ADMIN' ;
     const modalDialog = 'Are You Sure You want to delete this User?'

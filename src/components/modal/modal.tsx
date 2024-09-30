@@ -114,7 +114,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
       const deals: Deals = data.deals;
       const myDeal: DealFormData | undefined = data.deals.find((deal: any) => deal.id === id);
       if (myDeal) {
-        console.log('Pre-populating form with data:', myDeal);
+        //console.log('Pre-populating form with data:', myDeal);
         const filteredDeal: DealFormData = {
           name: myDeal.name,
           account: myDeal.account,
@@ -141,7 +141,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
     if ( page === 'Accounts'){
         const myAccount: AccountFormData | undefined = data.active_accounts.open_accounts.find((account: any) => account.id === id);
         if (myAccount) {
-          console.log('Pre-populating form with data:', myAccount);
+          //console.log('Pre-populating form with data:', myAccount);
           const filteredAccount: AccountFormData = {
             name: myAccount.name,
             deal: myAccount.deal,
@@ -170,7 +170,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
     if( page === 'Users'){
       const myUser: Profile | undefined = data.active_users.active_users.find((user: any) => user.id === id);
       if (myUser) {
-        console.log('Pre-populating form with data:', myUser);
+        //console.log('Pre-populating form with data:', myUser);
         const filteredUser: UserFormData = {
             id: myUser.user_details.id,
             profile_id: myUser.id,
@@ -327,7 +327,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
   const handleSave = async () => {
     setErrors({});
 
-    console.log('Save button clicked');
+    //console.log('Save button clicked');
     // Define base URLs for different pages
     const baseUrl = {
       Deals: DealUrl,

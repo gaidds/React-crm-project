@@ -210,7 +210,7 @@ export default function Accounts() {
             await fetchData(`${AccountsUrl}/?offset=${tab === "open" ? openOffset : closeOffset}&limit=${tab === "open" ? openRecordsPerPage : closedRecordsPerPage}`, 'GET', null as any, Header)
                 .then((res: any) => {
                     if (!res.error) {
-                        console.log(res, 'accounts');
+                        //console.log(res, 'accounts');
                         setOpenAccounts(res?.active_accounts?.open_accounts)
                         // setOpenAccountsCount(res?.active_accounts?.active_users_count)
                         // setOpenAccountsOffset(res?.active_accounts?.offset)
@@ -343,7 +343,7 @@ export default function Accounts() {
           }
         fetchData(`${AccountsUrl}/${selectedId}/`, 'DELETE', null as any, Header)
             .then((res: any) => {
-                console.log('delete:', res);
+                //console.log('delete:', res);
                 if (!res.error) {
                     deleteRowModalClose()
                     getAccounts()
@@ -410,7 +410,7 @@ export default function Accounts() {
           }
         fetchData(`${AccountsUrl}/${id}/`, 'GET', null as any, Header)
             .then((res) => {
-                console.log(res, 'resDetail');
+                //console.log(res, 'resDetail');
                 if (!res.error) {
                     const accountDetails = res?.account_obj
                     navigate('/app/accounts/edit-account', {
@@ -442,7 +442,7 @@ export default function Accounts() {
             })
     }
     const handleDelete = (id: any) => {
-        console.log(id, 's;ected')
+        //console.log(id, 's;ected')
     }
     const showAddButton = userRole !== 'USER' && userRole !== 'SALES REP';
     const modalDialog = 'Are You Sure You want to delete this Account?'

@@ -149,7 +149,7 @@ const DealDetails: React.FC = () => {
           Header
         );
         if (!res.error) {
-          console.log('Description updated successfully:', res);
+          //console.log('Description updated successfully:', res);
           await fetchDeal(); // Re-fetch the updated deal
         } else {
           console.error('Error updating description:', res.error);
