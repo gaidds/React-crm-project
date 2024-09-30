@@ -1,4 +1,4 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, ReactNode } from "react";
 
 export interface ImgUploaderProps {
     id?:string;
@@ -6,4 +6,5 @@ export interface ImgUploaderProps {
     onChange: (event: ChangeEvent<HTMLInputElement>) => void;
     defaultValue?: string;
     externalError?: string;
+    customWidget?: ReactNode;
   }
