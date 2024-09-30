@@ -16,6 +16,7 @@ import { useMyContext } from '../../context/Context';
 import { UsersFormProps } from './types';
 import ImgUploader from '../img-uploader/ImgUploader';
 import ChangePasswordModal from '../modal/ChangePassword';
+import ToggleActiveStatus from '../stages-bar/ToggleActiveStatuse';
 
 const buttonStyle = {
   backgroundColor: '#65558F',
@@ -111,6 +112,9 @@ const UsersForm = ({
           />
         </Grid>
       </FormControl>
+      <Grid item xs={12}>
+                    <ToggleActiveStatus userId={formData.profile_id} is_active={formData.is_active} /> {/* Pass user ID to the toggle */}
+        </Grid>
       <FormControl>
         <Grid item xs={12}>
           <TextField
