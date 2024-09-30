@@ -1,451 +1,279 @@
-import React, { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
-import {
-    Card,
-    Link,
-    Avatar,
-    Box,
-    Snackbar,
-    Alert,
-    Stack,
-    Button,
-    Chip
-} from '@mui/material'
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { AccountsUrl } from '../../services/ApiUrls';
+import { fetchData } from '../../components/FetchData';
+import { Box, Container, Paper, Grid } from '@mui/material';
+import { AuthBackground, CustomToolbar } from '../../styles/CssStyled';
+import DynamicModal from '../../components/modal/modal';
+import { useMyContext } from '../../context/Context';
+import ContactDetails from '../../components/ContactInfo';
+import ButtonsComponent from '../../components/notesattachments';
+import DescriptionComponent from '../../components/DealsDescription';
 
-import { fetchData } from '../../components/FetchData'
-import { AccountsUrl } from '../../services/ApiUrls'
-import { Tags } from '../../components/Tags'
-import { CustomAppBar } from '../../components/CustomAppBar'
-import { FaPlus, FaStar } from 'react-icons/fa'
-import FormateTime from '../../components/FormateTime'
-import { Label } from '../../components/Label'
-import { AntSwitch } from '../../styles/CssStyled'
-import MyContext, { useMyContext } from '../../context/Context'
-
-export const formatDate = (dateString: any) => {
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' }
-    return new Date(dateString).toLocaleDateString(undefined, options)
-}
-type response = {
-    created_by: {
-        email: string;
-        id: string;
-        profile_pic: string;
-    };
-    user_details: {
-        email: string;
-        id: string;
-        profile_pic: string;
-    };
-    org: { name: string };
-    lead: { title: string };
-    account_attachment: [];
-    assigned_to: Array<{ user_details: { email: string; id: string; profile_pic: string | null; } }>;
-    billing_address_line: string;
-    billing_city: string;
-    billing_country: string;
-    billing_state: string;
-    billing_postcode: string;
-    billing_street: string;
-    contact_name: string;
-    name: string;
-
-    created_at: string;
-    created_on: string;
-    created_on_arrow: string;
-    date_of_birth: string;
-    title: string;
-    first_name: string;
-    last_name: string;
-    account_name: string;
-    phone: string;
-    email: string;
-    lead_attachment: string;
-    opportunity_amount: string;
-    website: string;
-    description: string;
-    contacts: string;
-    status: string;
-    source: string;
-    address_line: string;
-    street: string;
-    city: string;
-    state: string;
-    postcode: string;
-    country: string;
-    tags: [];
-    company: string;
-    probability: string;
+interface Account {
+  name: string;
+  account_name: string;
+  account_obj: {
     industry: string;
-    skype_ID: string;
-    file: string;
-
-    close_date: string;
-    organization: string;
-    created_from_site: boolean;
-    id: string;
-    teams: [];
-    leads: string;
-
-};
-export const AccountDetails = (props: any) => {
-    const { state } = useLocation()
-    console.log(state)
-    const navigate = useNavigate()
-    const { userRole , profileId, userId} = useMyContext();
-
-    const [accountDetails, setAccountDetails] = useState<response | null>(null)
-    const [usersDetails, setUsersDetails] = useState<Array<{
-        user_details: {
-            email: string;
-            id: string;
-            profile_pic: string;
-        }
-    }>>([]);
-    const [selectedCountry, setSelectedCountry] = useState([])
-    const [attachments, setAttachments] = useState([])
-    const [tags, setTags] = useState([])
-    const [countries, setCountries] = useState<string[][]>([])
-    const [source, setSource] = useState([])
-    const [status, setStatus] = useState([])
-    const [industries, setIndustries] = useState([])
-    const [contacts, setContacts] = useState([])
-    const [users, setUsers] = useState([])
-    const [teams, setTeams] = useState([])
-    const [leads, setLeads] = useState([])
-    const [comments, setComments] = useState([])
-    const [commentList, setCommentList] = useState('Recent Last')
-    const [note, setNote] = useState('')
-
-    useEffect(() => {
-        getAccountDetails(state.accountId)
-    }, [state.accountId])
-
-    const getAccountDetails = (id: any) => {
-        const Header = {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            Authorization: localStorage.getItem('Token'),
-            org: localStorage.getItem('org')
-          }
-        fetchData(`${AccountsUrl}/${id}/`, 'GET', null as any, Header)
-            .then((res) => {
-                console.log(res, 'edd');
-                if (!res.error) {
-                    setAccountDetails(res?.account_obj)
-                    setContacts(res?.contacts)
-                    setIndustries(res?.industries)
-                    setUsers(res?.users)
-                    setStatus(res?.status)
-                    setCountries(res?.countries)
-                    setLeads(res?.leads)
-                    setTags(res?.tags)
-                    setTeams(res?.teams)
-                    // setAttachments(res?.attachments)
-                    // setTags(res?.tags)
-                    // setCountries(res?.countries)
-                    // setIndustries(res?.industries)
-                    // setStatus(res?.status)
-                    // setSource(res?.source)
-                    // setUsers(res?.users)
-                    // setContacts(res?.contacts)
-                    // setTeams(res?.teams)
-                    // setComments(res?.comments)
-                }
-            })
-            .catch((err) => {
-                // console.error('Error:', err)
-                < Snackbar open={err} autoHideDuration={4000} onClose={() => navigate('/app/accounts')} >
-                    <Alert onClose={() => navigate('/app/accounts')} severity="error" sx={{ width: '100%' }}>
-                        Failed to load!
-                    </Alert>
-                </Snackbar >
-            })
+    org: {
+      name:string;
+  
+    };
+    assigned_to: [
+    {
+      user_details: {
+        email: string;
+      };
     }
-    const accountCountry = (country: string) => {
-        let countryName: string[] | undefined;
-        for (countryName of countries) {
-            if (Array.isArray(countryName) && countryName.includes(country)) {
-                const ele = countryName;
-                break;
-            }
-        }
-        return countryName?.[1]
+  ];};
+  
+  contacts: [
+    {
+      first_name: string;
+      last_name: string;
+      primary_email: string;
+      mobile_number: string;
+      department: string;
+      address: {
+        street: string;
+        city: string;
+        state: string;
+        postcode: string;
+        country: string;
+      };
     }
-    const editHandle = () => {
-        // navigate('/contacts/edit-contacts', { state: { value: contactDetails, address: newAddress } })
-        let country: string[] | undefined;
-        for (country of countries) {
-            if (Array.isArray(country) && country.includes(accountDetails?.country || '')) {
-                const firstElement = country[0];
-                break;
-            }
-        }
-        navigate('/app/accounts/edit-account', {
-            state: {
-                value: {
-                    ...accountDetails,
-                    name: accountDetails?.name,
-                    phone: accountDetails?.phone,
-                    email: accountDetails?.email,
-                    billing_address_line: accountDetails?.billing_address_line,
-                    billing_street: accountDetails?.billing_street,
-                    billing_city: accountDetails?.billing_city,
-                    billing_state: accountDetails?.billing_state,
-                    billing_postcode: accountDetails?.billing_postcode,
-                    billing_country: accountDetails?.billing_country,
-                    contact_name: accountDetails?.contact_name,
-                    teams: accountDetails?.teams || [],
-                    assigned_to: accountDetails?.assigned_to || [],
-                    tags: accountDetails?.tags || [],
-                    account_attachment: accountDetails?.account_attachment || null,
-                    website: accountDetails?.website,
-                    status: accountDetails?.status,
-                    lead: accountDetails?.lead?.title || '',
-                    contacts: accountDetails?.contacts || [],
-        
-                }, id: state?.accountId,
-                contacts: state?.contacts || [], status: state?.status || [], tags: state?.tags || [], users: state?.users || [], countries: state?.countries || [], teams: state?.teams || [], leads: state?.leads || []
-            }
-        }
-        )
-    }
-
-    const backbtnHandle = () => {
-        navigate('/app/accounts')
-    }
-
-    interface AssignedToItem {
-        id: string;
-    }
-    const isAssignedToAccount = (accountDetails?.assigned_to ?? []).some(item => item.user_details.id === userId);
-    const isSalesManager = userRole === "SALES MANAGER";
-    const isCreatedByUser = accountDetails?.created_by.id === userId;
-    const showEditButton = !isSalesManager || isAssignedToAccount || isCreatedByUser;
-
-    const module = 'Accounts'
-    const crntPage = 'Account Details'
-    const backBtn = 'Back To Accounts'
-
-    return (
-        <Box sx={{ mt: '60px'}}>
-            <div>
-                <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} editHandle={showEditButton ? editHandle : null} />
-                <Box sx={{ mt: '110px', p: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Box sx={{ width: '65%' }}>
-                        <Box sx={{ borderRadius: '16px', border: '1px solid #80808038', backgroundColor: 'white' }}>
-                            <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <div style={{ fontWeight: 600, fontSize: '18px', color: '#1a3353f0' }}>
-                                    Account Information
-                                </div>
-                                <div style={{ color: 'gray', fontSize: '16px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginRight: '15px' }}>
-                                        created &nbsp;
-                                        {FormateTime(accountDetails?.created_at)} &nbsp; by   &nbsp;
-                                        <Avatar
-                                            // src={accountDetails?.created_by?.profile_pic}
-                                            alt={accountDetails?.created_by?.email}
-                                        />
-                                        &nbsp;&nbsp;
-                                        {accountDetails?.created_by?.email}
-                                        {/* {accountDetails?.first_name}&nbsp;
-                                        {accountDetails?.last_name} */}
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', marginTop: '10px' }}>
-                                <div className='title2'>
-                                    {accountDetails?.name}
-                                    <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 1 }}>
-                                        {/* {
-                                            lead.assigned_to && lead.assigned_to.map((assignItem) => (
-                                                assignItem.user_details.profile_pic
-                                                    ? */}
-                                        {usersDetails?.length ? usersDetails.map((val: any, i: any) =>
-                                            <Avatar
-                                                key={i}
-                                                alt={val?.user_details?.email}
-                                                src={val?.user_details?.profile_pic}
-                                                sx={{ mr: 1 }}
-                                            />
-                                        ) : ''
-                                        }
-                                    </Stack>
-                                </div>
-                                <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                    {accountDetails?.tags?.length ? accountDetails?.tags.map((tagData: any) => (
-                                        <Label
-                                            tags={tagData}
-                                        />)) : ''}
-                                </Stack>
-                            </div>
-                            <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <div style={{ width: '32%' }}>
-                                    <div className='title2'>Website</div>
-                                    <div className='title3'>
-                                        {accountDetails?.website || '----'}
-                                    </div>
-                                </div>
-                                <div style={{ width: '32%' }}>
-                                    <div className='title2'>Contact Name</div>
-                                    <div className='title3'>
-                                        {accountDetails?.contact_name}
-                                    </div>
-                                </div>
-                                <div style={{ width: '32%' }}>
-                                    <div className='title2'>Organization Name</div>
-                                    <div className='title3'>
-                                        {accountDetails?.org?.name || '----'}
-                                    </div>
-                                </div>
-                            </div>
-                            <div style={{ padding: '20px', marginTop: '10px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <div style={{ width: '32%' }}>
-                                    <div className='title2'>Industry</div>
-                                    <div className='title3'>
-                                        {/* {lead.pipeline ? lead.pipeline : '------'} */}
-                                        {accountDetails?.industry || '----'}
-                                    </div>
-                                </div>
-                                <div style={{ width: '32%' }}>
-                                    <div className='title2'>Leads</div>
-                                    <div className='title3'>
-                                        {accountDetails?.lead?.title || '----'}
-                                    </div>
-                                </div>
-                                <div style={{ width: '32%' }}>
-                                    <div className='title2'>Teams</div>
-                                    <div className='title3'>
-                                        {accountDetails?.teams?.length ? accountDetails?.teams.map((team: any) =>
-                                            <Chip label={team} sx={{ height: '20px', borderRadius: '4px' }} />
-                                        ) : '----'}
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div style={{ padding: '20px', marginTop: '10px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <div style={{ width: '32%' }}>
-                                    <div className='title2'>Email Address</div>
-                                    <div className='title3'>
-                                        {accountDetails?.email || '----'}
-                                    </div>
-                                </div>
-                                <div style={{ width: '32%' }}>
-                                    <div className='title2'>Mobile Number</div>
-                                    <div className='title3'>
-                                        {accountDetails?.phone || '----'}
-                                    </div>
-                                </div>
-                                <div style={{ width: '32%' }}>
-                                    <div className='title2'>Assigned to</div>
-                                    <div className='title3'>
-                                    {accountDetails && accountDetails.assigned_to?.length > 0 
-                                        ? accountDetails.assigned_to.map((user, index) => (
-                                            <div key={index}>
-                                                {user.user_details.email || 'No email available'}
-                                            </div>
-                                        ))
-                                        : '----'}
-                                    </div>
-                                </div>
-                            </div>
-                            {/* </div> */}
-                            {/* Address details */}
-                            <div style={{ marginTop: '2%' }}>
-                                <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <div style={{ fontWeight: 600, fontSize: '18px', color: '#1a3353f0' }}>
-                                        Address Details
-                                    </div>
-                                </div>
-                                <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: '10px' }}>
-                                    <div style={{ width: '32%' }}>
-                                        <div className='title2'>Address Lane</div>
-                                        <div className='title3'>
-                                            {accountDetails?.billing_address_line || '----'}
-                                        </div>
-                                    </div>
-                                    <div style={{ width: '32%' }}>
-                                        <div className='title2'>Street</div>
-                                        <div className='title3'>
-                                            {accountDetails?.billing_street || '----'}
-                                        </div>
-                                    </div>
-                                    <div style={{ width: '32%' }}>
-                                        <div className='title2'>City</div>
-                                        <div className='title3'>
-                                            {accountDetails?.billing_city || '----'}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div style={{ padding: '20px', marginTop: '15px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <div style={{ width: '32%' }}>
-                                        <div className='title2'>Pincode</div>
-                                        <div className='title3'>
-                                            {accountDetails?.billing_postcode || '----'}
-                                        </div>
-                                    </div>
-                                    <div style={{ width: '32%' }}>
-                                        <div className='title2'>State</div>
-                                        <div className='title3'>
-                                            {accountDetails?.billing_state || '----'}
-                                        </div>
-                                    </div>
-                                    <div style={{ width: '32%' }}>
-                                        <div className='title2'>Country</div>
-                                        <div className='title3'>
-                                            {/* {accountDetails?.billing_country || '----'} */}
-                                            {accountCountry(accountDetails?.billing_country || '----')}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {/* Description */}
-                            <div style={{ marginTop: '2%' }}>
-                                <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <div style={{ fontWeight: 600, fontSize: '18px', color: '#1a3353f0' }}>
-                                        Description
-                                    </div>
-                                </div>
-                                <Box sx={{ p: '15px' }}>
-                                    {accountDetails?.description ? <div dangerouslySetInnerHTML={{ __html: accountDetails?.description }} /> : '---'}
-                                </Box>
-                            </div>
-
-                        </Box>
-                    </Box>
-                    <Box sx={{ width: '34%' }}>
-                        <Box sx={{ borderRadius: '16px', border: '1px solid #80808038', backgroundColor: 'white' }}>
-                            <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <div style={{ fontWeight: 600, fontSize: '18px', color: '#1a3353f0' }}>
-                                    Attachments
-                                </div>
-                                {/* <div style={{ color: "#3E79F7", fontSize: "16px", fontWeight: "bold" }}> */}
-                                {/* Add Social #1E90FF */}
-                                <Button
-                                    type='submit'
-                                    variant='text'
-                                    size='small'
-                                    startIcon={<FaPlus style={{ fill: '#3E79F7', width: '12px' }} />}
-                                    style={{ textTransform: 'capitalize', fontWeight: 600, fontSize: '16px' }}
-                                >
-                                    Add Attachments
-                                </Button>
-                                {/* </div> */}
-                            </div>
-
-                            <div style={{ padding: '10px 10px 10px 15px', marginTop: '5%' }}>
-                                {/* {lead && lead.lead_attachment} */}
-                                {accountDetails?.account_attachment?.length ? accountDetails?.account_attachment.map((pic: any, i: any) =>
-                                    <Box key={i} sx={{ width: '100px', height: '100px', border: '0.5px solid gray', borderRadius: '5px' }}>
-                                        <img src={pic} alt={pic} />
-                                    </Box>
-                                ) : ''}
-                            </div>
-                        </Box>
-                    </Box>
-                </Box>
-            </div>
-        </Box>
-    )
+  ];
+  website: string;
+  
+ 
+  description: string;
+  tags: string[];
+  created_by: { id: string };
 }
+
+const AccountDetails: React.FC = () => {
+  const { accountId } = useParams<{ accountId: string }>();
+  const [account, setAccount] = useState<Account | null>(null);
+  const { userRole, userId } = useMyContext();
+  const [data, setData] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (accountId) {
+      fetchAccount();
+      getAccounts();
+    }
+  }, [accountId]);
+
+  const getAccounts = async () => {
+    const Header = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: localStorage.getItem('Token'),  // Fallback to undefined if null
+      org: localStorage.getItem('org'),               // Fallback to undefined if null
+    };
+  
+    try {
+      const res = await fetchData(`${AccountsUrl}`, 'GET', null as any, Header); // Properly passing null for body
+      if (!res.error) {
+        setData(res || []); // Setting the fetched data or empty array
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error); // Logging any errors that occur
+    }
+  };
+  
+
+  const fetchAccount = async () => {
+    const Header = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: localStorage.getItem('Token'),
+      org: '803a0394-5f34-4e3f-9d48-dbe7df156bd0',
+    };
+  
+    try {
+      const response = await fetchData(`${AccountsUrl}/${accountId}`, 'GET', null as any, Header);
+      
+      if (response) {
+        console.log('Fetched account data:', response); // Log the data to check the response
+        setAccount(response); // Set account state with fetched data
+      } else {
+        console.error('No account data found');
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+  
+  
+
+  const handleSaveDescription = (updatedDescription: string) => {
+    const submitForm = async () => {
+      const data = { description: updatedDescription };
+
+      const Header = {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: localStorage.getItem('Token') ?? '',
+        org: localStorage.getItem('org') ?? '',
+      };
+
+      try {
+        const res = await fetchData(
+          `${AccountsUrl}/${accountId}/`,
+          'PATCH',
+          JSON.stringify(data),
+          Header
+        );
+        if (!res.error) {
+          await fetchAccount(); // Re-fetch account data after updating
+        } else {
+          console.error('Error updating description:', res.error);
+        }
+      } catch (error) {
+        console.error('Request failed:', error);
+      }
+    };
+
+    submitForm();
+  };
+const test = true
+  // Show loading message if account data is not yet available
+  // if (test) {
+  //   return (<Box style={{height:1000, width:1000, backgroundColor: "red"}}>Loading...</Box>)
+  // }
+  console.log("account", account)
+  if (!account) {
+    return (<Box>Loading...</Box>)
+  }
+
+  return (
+    <Box sx={{ mt: '60px'}}>
+      <CustomToolbar
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        {(userRole === 'ADMIN' ||
+          account.created_by.id === userId ||
+          account.account_obj.assigned_to.some(
+            (assignee: any) => assignee.user_details.id === userId
+          )) && (
+          <DynamicModal
+            page="Deals"
+            id={accountId}
+            mode="edit"
+            data={data}
+            onSaveSuccess={async () => {
+              await fetchAccount();
+            }}
+          />
+        )}
+      </CustomToolbar>
+
+      <Container sx={{ width: '100%', maxWidth: '100%', minWidth: '100%' }}>
+        <Box sx={{ width: '100%', minWidth: '100%', m: '15px 0px 0px 0px' }}>
+          <Paper
+            sx={{
+              width: 'calc(100% - 15px)',
+              mb: 2,
+              p: '15px 15px 15px 15px',
+              borderRadius: '16px',
+            }}
+          >
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <Box sx={{ padding: '0px 0px 0px 100px', marginTop: '60px' }}>
+                  <h1 style={{ fontSize: '32px' }}>{account.name}</h1>
+                </Box>
+                <Box
+                  sx={{
+                    padding: '0px 0px 0px 100px',
+                    color: 'grey',
+                    marginTop: '20px',
+                  }}
+                >
+                  <h2 style={{ fontSize: '24px' }}>{account.website}</h2>
+                </Box>
+              </Grid>
+            </Grid>
+
+            <Grid container spacing={2} padding={'0px 0px 80px 80px'}>
+              <Grid item xs={12} sm={4}>
+                <ContactDetails
+                  src="data:image/png;base64,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"
+                  fullName={`${account.contacts[0]?.first_name ?? '---'} ${
+                    account.contacts[0]?.last_name ?? '---'
+                  }`}
+                  email={account.contacts[0]?.primary_email ?? '---'}
+                  phone={account.contacts[0]?.mobile_number ?? '---'}
+                  department={account.contacts[0]?.department ?? '---'}
+                  address={`
+                    ${account.contacts[0]?.address?.street ?? '---'}, 
+                    ${account.contacts[0]?.address?.city ?? '---'},
+                    ${account.contacts[0]?.address?.state ?? '---'}, 
+                    ${account.contacts[0]?.address?.postcode ?? '---'}, 
+                    ${account.contacts[0]?.address?.country ?? '---'}
+                  `}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={4}>
+                <Box
+                  sx={{
+                    display: 'grid',
+                    gridTemplateColumns: '150px 1fr',
+                    rowGap: 2,
+                    columnGap: 2,
+                  }}
+                >
+                  <p>
+                    <strong>Organization</strong>
+                  </p>
+                  <p>{account.account_obj.org.name}</p>
+
+                  <p>
+                    <strong>Industry</strong>
+                  </p>
+                  <p>{account.account_obj.industry}</p>
+
+                  <p>
+                    <strong>Assigned To</strong>
+                  </p>
+                  <p>
+                    {account?.account_obj?.assigned_to
+                      ?.map((user) => user.user_details.email)
+                      .join(', ')}
+                  </p>
+                </Box>
+              </Grid>
+
+              <Grid item xs={12} sm={4}>
+                <Grid container mb={5}>
+                  <Box height={300} borderColor={'black'}>
+                    <Grid item>
+                      <ButtonsComponent />
+                    </Grid>
+                  </Box>
+                </Grid>
+                <Grid container>
+                  <Grid item paddingRight={10}>
+                    <DescriptionComponent
+                      initialDescription={account.description}
+                      onSave={handleSaveDescription}
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Paper>
+        </Box>
+      </Container>
+    </Box>
+  );
+};
+
+export default AccountDetails;
