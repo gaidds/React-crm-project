@@ -1,24 +1,40 @@
 export type FormErrors = {
-  name?: string[],
-  account?: string[],
-  assigned_to?: string[],
-  account_name?: string[],
-  phone?: string[],
-  email?: string[],
-  value?: string[],
-  lead_attachment?: string[],
-  opportunity_amount?: string[],
-  website?: string[],
-  description?: string[],
-  contacts?: string[],
-  stage?: string[],
-  deal_source?: string[],
-  industry?: string[],
-  currency?: string[],
-  country?: string[],
-  close_date?: string[],
-  probability?: number[],
-  file?: string[],
+  // DealFormErrors fields
+  name?: string[];
+  account?: string[];
+  assigned_to?: string[];
+  account_name?: string[];
+  phone?: string[];
+  email?: string[];
+  value?: string[];
+  lead_attachment?: string[];
+  opportunity_amount?: string[];
+  website?: string[];
+  description?: string[];
+  contacts?: string[];
+  stage?: string[];
+  deal_source?: string[];
+  industry?: string[];
+  currency?: string[];
+  country?: string[];
+  close_date?: string[];
+  probability?: number[];
+  file?: string[];
+
+  // UserFormErrors fields
+  first_name?: string[];
+  last_name?: string[];
+  role?: string[];
+  alternate_phone?: string[];
+  address_line?: string[];
+  street?: string[];
+  city?: string[];
+  state?: string[];
+  postcode?: string[];
+  profile_pic?: string[];
+  has_sales_access?: string[];
+  has_marketing_access?: string[];
+  is_organization_admin?: string[];
   deal?:string[],
 };
 
@@ -70,9 +86,55 @@ export interface DealFormData {
   }
   
 
-  export interface UserFormData{
-    name: string;
+  export interface UserDetails {
+    first_name: string;
+    last_name: string;
+    email: string;
+    id?: string;
+    is_active?: boolean;
+    profile_pic: string | null;
   }
+  
+  export interface Address {
+    address_line: string;
+    street: string;
+    city: string;
+    state: string;
+    postcode: string;
+    country: string;
+  }
+  
+  export interface Profile {
+    id?: string;
+    user_details: UserDetails;
+    role: string;
+    address: Address;
+    has_marketing_access: boolean;
+    has_sales_access: boolean;
+    phone: string;
+    alternate_phone?: string;
+    date_of_joining?: string;
+    is_active?: boolean;
+  }
+
+  export interface UserFormData{
+    first_name: string,
+    last_name: string,
+    email: string,
+    role: string,
+    phone: string,
+    alternate_phone?: string,
+    address_line: string,
+    street: string,
+    city: string,
+    state: string,
+    postcode: string,
+    country: string,
+    profile_pic: string | null,
+    has_sales_access?: boolean,
+    has_marketing_access?: boolean,
+    is_organization_admin?: boolean
+}
 
   export type ModalProps = {
     mode: 'add' | 'edit';
@@ -83,6 +145,13 @@ export interface DealFormData {
     text?: boolean;
     onSaveSuccess: () => Promise<void>;
   };
+
+  export const roleOptions = [
+    { label: 'ADMIN', value: 'ADMIN' },
+    { label: 'SALES MANAGER', value: 'SALES MANAGER' },
+    { label: 'SALES REPRESENTATIVE', value: 'SALES REP' },
+    { label: 'USER', value: 'USER' }
+];
 
 
   const countryMapping: { [key: string]: string } = {

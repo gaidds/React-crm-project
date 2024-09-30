@@ -8,10 +8,10 @@ import DealsForm from '../forms/DealsForm';
 import AccountsForm from '../forms/AccountsForm';
 import ContactsForm from '../forms/ContactsForm';
 import { fetchData, Header } from '../FetchData';
-import { DealUrl, UserUrl, UsersUrl, AccountsUrl, ContactUrl } from '../../services/ApiUrls';
+import { DealUrl, UsersUrl, UserUrl, AccountsUrl, ContactUrl } from '../../services/ApiUrls';
 import { SelectChangeEvent } from '@mui/material';
 import { FaEdit } from 'react-icons/fa';
-import { DealFormData, ContactFormData, AccountFormData, UserFormData , ModalProps, Deals, convertCountryNameToCode, FormErrors} from './types';
+import { DealFormData, ContactFormData, AccountFormData, UserFormData , ModalProps, Deals, convertCountryNameToCode, FormErrors, Profile} from './types';
 import { useState, useEffect } from 'react';
 import { User } from '../forms/types';
 
@@ -64,7 +64,25 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
     description: '',
     tags: [],
   });
-  const [userFormData, setUserFormData] = useState<UserFormData>({ name: '' });
+
+  const [userFormData, setUserFormData] = useState<UserFormData>({ 
+      first_name: '',
+      last_name: '',
+      email: '',
+      profile_pic: null,
+      role: 'USER',
+      address_line: '',
+      street: '',
+      city: '',
+      state: '',
+      postcode: '',
+      country: 'US',
+      has_marketing_access: false,
+      has_sales_access: false,
+      phone: '',
+      alternate_phone: '',
+  });
+
   const [contactFormData, setConactFormData] = useState<ContactFormData>({ name: '' });
   const [accountFormData, setAccountFormData] = useState<AccountFormData>({
       name: '',
@@ -88,6 +106,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [error, setError] = useState(false);
+  const [userErrors, setUserErrors] = useState<FormErrors>({});
 
   const handleOpen = () => {
     if (mode === 'edit') {
@@ -148,9 +167,36 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
           console.error('Account not found!');
         }   
     }
+    if( page === 'Users'){
+      const myUser: Profile | undefined = data.active_users.active_users.find((user: any) => user.id === id);
+      if (myUser) {
+        console.log('Pre-populating form with data:', myUser);
+        const filteredUser: UserFormData = {
+            first_name: myUser.user_details.first_name,
+            last_name: myUser.user_details.last_name,
+            email: myUser.user_details.email,
+            profile_pic: myUser.user_details.profile_pic,
+            role: myUser.role,
+            address_line: myUser.address.address_line,
+            street: myUser.address.street,
+            city: myUser.address.city,
+            state: myUser.address.state,
+            postcode: myUser.address.postcode,
+            country: myUser.address.country,
+            has_marketing_access: myUser.has_marketing_access,
+            has_sales_access: myUser.has_sales_access,
+            phone: myUser.phone,
+            alternate_phone: myUser.alternate_phone,
+        };
+        setUserFormData(filteredUser);
+      } else {
+        console.error('User not found!');
+      }
+   };
     }
     setOpen(true);
   };
+
   const handleClose = () => setOpen(false);
 
   useEffect(() => {
@@ -239,13 +285,11 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
     }
   };
 
-  // const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
   const handleAutocompleteChange = (
     event: React.ChangeEvent<{}>,
     newValue: User[]
   ) => {
     const selectedUserIds = newValue.map(user => user.id);
-    // setSelectedUserIds(selectedIds); // Extract the selected user IDs
   
     switch (page) {
       case 'Deals':
@@ -286,7 +330,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
       Deals: DealUrl,
       Contacts: ContactUrl,
       Accounts: AccountsUrl,
-      Users: UsersUrl,
+      Users: mode === 'add' ? UsersUrl : UserUrl,
     }[page];
   
     // Define the URL and HTTP method based on mode (add or edit)
@@ -321,7 +365,13 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
       if (data.error) {
         setError(true);
         console.error('Error:', data.error);
-        setErrors(data.errors);
+        if (page === "Users") {
+          setErrors(data?.errors?.profile_errors);
+          setUserErrors(data?.errors?.user_errors);
+      } else {
+          setErrors(data?.errors);
+      }
+        console.log(errors)
         return;
       }
   
@@ -341,7 +391,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
   const renderForm = () => {
     switch (page) {
       case 'Users':
-        return <UsersForm mode={mode} handleInputChange={handleInputChange} formData={userFormData} data={data} />;
+        return <UsersForm mode={mode} handleInputChange={handleInputChange} formData={userFormData} data={data} errors={errors} userErrors={userErrors} />;
       case 'Contacts':
         return <ContactsForm mode={mode} handleInputChange={handleInputChange} formData={contactFormData} data={data} />;
       case 'Accounts':
