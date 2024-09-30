@@ -7,13 +7,31 @@ import {
     FormControl,
     FormHelperText,
     InputLabel,
-    Grid
+    Grid,
+    Button
 } from '@mui/material';
 import { RequiredTextField } from '../../styles/CssStyled';
-import { roleOptions } from '../modal/types';
+import { roleOptions} from '../modal/types';
 import { useMyContext } from '../../context/Context';
 import { UsersFormProps } from './types';
 import ImgUploader from '../img-uploader/ImgUploader';
+import ChangePasswordModal from '../modal/ChangePassword';
+
+const buttonStyle = {
+  backgroundColor: '#65558F',
+  color: 'white',
+  borderRadius: '30px',
+  padding: '10px 20px',
+  width: '100%', // Fixed width
+  height: '36px', // Fixed height
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  textAlign: 'center',
+  '&:hover': {
+    backgroundColor: '#89829e',
+  },
+};
 
 const UsersForm = ({ 
   mode,
@@ -24,6 +42,11 @@ const UsersForm = ({
   userErrors
 }: UsersFormProps) => {
   const { userRole, setUserRole, userId } = useMyContext();
+  const [openPasswordModal, setOpenPasswordModal] = useState(false);
+
+  const handleOpenPasswordModal = () => setOpenPasswordModal(true);
+  const handleClosePasswordModal = () => setOpenPasswordModal(false);
+
 
   const selectLable = (str: string) => (
     <InputLabel sx={{ backgroundColor: 'white', paddingX: '4px' }}>
@@ -31,10 +54,8 @@ const UsersForm = ({
     </InputLabel>
   );
 
-  if (errors?.email?.[0]){
-  console.log(errors?.email[0], 'EROOORRRR');}
-
   return (
+  <>
     <Box
       sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 2 }}
     >
@@ -197,6 +218,16 @@ const UsersForm = ({
         </FormHelperText>
       </FormControl>
     </Box>
+    <FormControl>
+    <Grid item xs={12}>
+  <Button variant="contained" sx={buttonStyle} onClick={handleOpenPasswordModal}> Change Password </Button>
+    <ChangePasswordModal 
+    open={openPasswordModal} 
+    handleClose={handleClosePasswordModal}
+  />
+    </Grid>
+  </FormControl>  
+  </>
   );
 };
 
