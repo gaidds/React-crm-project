@@ -1,4 +1,5 @@
-import { DealFormData, ContactFormData } from "../modal/types";
+
+import { DealFormData, UserFormData, AccountFormData, ContactFormData } from "../modal/types";
 import { SelectChangeEvent } from "@mui/material";
 import { FormErrors } from "../modal/types";
 import { Deal } from "../../pages/deals/Deals";
@@ -44,4 +45,41 @@ export type DealsFormProps = {
       accounts: any[];
     };
     errors?: FormErrors;
-  }; 
+  };
+
+
+  export type AccountsFormProps = {
+    mode: 'add' | 'edit';
+    handleInputChange: (
+      e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<any>
+    ) => void;
+  handleAutocompleteChange: (
+    event: React.ChangeEvent<{}>,
+    newValue: User[]
+  ) => void;
+  formData: AccountFormData ;
+  errors?: FormErrors;
+  data: {
+    contacts: any[];
+    status: any[];
+    users: any[];
+    deals: Deal[];
+    countries: any[];
+    active_accounts: {open_accounts: any[];};
+  };
+};
+
+  export type UsersFormProps = {
+    
+    mode: 'add' | 'edit';
+    handleInputChange: (
+      e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<any>
+    ) => void;
+    formData: UserFormData;
+    data: {
+      countries: any[];
+      roles: any[];
+    };
+    errors?: FormErrors;
+    userErrors?: FormErrors;
+  };

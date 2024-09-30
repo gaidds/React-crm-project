@@ -21,6 +21,7 @@ const ContactsForm = ({
   errors, 
 }: ContactFormProps) => {
   const { userRole, setUserRole, userId } = useMyContext();
+  console.log('ERRORS', errors);
 
   const selectLable = (str: string) => (
     <InputLabel sx={{ backgroundColor: 'white', paddingX: '4px' }}>
@@ -193,7 +194,7 @@ const ContactsForm = ({
     <FormControl>
       <Grid item xs={12}>
         <TextField
-          label="Ctiry"
+          label="City"
           name="city"
           value={formData.city || ''}
           onChange={handleInputChange}
