@@ -16,7 +16,7 @@ import { useMyContext } from '../../context/Context';
 import { UsersFormProps } from './types';
 import ImgUploader from '../img-uploader/ImgUploader';
 import ChangePasswordModal from '../modal/ChangePassword';
-import ToggleActiveStatus from '../ToggleActiveStatuse';
+import ToggleActiveStatus from '../ToggleActiveStatus';
 
 const buttonStyle = {
   backgroundColor: '#65558F',
