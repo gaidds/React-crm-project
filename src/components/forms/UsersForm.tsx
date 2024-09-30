@@ -13,6 +13,7 @@ import { RequiredTextField } from '../../styles/CssStyled';
 import { roleOptions } from '../modal/types';
 import { useMyContext } from '../../context/Context';
 import { UsersFormProps } from './types';
+import ImgUploader from '../img-uploader/ImgUploader';
 
 const UsersForm = ({ 
   mode,
@@ -67,15 +68,11 @@ const UsersForm = ({
       </FormControl>
       <FormControl>
         <Grid item xs={12}>
-          <TextField
-            label="Profile Picture"
+        <ImgUploader
             name="profile_pic"
-            value={formData.profile_pic || ''}
-            onChange={handleInputChange}
-            size="small"
-            fullWidth
-            helperText={userErrors?.profile_pic?.[0] ? userErrors?.profile_pic[0] : ''}
-            error={!!userErrors?.profile_pic?.[0]}
+            onChange={handleInputChange
+            }
+            defaultValue= {formData.profile_pic || "https://res.cloudinary.com/dpci3gfrc/image/upload/v1727470032/bottle-crm/rjpnub4fzkfkggdudowh.png"}
           />
         </Grid>
       </FormControl>
