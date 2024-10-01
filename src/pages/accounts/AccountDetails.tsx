@@ -88,7 +88,7 @@ const AccountDetails: React.FC = () => {
       Accept: 'application/json',
       'Content-Type': 'application/json',
       Authorization: localStorage.getItem('Token'),
-      org: '803a0394-5f34-4e3f-9d48-dbe7df156bd0',
+      org: localStorage.getItem('org'),
     };
   
     try {
@@ -163,7 +163,7 @@ const test = true
             (assignee: any) => assignee.user_details.id === userId
           )) && (
           <DynamicModal
-            page="Deals"
+            page="Accounts"
             id={accountId}
             mode="edit"
             data={data}
@@ -242,6 +242,14 @@ const test = true
 
                   <p>
                     <strong>Assigned To</strong>
+                  </p>
+                  <p>
+                    {account?.account_obj?.assigned_to
+                      ?.map((user) => user.user_details.email)
+                      .join(', ')}
+                  </p>
+                  <p>
+                    <strong>Deals</strong>
                   </p>
                   <p>
                     {account?.account_obj?.assigned_to
