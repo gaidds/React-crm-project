@@ -8,7 +8,7 @@ const ProfilePage: FC<UserDataProps> = ({ userData }) => {
   const [profilePic, setProfilePic] = useState<string | undefined>(
     userData.user_details.profile_pic
   );
-  userData.is_active = false;
+
   return (
     <div className="profile-page-container">
       <div className="profile-page-header">
