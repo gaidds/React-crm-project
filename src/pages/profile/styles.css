@@ -39,3 +39,16 @@
     display: flex;
     justify-content: center;
 }
+
+.profile-page-user-role{
+    margin-bottom: 32px !important;
+
+}
+.profil-page-user-details-container{
+    display: flex;
+    margin-bottom: 24px;
+}
+.profile-page-user-details-icon{
+    font-size: larger;
+    margin-right: 12px;
+}
