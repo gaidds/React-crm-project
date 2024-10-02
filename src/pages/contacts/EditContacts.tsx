@@ -179,10 +179,18 @@ const { state } = location;
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    // Update formData's description field with the Quill editor's current content
-    setFormData({ ...formData, description: quill.root.innerHTML });
+  
+    // Check if quill is defined before accessing its root.innerHTML
+    if (quill) {
+      setFormData({ ...formData, description: quill.root.innerHTML });
+    } else {
+      console.error('Quill is not initialized yet, cannot retrieve description');
+    }
+  
+    // Proceed to submit the form
     submitForm();
   };
+  
   
   const isValidEmail = (email: any) => {
     return /^\S+@\S+\.\S+$/.test(email);

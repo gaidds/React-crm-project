@@ -17,7 +17,7 @@ import Cases from '../pages/cases/Cases';
 import Accounts from '../pages/accounts/Accounts';
 import { AddAccount } from '../pages/accounts/AddAccount';
 import { EditAccount } from '../pages/accounts/EditAccount';
-import { AccountDetails } from '../pages/accounts/AccountDetails';
+import AccountDetails from '../pages/accounts/AccountDetails';
 import { AddUsers } from '../pages/users/AddUsers';
 import { EditUser } from '../pages/users/EditUser';
 import UserDetails from '../pages/users/UserDetails';
@@ -208,7 +208,7 @@ export default function Sidebar(props: any) {
                         {/* <IconButton onClick={userProfile} sx={{ mr: 2 }}><FaCog /></IconButton> */}
                         <IconButton onClick={handleClick} sx={{ mr: 3 }}>
                             <Avatar
-                                src={userDetail.user_details.profile_pic}
+                                src={userDetail?.user_details?.profile_pic}
                                 sx={{ height: '27px', width: '27px' }}
                             />
                         </IconButton>
@@ -369,7 +369,7 @@ export default function Sidebar(props: any) {
                             <Route path='/app/contacts/edit-contact' element={<EditContact />} />
                             <Route path='/app/accounts' element={<Accounts />} />
                             <Route path='/app/accounts/add-account' element={<AddAccount />} />
-                            <Route path='/app/accounts/account-details' element={<AccountDetails />} />
+                            <Route path='/app/accounts/:accountId' element={<AccountDetails />} />
                             <Route path='/app/accounts/edit-account' element={<EditAccount />} />
                             <Route path='/app/users' element={<Users />} />
                             <Route path='/app/users/add-users' element={<AddUsers />} />
