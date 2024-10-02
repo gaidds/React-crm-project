@@ -84,16 +84,20 @@
 }
 
 .profile-page-user-role{
-    margin-bottom: 32px !important;
+    margin-bottom: 40px !important;
 
 }
 
 .profil-page-user-details-container{
     display: flex;
-    margin-bottom: 24px;
+    margin-bottom: 32px;
+}
+
+.profil-page-user-details-container > h6{
+    font-size: 24px;
 }
 
 .profile-page-user-details-icon{
-    font-size: larger;
-    margin-right: 12px;
+    font-size: 32px;
+    margin-right: 32px;
 }

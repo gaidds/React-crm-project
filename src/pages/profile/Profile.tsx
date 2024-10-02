@@ -96,7 +96,7 @@ const ProfilePage: FC<UserDataProps> = ({ userData }) => {
         <div className="profile-page-right-section">
           <Typography
             className="profile-page-user-role"
-            variant="h4"
+            variant="h3"
             gutterBottom
           >
             {userData.role}
@@ -113,7 +113,15 @@ const ProfilePage: FC<UserDataProps> = ({ userData }) => {
           </div>
           <div className="profil-page-user-details-container">
             <IoLocationSharp className="profile-page-user-details-icon" />
-            <Typography variant="h6">{`${userData.address.street}, ${userData.address.postcode}, ${userData.address.city}, ${userData.address.state}, ${userData.address.country}`}</Typography>
+            <div>
+              <Typography variant="h6">
+                {`${user?.address.street}, ${user?.address.postcode},`}
+              </Typography>
+              <Typography variant="h6">
+                {`${user?.address.city}, ${user?.address.state},`}
+              </Typography>
+              <Typography variant="h6">{user?.address.country}</Typography>
+            </div>
           </div>
         </div>
       </div>
