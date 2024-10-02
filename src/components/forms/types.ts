@@ -1,5 +1,5 @@
 
-import { DealFormData, UserFormData, AccountFormData } from "../modal/types";
+import { DealFormData, UserFormData, AccountFormData, ContactFormData } from "../modal/types";
 import { SelectChangeEvent } from "@mui/material";
 import { FormErrors } from "../modal/types";
 import { Deal } from "../../pages/deals/Deals";
@@ -34,6 +34,18 @@ export type DealsFormProps = {
     user__email: string;
   };
 
+  export type ContactFormProps = {
+    mode: 'add' | 'edit';
+    handleInputChange: (
+      e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<any>
+    ) => void;
+    formData: ContactFormData;
+    data: {
+      countries: any[];
+      accounts: any[];
+    };
+    errors?: FormErrors;
+  };
 
 
   export type AccountsFormProps = {

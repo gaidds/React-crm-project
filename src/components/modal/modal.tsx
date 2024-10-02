@@ -11,7 +11,7 @@ import { fetchData, Header } from '../FetchData';
 import { DealUrl, UsersUrl, UserUrl, AccountsUrl, ContactUrl } from '../../services/ApiUrls';
 import { SelectChangeEvent } from '@mui/material';
 import { FaEdit } from 'react-icons/fa';
-import { DealFormData, ContactFormData, AccountFormData, UserFormData , ModalProps, Deals, convertCountryNameToCode, FormErrors, Profile} from './types';
+import { DealFormData, ContactFormData, AccountFormData, UserFormData , ModalProps, Deals, convertCountryNameToCode, FormErrors, ContactProfile, Profile} from './types';
 import { useState, useEffect } from 'react';
 import { User } from '../forms/types';
 
@@ -83,7 +83,35 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
       alternate_phone: '',
   });
 
-  const [contactFormData, setConactFormData] = useState<ContactFormData>({ name: '' });
+  const organization = localStorage.getItem('org');
+
+  const [contactFormData, setContactFormData] = useState<ContactFormData>({ 
+    salutation: '',
+    first_name: '',
+    last_name: '',
+    organization: organization,
+    title: '',
+    website: '',
+    profile_pic: '',
+    primary_email: '',
+    secondary_email: '', // Optional field, can be left as an empty string
+    mobile_number: '',
+    secondary_number: '', // Optional field, can be left as an empty string
+    department: '', // Optional field, can be left as an empty string
+    country: 'NL',
+    language: '', // Optional field, can be left as an empty string
+    do_not_call: false, // Optional field, default to false
+    description: '', // Optional field, can be left as an empty string
+    linked_in_url: '', // Optional field, can be left as an empty string
+    facebook_url: '', // Optional field, can be left as an empty string
+    twitter_username: '', // Optional field, can be left as an empty string
+    address_line: '',
+    street: '',
+    city: '',
+    state: '',
+    postcode: '',
+   });
+   
   const [accountFormData, setAccountFormData] = useState<AccountFormData>({
       name: '',
       phone: '',
@@ -136,6 +164,41 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
         setDealFormData(filteredDeal);
       } else {
         console.error('Deal not found!');
+      }
+    }
+    if (page === 'Contacts'){
+      const myContact: ContactProfile | undefined = data.contact_obj_list.find((contact: any) => contact.id === id);
+      if (myContact) {
+        console.log('Pre-populating form with data:', myContact);
+        const filteredContact: ContactFormData = {
+          salutation: myContact.salutation,
+          first_name: myContact.first_name,
+          last_name: myContact.last_name,
+          organization: myContact.organization,
+          title: myContact.title,
+          website: myContact.website,
+          profile_pic: myContact.profile_pic,
+          primary_email: myContact.primary_email,
+          secondary_email: myContact.secondary_email, // Optional
+          mobile_number: myContact.mobile_number,
+          secondary_number: myContact.secondary_number, // Optional
+          department: myContact.department, // Optional
+          country: myContact.address.country,
+          language: myContact.language, // Optional
+          do_not_call: myContact.do_not_call, // Optional
+          description: myContact.description, // Optional
+          linked_in_url: myContact.linked_in_url, // Optional
+          facebook_url: myContact.facebook_url, // Optional
+          twitter_username: myContact.twitter_username, // Optional
+          address_line: myContact.address.address_line,
+          street: myContact.address.street,
+          city: myContact.address.city,
+          state: myContact.address.state,
+          postcode: myContact.address.postcode,
+      };
+      setContactFormData(filteredContact);
+      } else {
+        console.error('Contact not found!');
       }
     }
     if ( page === 'Accounts'){
@@ -212,7 +275,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
           }));
           break;
         case 'Contacts':
-          setConactFormData((prevState) => ({
+          setContactFormData((prevState) => ({
             ...prevState,
             ...data,
           }));
@@ -248,7 +311,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
         }));
         break;
       case 'Contacts':
-        setConactFormData((prevState) => ({
+        setContactFormData((prevState) => ({
           ...prevState,
           [name]: value,
         }));
@@ -302,7 +365,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
         }));
         break;
       case 'Contacts':
-        setConactFormData((prevState) => ({
+        setContactFormData((prevState) => ({
           ...prevState,
           assigned_to: selectedUserIds,
         }));
@@ -368,7 +431,10 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
       if (data.error) {
         setError(true);
         console.error('Error:', data.error);
-        if (page === "Users") {
+        if (page === "Contacts") {
+          setErrors(data?.errors?.contact_errors);
+        }
+        else if (page === "Users") {
           setErrors(data?.errors?.profile_errors);
           setUserErrors(data?.errors?.user_errors);
       } else {
@@ -376,7 +442,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
       }
         console.log(errors)
         return;
-      }
+  }
   
       if (typeof onSaveSuccess === 'function') {
         await onSaveSuccess();
@@ -396,7 +462,7 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
       case 'Users':
         return <UsersForm mode={mode} handleInputChange={handleInputChange} formData={userFormData} data={data} errors={errors} userErrors={userErrors} />;
       case 'Contacts':
-        return <ContactsForm mode={mode} handleInputChange={handleInputChange} formData={contactFormData} data={data} />;
+        return <ContactsForm mode={mode} handleInputChange={handleInputChange} formData={contactFormData} data={data} errors={errors} />;
       case 'Accounts':
         return <AccountsForm mode={mode} handleInputChange={handleInputChange} handleAutocompleteChange={handleAutocompleteChange} formData={accountFormData} data={data} errors={errors} />;
       case 'Deals':

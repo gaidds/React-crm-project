@@ -15,6 +15,7 @@ import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { EnhancedTableHead } from '../../components/EnchancedTableHead';
 import MyContext, { useMyContext } from '../../context/Context'
+import DynamicModal from '../../components/modal/modal';
 
 interface HeadCell {
     disablePadding: boolean;
@@ -86,6 +87,8 @@ export default function Contacts() {
     const [recordsPerPage, setRecordsPerPage] = useState<number>(10);
     const [totalPages, setTotalPages] = useState<number>(0);
     const { userRole, setUserRole, userId} = useMyContext();
+    const [data, setData] = useState<any[]>([]);
+
     console.log(userId, 'Contacts user id')
 
     // useEffect(() => {
@@ -126,9 +129,10 @@ export default function Contacts() {
                 // fetchData(`${ContactUrl}/`, 'GET', null as any, Header)
                 .then((data) => {
                     if (!data.error) {
-                        // console.log(data.contact_obj_list, 'contact')
+                        console.log(data, 'contact')
                         // if (initial) {
                         setContactList(data.contact_obj_list);
+                        setData(data);
                         setCountries(data?.countries)
                         // setTotalPages(data?.contacts_count)
                         setTotalPages(Math.ceil(data?.contacts_count / recordsPerPage));
@@ -352,14 +356,14 @@ export default function Contacts() {
                         </FabRight>
                     </Box>
                     {showAddButton && (
-                        <Button
-                            variant='contained'
-                            startIcon={<FiPlus className='plus-icon' />}
-                            onClick={onAddContact}
-                            className={'add-button'}
-                        >
-                            Add Contact
-                        </Button>
+                         <DynamicModal
+                         mode="add"
+                         page="Contacts"
+                         data={data}
+                         onSaveSuccess={async () => {
+                           await getContacts();
+                         }}
+                       />
             )}
                 </Stack>
             </CustomToolbar>
@@ -417,9 +421,16 @@ export default function Contacts() {
                                                             <TableCell className='tableCell'>
                                                                 {userRole === 'ADMIN' || (userRole === 'SALES MANAGER' && item.created_by === userId) ? (
                                                                     <>
-                                                                        <FaEdit
-                                                                            style={{ cursor: 'pointer', marginRight: '10px' }}
-                                                                            onClick={() => handleEditContact(item.id)}/>
+                                                                        <DynamicModal
+                                                                            mode="edit"
+                                                                            page="Contacts"
+                                                                            id={item.id}
+                                                                            data={data}
+                                                                            icon={true}
+                                                                            onSaveSuccess={async () => {
+                                                                            await getContacts();
+                                                                            }}
+                                                                        />
                                                                         <FaTrashAlt
                                                                             style={{ cursor: 'pointer' }}
                                                                             onClick={() => deleteRow(item.id)}
