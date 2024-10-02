@@ -16,6 +16,9 @@ import { UsersUrl, UserUrl } from '../../services/ApiUrls';
 import { CustomTab, CustomToolbar, FabLeft, FabRight } from '../../styles/CssStyled';
 import MyContext, { useMyContext } from '../../context/Context'
 import DynamicModal from '../../components/modal/modal';
+import { FaFilter } from 'react-icons/fa';
+import { text } from 'stream/consumers';
+import { Label } from '../../components/label-user';
 
 interface HeadCell {
     disablePadding: boolean;
@@ -446,26 +449,6 @@ export default function Users() {
     const recordsList = [[10, '10 Records per page'], [20, '20 Records per page'], [30, '30 Records per page'], [40, '40 Records per page'], [50, '50 Records per page']]
     // console.log(!!(selectedId?.length === 0), 'asd');
 
-    const activeStyle = {
-        backgroundColor: '#ECFFEE',
-        color: '#00B112',
-        border: '2px solid green',
-        padding: '5px 10px',
-        borderRadius: '5px',
-        fontWeight: 'bold',
-        display: 'inline-block',
-    };
-
-    const inactiveStyle = {
-        backgroundColor: '#FFECEC',
-        color: '#B10000',
-        border: '2px solid red',
-        padding: '5px 10px',
-        borderRadius: '5px',
-        fontWeight: 'bold',
-        display: 'inline-block',
-    };
-
     const defaultStyle = {
         backgroundColor: 'white',
         color: 'gray',
@@ -478,23 +461,31 @@ export default function Users() {
 
     return (
         <Box sx={{ mt: '60px' }}>
-            <CustomToolbar>
-                <Tabs defaultValue={tab} onChange={handleChangeTab} sx={{ mt: '26px' }}>
-                    <CustomTab value="active" label="Active"
-                        sx={{
-                            backgroundColor: tab === 'active' ? '#F0F7FF' : '#284871',
-                            color: tab === 'active' ? '#3f51b5' : 'white',
-                        }}></CustomTab>
-                    <CustomTab value="inactive" label="In Active"
-                        sx={{
-                            backgroundColor: tab === 'inactive' ? '#F0F7FF' : '#284871',
-                            color: tab === 'inactive' ? '#3f51b5' : 'white',
-                            ml: '5px',
-                        }}
-                    ></CustomTab>
-                </Tabs>
-
-                <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            <CustomToolbar
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    mb: 3,
+                }}
+            >
+                <Stack direction="row" spacing={2} alignItems="center">
+                    <IconButton color="primary">
+                        <FaFilter style={{ color: '#333F49' }} />
+                    </IconButton>
+                    {showAddButton && (
+                        <>
+                            <DynamicModal
+                                mode="add"
+                                page="Users"
+                                data={data}
+                                onSaveSuccess={async () => {
+                                    await getUsers();
+                                }}
+                            />
+                        </>
+                    )}
                     <Select
                         value={tab === 'active' ? activeRecordsPerPage : inactiveRecordsPerPage}
                         onChange={(e: any) => handleRecordsPerPage(e)}
@@ -530,16 +521,6 @@ export default function Users() {
                             <FiChevronRight style={{ height: '15px' }} />
                         </FabRight>
                     </Box>
-                    {showAddButton && (
-                        <DynamicModal
-                            mode="add"
-                            page="Users"
-                            data={data}
-                            onSaveSuccess={async () => {
-                                await getUsers();
-                            }}
-                        />
-                    )}
                 </Stack>
             </CustomToolbar>
             <Container sx={{ width: '100%', maxWidth: '100%', minWidth: '100%' }}>
@@ -637,15 +618,15 @@ export default function Users() {
                                                             {item.user_type ? item.user_type : '---'}
                                                         </TableCell> */}
                                                             <TableCell className='tableCell'>
-                                                                <div style={
-                                                                    item?.user_details?.is_active === true
-                                                                        ? activeStyle
-                                                                        : item?.user_details?.is_active === false
-                                                                            ? inactiveStyle
-                                                                            : defaultStyle
-                                                                }>
-                                                                    {item?.user_details?.is_active === true ? 'ACTIVE' : item?.user_details?.is_active === false ? 'INACTIVE' : '---'}
-                                                                </div>
+                                                                <Label
+                                                                    tags={
+                                                                        item?.user_details?.is_active === true
+                                                                            ? 'ACTIVE'
+                                                                            : item?.user_details?.is_active === false
+                                                                                ? 'INACTIVE'
+                                                                                : '---'
+                                                                    }
+                                                                />
                                                             </TableCell>
                                                             <TableCell className='tableCell'>
                                                                 {(userRole === 'ADMIN' || item?.user_details?.id === userId) && (
