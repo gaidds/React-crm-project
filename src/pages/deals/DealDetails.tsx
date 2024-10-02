@@ -96,7 +96,7 @@ const DealDetails: React.FC = () => {
         (res) => {
           if (!res.error) {
             setDeal(res?.deal_obj);
-            let lastStage = 'CLOSED';
+            let lastStage = 'COLSED';
             if (
               res?.deal_obj.stage === 'CLOSED WON' ||
               res?.deal_obj.stage === 'CLOSED LOST'
