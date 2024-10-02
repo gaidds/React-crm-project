@@ -504,6 +504,8 @@ export default function Sidebar(props: any) {
                       if (text === 'logout') {
                         localStorage.clear();
                         navigate('/login');
+                      } else if (text === 'profile') {
+                        navigate(`/app/profile/${userDetail.id}`);
                       } else {
                         navigate(`/app/${text}`);
                       }
@@ -586,10 +588,7 @@ export default function Sidebar(props: any) {
             <Route path="/app/cases/add-case" element={<AddCase />} />
             <Route path="/app/cases/edit-case" element={<EditCase />} />
             <Route path="/app/cases/case-details" element={<CaseDetails />} />
-            <Route
-              path="/app/profile"
-              element={<ProfilePage userData={userDetail} />}
-            />
+            <Route path="/app/profile/:id" element={<ProfilePage />} />
           </Routes>
         </Box>
         {/* </MyContext.Provider> */}

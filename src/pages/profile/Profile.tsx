@@ -8,8 +8,10 @@ import { Chip, Button, Avatar, Typography } from '@mui/material';
 import { MdEmail } from 'react-icons/md';
 import { FaPhone } from 'react-icons/fa';
 import { IoLocationSharp } from 'react-icons/io5';
+import { useParams } from 'react-router-dom';
 
-const ProfilePage: FC<UserDataProps> = ({ userData }) => {
+const ProfilePage: FC = () => {
+  const { id } = useParams();
   const [data, setData] = useState<any[]>([]);
   const [user, setUser] = useState<any>();
 
@@ -27,16 +29,13 @@ const ProfilePage: FC<UserDataProps> = ({ userData }) => {
 
   const getUser = async () => {
     try {
-      await fetchData(
-        `${UserUrl}/${userData.id}`,
-        'GET',
-        null as any,
-        Header
-      ).then((res) => {
-        if (!res.error) {
-          setUser(res.data.profile_obj || []);
+      await fetchData(`${UserUrl}/${id}`, 'GET', null as any, Header).then(
+        (res) => {
+          if (!res.error) {
+            setUser(res.data.profile_obj || []);
+          }
         }
-      });
+      );
     } catch (error) {}
   };
   useEffect(() => {
@@ -45,7 +44,7 @@ const ProfilePage: FC<UserDataProps> = ({ userData }) => {
 
   useEffect(() => {
     (async () => await getUsers())();
-  }, [userData]);
+  }, [id]);
 
   return (
     <div className="profile-page-container">
@@ -53,7 +52,7 @@ const ProfilePage: FC<UserDataProps> = ({ userData }) => {
         <DynamicModal
           page="Users"
           mode="edit"
-          id={userData.id}
+          id={id}
           data={data}
           onSaveSuccess={async () => {
             await getUsers();
