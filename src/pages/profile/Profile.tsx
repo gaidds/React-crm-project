@@ -4,7 +4,6 @@ import { UserDataProps } from './types';
 import { fetchData, Header } from '../../components/FetchData';
 import { UsersUrl, UserUrl } from '../../services/ApiUrls';
 import DynamicModal from '../../components/modal/modal';
-import ImgUploader from '../../components/img-uploader/ImgUploader';
 import { Chip, Button, Avatar, Typography } from '@mui/material';
 import { MdEmail } from 'react-icons/md';
 import { FaPhone } from 'react-icons/fa';
@@ -13,9 +12,7 @@ import { IoLocationSharp } from 'react-icons/io5';
 const ProfilePage: FC<UserDataProps> = ({ userData }) => {
   const [data, setData] = useState<any[]>([]);
   const [user, setUser] = useState<any>();
-  const [profilePic, setProfilePic] = useState<string | undefined>(
-    userData.user_details.profile_pic
-  );
+
   const getUsers = async () => {
     try {
       await fetchData(`${UsersUrl}`, 'GET', null as any, Header).then((res) => {
@@ -76,17 +73,7 @@ const ProfilePage: FC<UserDataProps> = ({ userData }) => {
           <Avatar
             className="porfile-page-user-img"
             alt={user?.user_details.first_name || undefined}
-            src={profilePic}
-          />
-
-          <ImgUploader
-            name="profile_pic"
-            onChange={(e) => setProfilePic(e.target.value)}
-            customWidget={
-              <Button variant="text" className="edit-profile-pic-btn">
-                Edit
-              </Button>
-            }
+            src={user?.user_details.profile_pic}
           />
           <div className="profile-page-user-name-container">
             <span>{user?.user_details.first_name || 'Welcome!'}</span>
