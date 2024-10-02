@@ -1,5 +1,5 @@
-import React, { SyntheticEvent, useEffect, useState } from 'react'
-import { Box, Button, Card, Stack, Tab, Table, TableBody, TableContainer, TableHead, TablePagination, TableRow, Tabs, Toolbar, Typography, Paper, TableCell, IconButton, Checkbox, Tooltip, TableSortLabel, alpha, MenuItem, Select, Avatar, Fab, Container, TextField, AvatarGroup } from '@mui/material'
+import React, { SyntheticEvent, useEffect, useState, ChangeEvent } from 'react'
+import { Box, Button, Card, Stack, Tab, Table, TableBody, TableContainer, TableHead, TablePagination, TableRow, Tabs, Toolbar, Typography, Paper, TableCell, IconButton, Checkbox, Tooltip, TableSortLabel, alpha, MenuItem, Select, Avatar, Fab, Container, TextField, AvatarGroup, SelectChangeEvent } from '@mui/material'
 import { FiPlus } from "@react-icons/all-files/fi/FiPlus";
 import { FiChevronLeft } from "@react-icons/all-files/fi/FiChevronLeft";
 import { FiChevronRight } from "@react-icons/all-files/fi/FiChevronRight";
@@ -7,7 +7,7 @@ import { FiChevronDown } from "@react-icons/all-files/fi/FiChevronDown";
 import { FiChevronUp } from "@react-icons/all-files/fi/FiChevronUp";
 import { CustomTab, CustomToolbar, FabLeft, FabRight } from '../../styles/CssStyled';
 import { getComparator, stableSort } from '../../components/Sorting';
-import { FaAd, FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { FaAd, FaEdit, FaFilter, FaTrashAlt } from 'react-icons/fa';
 import { fetchData } from '../../components/FetchData';
 import { AccountsUrl } from '../../services/ApiUrls';
 import { useNavigate } from 'react-router-dom';
@@ -51,17 +51,7 @@ const headCells: readonly HeadCell[] = [
         disablePadding: false,
         label: 'Assigned To',
       },
-    {
-        id: 'country',
-        numeric: true,
-        disablePadding: false,
-        label: 'Country'
-    }, {
-        id: 'tags',
-        numeric: true,
-        disablePadding: false,
-        label: 'Tags'
-    },
+
     {
         id: 'actions',
         numeric: true,
@@ -179,18 +169,20 @@ export default function Accounts() {
     const accountDetail = (accountId: any) => {
         navigate(`/app/accounts/account-details`, { state: { accountId, detail: true, contacts: contacts || [], status: status || [], tags: tags || [], users: users || [], countries: countries || [], teams: teams || [], leads: leads || [] } })
     }
-    const handleRecordsPerPage = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        if (tab == 'open') {
-            setOpenLoading(true)
-            setOpenRecordsPerPage(parseInt(event.target.value));
+    const handleRecordsPerPage = (event: SelectChangeEvent<number>) => {
+        const selectedValue = Number(event.target.value); // Explicitly convert value to number
+    
+        if (tab === 'open') {
+            setOpenLoading(true);
+            setOpenRecordsPerPage(selectedValue); // Use the converted number
             setOpenCurrentPage(1);
         } else {
-            setClosedLoading(true)
-            setClosedRecordsPerPage(parseInt(event.target.value));
+            setClosedLoading(true);
+            setClosedRecordsPerPage(selectedValue); // Use the converted number
             setClosedCurrentPage(1);
         }
-
     };
+    
     const handlePreviousPage = () => {
         if (tab == 'open') {
             setOpenLoading(true)
@@ -395,70 +387,149 @@ export default function Accounts() {
 
     return (
         <Box sx={{ mt: '60px' }}>
-            <CustomToolbar>
-                <Tabs defaultValue={tab} onChange={handleChangeTab} sx={{ mt: '26px' }}>
-                    <CustomTab value="open" label="Open"
-                        sx={{
-                            backgroundColor: tab === 'open' ? '#F0F7FF' : '#284871',
-                            color: tab === 'open' ? '#3f51b5' : 'white',
-                        }} />
-                    <CustomTab value="closed" label="Closed"
-                        sx={{
-                            backgroundColor: tab === 'closed' ? '#F0F7FF' : '#284871',
-                            color: tab === 'closed' ? '#3f51b5' : 'white',
-                            ml: '5px',
-                        }}
-                    />
-                </Tabs>
+  <CustomToolbar
+    sx={{
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      mb: 3,
+    }}
+  >
+    {/* Left Section: Filter Icon and Add Button */}
+    <Stack direction="row" spacing={2} alignItems="center">
+      {/* Filter Icon */}
+      <IconButton
+      sx={{
+        
+        color: '#37474F', // Dark gray filter color
+        borderRadius: '50%', // Make the icon circular
+        width: '40px',
+        height: '40px',
+        '&:hover': {
+          backgroundColor: '#CFD8DC', // Slight hover color
+        },
+      }}
+    >
+        <FaFilter style={{ fontSize: '20px' }} /> 
+      </IconButton>
 
-                <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <Select
-                        value={tab === 'open' ? openRecordsPerPage : closedRecordsPerPage}
-                        onChange={(e: any) => handleRecordsPerPage(e)}
-                        open={selectOpen}
-                        onOpen={() => setSelectOpen(true)}
-                        onClose={() => setSelectOpen(false)}
-                        className={`custom-select`}
-                        onClick={() => setSelectOpen(!selectOpen)}
-                        IconComponent={() => (
-                            <div onClick={() => setSelectOpen(!selectOpen)} className="custom-select-icon">
-                                {selectOpen ? <FiChevronUp style={{ marginTop: '12px' }} /> : <FiChevronDown style={{ marginTop: '12px' }} />}
-                            </div>
-                        )}
-                        sx={{
-                            '& .MuiSelect-select': { overflow: 'visible !important' }
-                        }}
-                    >
-                        {recordsList?.length && recordsList.map((item: any, i: any) => (
-                            <MenuItem key={i} value={item[0]}>
-                                {item[1]}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                    <Box sx={{ borderRadius: '7px', backgroundColor: 'white', height: '40px', minHeight: '40px', maxHeight: '40px', display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 1, p: '0px' }}>
-                        <FabLeft onClick={handlePreviousPage} disabled={tab === 'open' ? openCurrentPage === 1 : closedCurrentPage === 1}>
-                            <FiChevronLeft style={{ height: '15px' }} />
-                        </FabLeft>
-                        <Typography sx={{ mt: 0, textTransform: 'lowercase', fontSize: '15px', color: '#1A3353', textAlign: 'center' }}>
-                            {tab === 'open' ? `${openCurrentPage} to ${openTotalPages}` : `${closedCurrentPage} to ${closedTotalPages}`}
+      {/* Add Button */}
+      {showAddButton && (
+        <Button
+        variant="contained"
+        onClick={onAddAccount} // Functionality to add account
+        sx={{
+          backgroundColor: '#6C4D9F', // Purple color
+          color: '#FFFFFF', // White text
+          borderRadius: '40%', // Circular shape
+          width: '30px',
+          height: '40px', // Adjust height
+          textTransform: 'none', // Keep the text in normal case
+          '&:hover': {
+            backgroundColor: '#5A3E85', // Darken on hover
+          },
+        }}
+        >
+          ADD
+        </Button>
+      )}
+    </Stack>
 
-                        </Typography>
-                        <FabRight onClick={handleNextPage} disabled={tab === 'open' ? (openCurrentPage === openTotalPages) : (closedCurrentPage === closedTotalPages)}>
-                            <FiChevronRight style={{ height: '15px' }} />
-                        </FabRight>
-                    </Box>
-                    {showAddButton && (
-                        <Button
-                            variant='contained'
-                            startIcon={<FiPlus className='plus-icon' />}
-                            onClick={onAddAccount}
-                            className={'add-button'}
-                        >
-                            Add Account
-                        </Button>
-            )}
-                </Stack>
-            </CustomToolbar>
+    {/* Right Section: Records per Page and Page Navigation */}
+    
+    <Stack direction="row" alignItems="center" spacing={2} justifyContent="flex-end">
+      {/* Records per Page Dropdown */}
+     
+      <Select
+        value={tab === 'open' ? openRecordsPerPage : closedRecordsPerPage}
+        onChange={(event: SelectChangeEvent<number>) =>
+          handleRecordsPerPage(event)
+        } // Fixing the onChange type
+        sx={{
+            backgroundColor: 'white',
+            minWidth: '80px',
+            borderRadius: '8px',
+            '& .MuiOutlinedInput-notchedOutline': { border: 'none' }, // Remove default border
+            padding: '6px', // Adjust padding for dropdown text
+            fontSize: '14px',
+            color: '#000', // Black text
+            height: '35px'
+
+          }}
+        >
+        {recordsList?.length &&
+          recordsList.map((item, i) => (
+            <MenuItem key={i} value={item[0]}>
+              {item[1]}
+            </MenuItem>
+          ))}
+      </Select>
+    
+      {/* Page Navigation */}
+      <Box
+        sx={{
+            display: 'flex',
+            alignItems: 'center',
+            backgroundColor: 'white', // Same white background as the Records per page
+            borderRadius: '10px', // Rounded corners to match design
+            padding: '0px 8px', // Padding inside the pagination controls
+            border: '1px solid #ccc', // Add light border
+            height: '36px', // Same height as Records per Page dropdown for uniformity
+          }}
+        >
+        {/* Previous Page Button */}
+        <IconButton
+          onClick={handlePreviousPage}
+          disabled={tab === 'open' ? openCurrentPage === 1 : closedCurrentPage === 1}
+          sx={{
+            padding: 0,
+            '&:disabled': { color: '#D3D3D3' }, // Grey when disabled
+            color: '#000000',
+            '&:hover': {
+              backgroundColor: 'rgba(0, 0, 0, 0.1)',
+            },
+          }}
+        >
+          <FiChevronLeft style={{ fontSize: '18px' }} />
+        </IconButton>
+
+        {/* Current Page / Total Pages */}
+        <Typography
+          sx={{
+            fontSize: '14px',
+            color: '#000000',
+            textAlign: 'center',
+            padding: '0px 8px', // Adjust spacing for page number text
+          }}
+        >
+          {tab === 'open'
+            ? `${openCurrentPage} of ${openTotalPages}`
+            : `${closedCurrentPage} of ${closedTotalPages}`}
+        </Typography>
+
+        {/* Next Page Button */}
+        <IconButton
+          onClick={handleNextPage}
+          disabled={
+            tab === 'open'
+              ? openCurrentPage === openTotalPages
+              : closedCurrentPage === closedTotalPages
+          }
+          sx={{
+            padding: 0,
+            '&:disabled': { color: '#D3D3D3' }, // Grey when disabled
+            color: '#000000',
+            '&:hover': {
+              backgroundColor: 'rgba(0, 0, 0, 0.1)',
+            },
+          }}
+        >
+          <FiChevronRight style={{ fontSize: '18px' }} />
+        </IconButton>
+      </Box>
+    </Stack>
+  </CustomToolbar>
             <Container sx={{ width: '100%', maxWidth: '100%', minWidth: '100%' }}>
                 <Box sx={{ width: '100%', minWidth: '100%', m: '15px 0px 0px 0px' }}>
                     <Paper sx={{ width: 'calc(100% - 15px)', mb: 2, p: '15px 15px 15px 15px', borderRadius:'16px'}}>
@@ -492,7 +563,7 @@ export default function Accounts() {
                                                             <TableRow
                                                                 tabIndex={-1}
                                                                 key={index}
-                                                                sx={{ border: 0, '&:nth-of-type(even)': { backgroundColor: 'whitesmoke' }, color: 'rgb(26, 51, 83)', textTransform: 'capitalize' }}
+                                                                sx={{ border: 0, '&:nth-of-type(even)': { backgroundColor: 'white' }, color: 'rgb(26, 51, 83)', textTransform: 'capitalize' }}
                                                             >
                                                                 {/* <TableCell
                                                                     padding='checkbox'
@@ -535,12 +606,7 @@ export default function Accounts() {
                                                                     )) : '---'}
                                                                     </AvatarGroup>
                                                                 </TableCell>
-                                                                <TableCell className='tableCell'>
-                                                                    {item?.lead?.country ? item?.lead?.country : '---'}
-                                                                </TableCell>
-                                                                <TableCell className='tableCell'>
-                                                                    {item?.tags?.length ? item?.tags.map((tag: any, i: any) => <Stack sx={{ mr: 0.5 }}> Tags(tag)</Stack>) : '---'}
-                                                                </TableCell>
+                                                                                                                              
                                                                 <TableCell className='tableCell'>
                                                                 {(userRole === 'ADMIN' || 
                                                                     item.created_by.id === userId || 
