@@ -71,14 +71,21 @@ export default function Sidebar(props: any) {
   const [drawerWidth, setDrawerWidth] = useState(200);
   const [headerWidth, setHeaderWidth] = useState(drawerWidth);
   const [loading, setLoading] = useState(true);
-  const [userDetail, setUserDetail] = useState<any>(null);
   const [organizationModal, setOrganizationModal] = useState(false);
   // const [navList, setNavList] = useState<string[]>(['deals', 'contacts', 'accounts', 'users']);
   const organizationModalClose = () => {
     setOrganizationModal(false);
   };
-  const { userRole, setUserRole, setUserId, userId, setProfileId, profileId } =
-    useMyContext();
+  const {
+    userRole,
+    setUserRole,
+    setUserId,
+    userId,
+    setProfileId,
+    profileId,
+    userData,
+    setUserData,
+  } = useMyContext();
   console.log(userRole);
 
   useEffect(() => {
@@ -124,7 +131,7 @@ export default function Sidebar(props: any) {
       .then((res: any) => {
         console.log(res, 'user');
         if (res?.user_obj) {
-          setUserDetail(res?.user_obj);
+          setUserData(res?.user_obj);
           setUserRole(res?.user_obj.role);
           setUserId(res?.user_obj.user_details.id);
           setProfileId(res?.user_obj.id);
@@ -200,12 +207,12 @@ export default function Sidebar(props: any) {
       case 'profile':
         return screen === 'profile' ? (
           <Avatar
-            src={userDetail?.user_details?.profile_pic}
+            src={userData?.user_details?.profile_pic}
             sx={{ height: 30, width: 30 }}
           />
         ) : (
           <Avatar
-            src={userDetail?.user_details?.profile_pic}
+            src={userData?.user_details?.profile_pic}
             sx={{ height: 30, width: 30 }}
           />
         );
@@ -316,7 +323,7 @@ export default function Sidebar(props: any) {
             {/* <IconButton onClick={userProfile} sx={{ mr: 2 }}><FaCog /></IconButton> */}
             <IconButton onClick={handleClick} sx={{ mr: 3 }}>
               <Avatar
-                src={userDetail.user_details.profile_pic}
+                src={userData?.user_details.profile_pic}
                 sx={{ height: '27px', width: '27px' }}
               />
             </IconButton>
@@ -505,7 +512,7 @@ export default function Sidebar(props: any) {
                         localStorage.clear();
                         navigate('/login');
                       } else if (text === 'profile') {
-                        navigate(`/app/profile/${userDetail.id}`);
+                        navigate(`/app/profile/${userData?.id}`);
                       } else {
                         navigate(`/app/${text}`);
                       }
