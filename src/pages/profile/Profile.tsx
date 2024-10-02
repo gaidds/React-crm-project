@@ -1,19 +1,19 @@
 import { FC, useEffect, useState } from 'react';
 import './styles.css';
-import { UserDataProps } from './types';
 import { fetchData, Header } from '../../components/FetchData';
 import { UsersUrl, UserUrl } from '../../services/ApiUrls';
 import DynamicModal from '../../components/modal/modal';
-import { Chip, Button, Avatar, Typography } from '@mui/material';
+import { Chip, Avatar, Typography } from '@mui/material';
 import { MdEmail } from 'react-icons/md';
 import { FaPhone } from 'react-icons/fa';
 import { IoLocationSharp } from 'react-icons/io5';
 import { useParams } from 'react-router-dom';
+import { useMyContext } from '../../context/Context';
 
 const ProfilePage: FC = () => {
   const { id } = useParams();
   const [data, setData] = useState<any[]>([]);
-  const [user, setUser] = useState<any>();
+  const { userData, setUserData } = useMyContext();
 
   const getUsers = async () => {
     try {
@@ -32,7 +32,7 @@ const ProfilePage: FC = () => {
       await fetchData(`${UserUrl}/${id}`, 'GET', null as any, Header).then(
         (res) => {
           if (!res.error) {
-            setUser(res.data.profile_obj || []);
+            setUserData(res.data.profile_obj || []);
           }
         }
       );
@@ -64,19 +64,19 @@ const ProfilePage: FC = () => {
         <div className="profile-page-left-section">
           <Chip
             className={`profile-user-status ${
-              !user?.is_active && 'profile-user-status-inactive'
+              !userData?.is_active && 'profile-user-status-inactive'
             }`}
-            label={user?.is_active ? 'ACTIVE' : 'INACTIVE'}
+            label={userData?.is_active ? 'ACTIVE' : 'INACTIVE'}
             variant="outlined"
           />
           <Avatar
             className="porfile-page-user-img"
-            alt={user?.user_details.first_name || undefined}
-            src={user?.user_details.profile_pic}
+            alt={userData?.user_details.first_name || undefined}
+            src={userData?.user_details.profile_pic}
           />
           <div className="profile-page-user-name-container">
-            <span>{user?.user_details.first_name || 'Welcome!'}</span>
-            <span>{user?.user_details.last_name}</span>
+            <span>{userData?.user_details.first_name || 'Welcome!'}</span>
+            <span>{userData?.user_details.last_name}</span>
           </div>
         </div>
         <div className="profile-page-right-section">
@@ -85,28 +85,28 @@ const ProfilePage: FC = () => {
             variant="h3"
             gutterBottom
           >
-            {user?.role}
+            {userData?.role}
           </Typography>
 
           <div className="profil-page-user-details-container">
             {' '}
             <MdEmail className="profile-page-user-details-icon" />
-            <Typography variant="h6">{user?.user_details.email}</Typography>
+            <Typography variant="h6">{userData?.user_details.email}</Typography>
           </div>
           <div className="profil-page-user-details-container">
             <FaPhone className="profile-page-user-details-icon" />
-            <Typography variant="h6">{user?.phone}</Typography>
+            <Typography variant="h6">{userData?.phone}</Typography>
           </div>
           <div className="profil-page-user-details-container">
             <IoLocationSharp className="profile-page-user-details-icon" />
             <div>
               <Typography variant="h6">
-                {`${user?.address.street}, ${user?.address.postcode},`}
+                {`${userData?.address.street}, ${userData?.address.postcode},`}
               </Typography>
               <Typography variant="h6">
-                {`${user?.address.city}, ${user?.address.state},`}
+                {`${userData?.address.city}, ${userData?.address.state},`}
               </Typography>
-              <Typography variant="h6">{user?.address.country}</Typography>
+              <Typography variant="h6">{userData?.address.country}</Typography>
             </div>
           </div>
         </div>
