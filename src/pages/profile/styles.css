@@ -67,6 +67,7 @@
     height: 250px !important;
     margin-bottom: 8px;
 }
+
 .edit-profile-pic-btn{
     color: #3C70FE;
     text-transform: none !important;
@@ -77,6 +78,22 @@
 .profile-page-user-name-container span{
     font-size: 32px;
 }
+
 .profile-page-user-name-container span:last-child{
     margin-left: 8px;
+}
+
+.profile-page-user-role{
+    margin-bottom: 32px !important;
+
+}
+
+.profil-page-user-details-container{
+    display: flex;
+    margin-bottom: 24px;
+}
+
+.profile-page-user-details-icon{
+    font-size: larger;
+    margin-right: 12px;
 }

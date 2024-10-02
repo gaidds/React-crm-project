@@ -5,7 +5,10 @@ import { fetchData, Header } from '../../components/FetchData';
 import { UsersUrl, UserUrl } from '../../services/ApiUrls';
 import DynamicModal from '../../components/modal/modal';
 import ImgUploader from '../../components/img-uploader/ImgUploader';
-import { Chip, Button, Avatar } from '@mui/material';
+import { Chip, Button, Avatar, Typography } from '@mui/material';
+import { MdEmail } from 'react-icons/md';
+import { FaPhone } from 'react-icons/fa';
+import { IoLocationSharp } from 'react-icons/io5';
 
 const ProfilePage: FC<UserDataProps> = ({ userData }) => {
   const [data, setData] = useState<any[]>([]);
@@ -90,7 +93,29 @@ const ProfilePage: FC<UserDataProps> = ({ userData }) => {
             <span>{user?.user_details.last_name}</span>
           </div>
         </div>
-        <div className="profile-page-right-section"></div>
+        <div className="profile-page-right-section">
+          <Typography
+            className="profile-page-user-role"
+            variant="h4"
+            gutterBottom
+          >
+            {userData.role}
+          </Typography>
+
+          <div className="profil-page-user-details-container">
+            {' '}
+            <MdEmail className="profile-page-user-details-icon" />
+            <Typography variant="h6">{userData.user_details.email}</Typography>
+          </div>
+          <div className="profil-page-user-details-container">
+            <FaPhone className="profile-page-user-details-icon" />
+            <Typography variant="h6">{userData.phone}</Typography>
+          </div>
+          <div className="profil-page-user-details-container">
+            <IoLocationSharp className="profile-page-user-details-icon" />
+            <Typography variant="h6">{`${userData.address.street}, ${userData.address.postcode}, ${userData.address.city}, ${userData.address.state}, ${userData.address.country}`}</Typography>
+          </div>
+        </div>
       </div>
     </div>
   );

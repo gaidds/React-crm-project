@@ -1,7 +1,14 @@
 export interface UserDataProps {
     userData: {
         date_of_joining: string;
-        address: any
+        address:{
+            address_line:string;
+            city: string; 
+            country: string; 
+            postcode: string; 
+            state: string; 
+            street: string; 
+        }
         has_marketing_access: boolean;
         has_sales_access: boolean;
         id: string;
