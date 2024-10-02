@@ -32,10 +32,51 @@
     box-sizing: border-box;
     padding: 16px;
     width: 50%;
-    height: 100px;
 }
 
 .profile-page-left-section {
     display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-user-status{
+    font-Size: 12px !important;
+    width: fit-content;
+    border-radius: 4px !important;
+    display: flex !important;
+    align-items: center !important;
     justify-content: center;
+    font-weight: bold !important;
+    overflow: hidden !important;
+    background-color: rgba(0, 177, 18, 0.1) !important;
+    color: #00B112 !important;
+    border: 2px solid #00B112 !important;
+    padding: 4px 8px !important;
+    margin-bottom: 16px;
+}
+
+.profile-user-status-inactive{
+    background-color: rgba(202, 29, 32, 0.1) !important;
+    color: #CA1D1F !important;
+    border: 2px solid #CA1D1F !important;
+}
+
+.porfile-page-user-img{
+    width: 250px !important;
+    height: 250px !important;
+    margin-bottom: 8px;
+}
+.edit-profile-pic-btn{
+    color: #3C70FE;
+    text-transform: none !important;
+    margin-bottom: 16px;
+    font-size: 16px !important;
+}
+
+.profile-page-user-name-container span{
+    font-size: 32px;
+}
+.profile-page-user-name-container span:last-child{
+    margin-left: 8px;
 }

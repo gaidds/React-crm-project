@@ -3,10 +3,14 @@ import './styles.css';
 import { UserDataProps } from './types';
 import { fetchData, Header } from '../../components/FetchData';
 import { UsersUrl, UserUrl } from '../../services/ApiUrls';
-import { useMyContext } from '../../context/Context';
 import DynamicModal from '../../components/modal/modal';
+import ImgUploader from '../../components/img-uploader/ImgUploader';
+import { Chip, Button, Avatar } from '@mui/material';
 
 const ProfilePage: FC<UserDataProps> = ({ userData }) => {
+  const [profilePic, setProfilePic] = useState<string | undefined>(
+    userData.user_details.profile_pic
+  );
   const [data, setData] = useState<any[]>([]);
   const [user, setUser] = useState<any>();
   const getUsers = async () => {
@@ -59,7 +63,34 @@ const ProfilePage: FC<UserDataProps> = ({ userData }) => {
         />
       </div>
       <div className="profile-page-body">
-        <div className="profile-page-left-section"></div>
+        <div className="profile-page-left-section">
+          <Chip
+            className={`profile-user-status ${
+              !user?.is_active && 'profile-user-status-inactive'
+            }`}
+            label={user?.is_active ? 'ACTIVE' : 'INACTIVE'}
+            variant="outlined"
+          />
+          <Avatar
+            className="porfile-page-user-img"
+            alt={user?.user_details.first_name || undefined}
+            src={profilePic}
+          />
+
+          <ImgUploader
+            name="profile_pic"
+            onChange={(e) => setProfilePic(e.target.value)}
+            customWidget={
+              <Button variant="text" className="edit-profile-pic-btn">
+                Edit
+              </Button>
+            }
+          />
+          <div className="profile-page-user-name-container">
+            <span>{user?.user_details.first_name || 'Welcome!'}</span>
+            <span>{user?.user_details.last_name}</span>
+          </div>
+        </div>
         <div className="profile-page-right-section"></div>
       </div>
     </div>
