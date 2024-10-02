@@ -121,8 +121,9 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
       billing_city: '',
       billing_state: '',
       billing_postcode: '',
+      industry: 'ADVERTISING',
       billing_country: 'GB', // Default value from your structure
-      contact_name: '',
+      contacts:[],
       teams: [],
       assigned_to: [],
       tags: [],
@@ -208,8 +209,9 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
           const filteredAccount: AccountFormData = {
             name: myAccount.name,
             deal: myAccount.deal,
+            industry: myAccount.industry,
             assigned_to: myAccount.assigned_to.map(user => user.id),
-            contact_name: myAccount.contact_name,
+            contacts: myAccount.contacts.map(contact => contact.id),
             website: myAccount.website,
             status: myAccount.status,
             description: myAccount.description,
@@ -321,24 +323,24 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
           ...prevState,
           [name]: name === 'contacts' ? [value] : value,
         }));
-        if (name === 'contacts' && value) {
-          const selectedContact = data.contacts.find((contact: any) => contact.id === value);
+        // if (name === 'contacts' && value) {
+        //   const selectedContact = data.contacts.find((contact: any) => contact.id === value);
           
-          if (selectedContact) {
-            // Automatically populate phone, address, and email
-            setAccountFormData((prevData) => ({
-              ...prevData,
-              phone: selectedContact.phone || '',
-              email: selectedContact.email || '',
-              billing_address_line: selectedContact.address?.line || '',
-              billing_street: selectedContact.address?.street || '',
-              billing_city: selectedContact.address?.city || '',
-              billing_state: selectedContact.address?.state || '',
-              billing_postcode: selectedContact.address?.postcode || '',
-              billing_country: selectedContact.address?.country || 'GB',
-            }));
-          }
-        }
+        //   if (selectedContact) {
+        //     // Automatically populate phone, address, and email
+        //     setAccountFormData((prevData) => ({
+        //       ...prevData,
+        //       phone: selectedContact.phone || '',
+        //       email: selectedContact.email || '',
+        //       billing_address_line: selectedContact.address?.line || '',
+        //       billing_street: selectedContact.address?.street || '',
+        //       billing_city: selectedContact.address?.city || '',
+        //       billing_state: selectedContact.address?.state || '',
+        //       billing_postcode: selectedContact.address?.postcode || '',
+        //       billing_country: selectedContact.address?.country || 'GB',
+        //     }));
+        //   }
+        // }
         break;
       case 'Users':
         setUserFormData((prevState) => ({

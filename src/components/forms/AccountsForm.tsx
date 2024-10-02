@@ -27,7 +27,6 @@ import * as React from 'react';
     const myAccount: any | undefined = data.active_accounts.open_accounts.find(
       (account: any) => account.name === formData.name
     );
-  
     const selectLable = (str: string) => (
       <InputLabel sx={{ backgroundColor: 'white', paddingX: '4px' }}>
         {str}
@@ -109,8 +108,8 @@ import * as React from 'react';
         <FormControl fullWidth size="small" sx={{ mb: 2 }}>
           {selectLable('Contact')}
           <Select
-            name="contact_name"
-            value={formData.contact_name || ''}
+            name="contacts"
+            value={formData.contacts || ''}
             onChange={handleInputChange}
             error={!!errors?.contacts?.[0]}
           >
@@ -155,7 +154,21 @@ import * as React from 'react';
             />
           </Grid>
         </FormControl>
-  
+        <FormControl fullWidth size="small" sx={{ mb: 2 }}>
+        {selectLable('Industry')}
+        <Select
+          name="industry"
+          value={formData.industry || ''}
+          onChange={handleInputChange}
+          error={!!errors?.industry?.[0]}
+        >
+          {data.industries.map((item) => (
+            <MenuItem key={item} value={item[1]}>
+              {item[1]}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
         <FormControl fullWidth>
           <Grid item xs={12}>
             <TextField

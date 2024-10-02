@@ -184,6 +184,7 @@ const { state } = location;
     submitForm();
   };
   
+  
   const isValidEmail = (email: any) => {
     return /^\S+@\S+\.\S+$/.test(email);
   };

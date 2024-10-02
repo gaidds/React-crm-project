@@ -132,7 +132,6 @@ type Item = {
 };
 export default function Accounts() {
     const { userRole, setUserRole , userId, profileId} = useMyContext();
-    const navigate = useNavigate()
 
     const [tab, setTab] = useState('open');
     const [loading, setLoading] = useState(true);
@@ -235,9 +234,9 @@ export default function Accounts() {
         }
 
     }
-
-    const accountDetail = (accountId: any) => {
-        navigate(`/app/accounts/account-details`, { state: { accountId, detail: true, contacts: contacts || [], status: status || [], tags: tags || [], users: users || [], countries: countries || [], teams: teams || [], leads: leads || [] } })
+    const navigate = useNavigate();
+    const accountDetail = (accountId: string) => {
+        navigate(`/app/accounts/${accountId}`, { state: { accountId, detail: true, contacts: contacts || [], status: status || [], tags: tags || [], users: users || [], countries: countries || [], teams: teams || [], leads: leads || [] } })
     }
     const handleRecordsPerPage = (event: React.ChangeEvent<HTMLSelectElement>) => {
         if (tab == 'open') {
@@ -717,5 +716,5 @@ export default function Accounts() {
                 DeleteItem={deleteItem}
             />
         </Box>
-    )
+    );
 }

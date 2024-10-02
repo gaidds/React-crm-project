@@ -134,7 +134,8 @@ export interface ContactProfile{
     billing_state: string;
     billing_postcode: string;
     billing_country: string;
-    contact_name: string;
+    industry: string;
+    contacts: any[];
     teams: string[];
     assigned_to: any[];
     tags: string[];

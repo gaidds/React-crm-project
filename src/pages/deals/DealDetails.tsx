@@ -11,6 +11,7 @@ import ContactDetails from '../../components/ContactInfo';
 import ButtonsComponent from '../../components/notesattachments';
 import DescriptionComponent from '../../components/DealsDescription';
 
+ {/* Define the interface Deal which describes the shape of the deal data fetched from the API, ensuring TypeScript type safety. */}
 interface Deal {
   name: string;
   account_name: string;
@@ -52,7 +53,7 @@ interface Deal {
   tags: string[];
   created_by: { id: string };
 }
-
+ {/* Component State and Context // The dealId is extracted from the route parameters using useParams */}
 const DealDetails: React.FC = () => {
   const { dealId } = useParams<{ dealId: string }>();
   const [deal, setDeal] = useState<Deal | null>(null);
@@ -67,7 +68,8 @@ const DealDetails: React.FC = () => {
     }
   }, [dealId]);
 
-  const getDeals = async () => {
+  {/* Fetching Deals and Deal Details */}
+  const getDeals = async () => {     //getDeals fetches a list of deals from the server and stores it in data.
     const Header = {
       Accept: 'application/json',
       'Content-Type': 'application/json',
@@ -85,7 +87,7 @@ const DealDetails: React.FC = () => {
     }
   };
 
-  const fetchDeal = async () => {
+  const fetchDeal = async () => {    //fetches the specific deal using dealId and updates the deal state.
     const Header = {
       Accept: 'application/json',
       'Content-Type': 'application/json',
@@ -128,7 +130,8 @@ const DealDetails: React.FC = () => {
     return <div>Loading...</div>;
   }
 
-  const handleSaveDescription = (updatedDescription: string) => {
+  {/* Handling Description Save */}
+  const handleSaveDescription = (updatedDescription: string) => {  // allows updating the deal’s description via an API call. It uses the PATCH method to only update the description field.
     const submitForm = async () => {
       const data = {
         description: updatedDescription, // Only updating the description field
@@ -163,6 +166,7 @@ const DealDetails: React.FC = () => {
     submitForm();
   };
 
+  {/* Rendering the UI */}
   return (
     <Box sx={{ mt: '60px' }}>
       <CustomToolbar
