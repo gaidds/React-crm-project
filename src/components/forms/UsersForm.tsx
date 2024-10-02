@@ -110,7 +110,7 @@ const UsersForm = ({
       <FormControl>
         <Grid item xs={12}>
           <TextField
-            label="Ctiry"
+            label="City"
             name="city"
             value={formData.city || ''}
             onChange={handleInputChange}
