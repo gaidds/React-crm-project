@@ -15,6 +15,8 @@ interface Account {
   account_name: string;
   deals:string;
   account_obj: {
+    name: string;
+    website: string;
     industry: string;
     org: {
       name:string;
@@ -188,7 +190,7 @@ const test = true
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <Box sx={{ padding: '0px 0px 0px 100px', marginTop: '60px' }}>
-                  <h1 style={{ fontSize: '32px' }}>{account.name}</h1>
+                  <h1 style={{ fontSize: '32px' }}>{account.account_obj.name}</h1>
                 </Box>
                 <Box
                   sx={{
@@ -197,15 +199,15 @@ const test = true
                     marginTop: '20px',
                   }}
                 >
-                  <h2 style={{ fontSize: '24px' }}>{account.website}</h2>
+                  <h2 style={{ fontSize: '24px' }}>{account.account_obj.website}</h2>
                 </Box>
               </Grid>
             </Grid>
 
             <Grid container spacing={2} padding={'0px 0px 80px 80px'}>
 
-              {/* Account name and website */}
-              {/* <Grid item xs={12} sm={6}>
+              {<Grid container spacing={2}>
+              <Grid item xs={12}>
                 <Box sx={{ padding: '0px 0px 0px 100px', marginTop: '60px' }}>
                   <h1 style={{ fontSize: '32px' }}>{account.name}</h1>
                 </Box>
@@ -218,7 +220,8 @@ const test = true
                 >
                   <h2 style={{ fontSize: '24px' }}>{account.website}</h2>
                 </Box>
-              </Grid> */}
+              </Grid>
+            </Grid>}
 
               <Grid item xs={12} sm={4}>
                 <ContactDetails
@@ -262,23 +265,31 @@ const test = true
                     <strong>Assigned To</strong>
                   </p>
                   <p>
-                    {account?.account_obj?.assigned_to
-                      ?.map((user) => user.user_details.email)
-                      .join(', ')}
+                   {account?.account_obj?.assigned_to?.map((user, index) => (
+                    <React.Fragment key={index}>
+                    {user.user_details.email}
+                  <br />
+                    </React.Fragment>
+                     ))}
                   </p>
                   <p>
                     <strong>Deals</strong>
                   </p>
                   {<p>
-                 {Array.isArray(account?.deals)
-                  ? account.deals
-                  .filter((deal) => deal.account === accountId) // Filter deals related to this account
-                  .map((deal) => deal.name)
-                  .join(', ')
-                  : 'No deals available'}
+                    {Array.isArray(account?.deals) ? (
+                      account.deals
+                      .filter((deal) => deal.account === accountId)
+                      .map((deal, index) => (
+                      <React.Fragment key={index}>
+                      {deal.name}
+                      <br />
+                      </React.Fragment>
+                      ))
+                      ) : (
+                      'No deals available'
+                      )}
                   </p>
-
-}
+                  }
                 </Box>
               </Grid>
 
