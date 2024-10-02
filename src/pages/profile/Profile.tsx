@@ -8,11 +8,11 @@ import ImgUploader from '../../components/img-uploader/ImgUploader';
 import { Chip, Button, Avatar } from '@mui/material';
 
 const ProfilePage: FC<UserDataProps> = ({ userData }) => {
+  const [data, setData] = useState<any[]>([]);
+  const [user, setUser] = useState<any>();
   const [profilePic, setProfilePic] = useState<string | undefined>(
     userData.user_details.profile_pic
   );
-  const [data, setData] = useState<any[]>([]);
-  const [user, setUser] = useState<any>();
   const getUsers = async () => {
     try {
       await fetchData(`${UsersUrl}`, 'GET', null as any, Header).then((res) => {
@@ -40,13 +40,12 @@ const ProfilePage: FC<UserDataProps> = ({ userData }) => {
     } catch (error) {}
   };
   useEffect(() => {
+    (async () => await getUser())();
+  }, []);
+
+  useEffect(() => {
     (async () => await getUsers())();
   }, [userData]);
-  useEffect(() => {
-    (async () => await getUser())();
-  }, [data]);
-
-  console.log('--------------------------', user);
 
   return (
     <div className="profile-page-container">
