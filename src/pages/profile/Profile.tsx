@@ -86,17 +86,17 @@ const ProfilePage: FC<UserDataProps> = ({ userData }) => {
             variant="h3"
             gutterBottom
           >
-            {userData.role}
+            {user?.role}
           </Typography>
 
           <div className="profil-page-user-details-container">
             {' '}
             <MdEmail className="profile-page-user-details-icon" />
-            <Typography variant="h6">{userData.user_details.email}</Typography>
+            <Typography variant="h6">{user?.user_details.email}</Typography>
           </div>
           <div className="profil-page-user-details-container">
             <FaPhone className="profile-page-user-details-icon" />
-            <Typography variant="h6">{userData.phone}</Typography>
+            <Typography variant="h6">{user?.phone}</Typography>
           </div>
           <div className="profil-page-user-details-container">
             <IoLocationSharp className="profile-page-user-details-icon" />
