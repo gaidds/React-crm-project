@@ -13,7 +13,13 @@ import { useMyContext } from '../../context/Context';
 const ProfilePage: FC = () => {
   const { id } = useParams();
   const [data, setData] = useState<any[]>([]);
-  const { userData, setUserData } = useMyContext();
+  const { userData: currentUserData, setUserData: setCurrentUserData } =
+    useMyContext();
+  const [userData, setUserData] = useState<any>();
+
+  const isProfileOwner = () => {
+    return currentUserData.id === id;
+  };
 
   const getUsers = async () => {
     try {
@@ -32,6 +38,9 @@ const ProfilePage: FC = () => {
       await fetchData(`${UserUrl}/${id}`, 'GET', null as any, Header).then(
         (res) => {
           if (!res.error) {
+            if (isProfileOwner()) {
+              setCurrentUserData(res.data.profile_obj || []);
+            }
             setUserData(res.data.profile_obj || []);
           }
         }
@@ -39,27 +48,35 @@ const ProfilePage: FC = () => {
     } catch (error) {}
   };
   useEffect(() => {
-    (async () => await getUser())();
+    if (isProfileOwner()) {
+      setUserData(currentUserData);
+    } else {
+      (async () => await getUser())();
+    }
   }, []);
 
   useEffect(() => {
     (async () => await getUsers())();
+    (async () => await getUser())();
   }, [id]);
 
   return (
     <div className="profile-page-container">
-      <div className="profile-page-header">
-        <DynamicModal
-          page="Users"
-          mode="edit"
-          id={id}
-          data={data}
-          onSaveSuccess={async () => {
-            await getUsers();
-            await getUser();
-          }}
-        />
-      </div>
+      {(isProfileOwner() || currentUserData.role === 'ADMIN') && (
+        <div className="profile-page-header">
+          <DynamicModal
+            page="Users"
+            mode="edit"
+            id={id}
+            data={data}
+            onSaveSuccess={async () => {
+              await getUsers();
+              await getUser();
+            }}
+          />
+        </div>
+      )}
+
       <div className="profile-page-body">
         <div className="profile-page-left-section">
           <Chip
