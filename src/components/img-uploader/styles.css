@@ -1,4 +1,4 @@
-.img-uploader-container{
+.img-uploader-container {
     box-sizing: border-box;
     display: flex;
     align-items: center;
@@ -11,39 +11,39 @@
     color: rgba(0, 0, 0, 0.87);
 }
 
-.img-uploader-container-error{
+.img-uploader-container-error {
     border-color: #d32f2f;
 }
 
-.img-uploader-container:hover{
+.img-uploader-container:hover {
     border-color: black;
 }
 
-.upload-img-section{
+.upload-img-section {
     width: 100%;
     display: flex;
     align-items: center;
 }
 
-.img-uploader-input{
+.img-uploader-input {
     display: none;
 }
 
-.upload-img-view{
+.upload-img-view {
     height: 24px;
     width: 24px;
     border-radius: 50%;
-    overflow: hidden; 
+    overflow: hidden;
     transition: all .2s ease-in-out;
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
 }
 
-.upload-img-view:hover{
+.upload-img-view:hover {
     transform: scale(3)
 }
 
-.upload-img-icon{
+.upload-img-icon {
     box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
     border-radius: 50%;
     height: 20px;
@@ -51,15 +51,15 @@
     padding: 2px;
 }
 
-.click-to-upload-img{
-    font-size: small;
+.click-to-upload-img {
+    font-size: 12px;
     margin-left: 8px;
     cursor: pointer;
     color: #65558F;
     font-weight: 500;
 }
 
-.cancel-uploaded-img-btn{
+.cancel-uploaded-img-btn {
     cursor: pointer;
     color: #d32f2f;
 }
@@ -67,9 +67,9 @@
 .cancel-uploaded-img-btn-disabled {
     color: #ccc;
     cursor: not-allowed;
-  }
+}
 
-.img-uploader-error-message{
+.img-uploader-error-message {
     font-family: Roboto, Helvetica, Arial, sans-serif;
     font-weight: 400;
     font-size: 0.75rem;

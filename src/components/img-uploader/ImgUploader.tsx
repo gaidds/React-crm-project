@@ -3,9 +3,6 @@ import {
   FC,
   useEffect,
   useState,
-  ReactElement,
-  isValidElement,
-  cloneElement,
 } from 'react';
 import { ImgUploaderProps } from './types';
 import { MdCloudUpload } from 'react-icons/md';
@@ -20,8 +17,12 @@ const ImgUploader: FC<ImgUploaderProps> = ({
   externalError,
   customWidget,
 }) => {
-  const [imgUrl, setImgUrl] = useState<string>(defaultValue || '');
+  const [imgUrl, setImgUrl] = useState<string>();
   const [error, setError] = useState<string | null>(null);
+  const defaultValueState = useState<string | undefined>(defaultValue)[0];
+  useEffect(() => {
+    setImgUrl(defaultValueState)
+  },[])
 
   useEffect(() => {
     if (window.cloudinary) {
@@ -76,14 +77,14 @@ const ImgUploader: FC<ImgUploaderProps> = ({
   }, [onChange]);
 
   const handleCancel = () => {
-    setImgUrl(defaultValue || '');
+    setImgUrl(defaultValueState || '');
     setError(null);
     onChange({
-      target: { id, name, value: defaultValue || '' },
+      target: { id, name, value: defaultValueState || '' },
     } as ChangeEvent<HTMLInputElement>);
   };
 
-  const isCancelDisabled = imgUrl === defaultValue || imgUrl === '';
+  const isCancelDisabled = imgUrl === defaultValueState || !imgUrl;
 
   if (customWidget) {
     return <div id="upload_widget">{customWidget}</div>;
@@ -105,7 +106,7 @@ const ImgUploader: FC<ImgUploaderProps> = ({
             readOnly
           />
           {imgUrl ? (
-            <img className="upload-img-view" src={imgUrl} alt="Uploaded" />
+            <img className="upload-img-view" src={imgUrl || defaultValue || ''} alt="Uploaded" />
           ) : (
             <MdCloudUpload className="upload-img-icon" />
           )}
