@@ -202,7 +202,7 @@ export default function Users() {
     }
 
     const userDetail = (userId: any) => {
-        navigate(`/app/users/user-details`, { state: { userId, detail: true } })
+        navigate(`/app/user-details/${userId}`);
     }
     const handleRecordsPerPage = (event: React.ChangeEvent<HTMLSelectElement>) => {
         if (tab == 'active') {

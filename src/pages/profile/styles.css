@@ -1,0 +1,103 @@
+.profile-page-container{
+    width: 100%;
+    height: calc(100vh - 60px);
+    margin-top: 60px;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.profile-page-header {
+    box-sizing: border-box;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding-right: 32px;
+    justify-content: flex-end;
+    margin-bottom: 12px;
+    height: 36px;
+}
+
+.profile-page-body {
+    border-radius: 16px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #FFFFFF;
+    height: calc(100% - 36px);
+    overflow: hidden;
+}
+
+.profile-page-right-section, .profile-page-left-section {
+    box-sizing: border-box;
+    padding: 16px;
+    width: 50%;
+}
+
+.profile-page-left-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-user-status{
+    font-Size: 12px !important;
+    width: fit-content;
+    border-radius: 4px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center;
+    font-weight: bold !important;
+    overflow: hidden !important;
+    background-color: rgba(0, 177, 18, 0.1) !important;
+    color: #00B112 !important;
+    border: 2px solid #00B112 !important;
+    padding: 4px 8px !important;
+    margin-bottom: 16px;
+}
+
+.profile-user-status-inactive{
+    background-color: rgba(202, 29, 32, 0.1) !important;
+    color: #CA1D1F !important;
+    border: 2px solid #CA1D1F !important;
+}
+
+.porfile-page-user-img{
+    width: 250px !important;
+    height: 250px !important;
+    margin-bottom: 8px;
+}
+
+.edit-profile-pic-btn{
+    color: #3C70FE;
+    text-transform: none !important;
+    margin-bottom: 16px;
+    font-size: 16px !important;
+}
+
+.profile-page-user-name-container span{
+    font-size: 32px;
+}
+
+.profile-page-user-name-container span:last-child{
+    margin-left: 8px;
+}
+
+.profile-page-user-role{
+    margin-bottom: 40px !important;
+
+}
+
+.profil-page-user-details-container{
+    display: flex;
+    margin-bottom: 32px;
+}
+
+.profil-page-user-details-container > h6{
+    font-size: 24px;
+}
+
+.profile-page-user-details-icon{
+    font-size: 32px;
+    margin-right: 32px;
+}
