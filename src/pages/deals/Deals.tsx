@@ -156,7 +156,7 @@ export default function Deals(props: any) {
         null as any,
         Header
       ).then((res) => {
-        console.log(res, 'deals');
+        //console.log(res, 'deals');
         if (!res.error) {
           const fetchedDeals: Deal[] = res.deals || [];
           setDeals(fetchedDeals);
@@ -227,7 +227,7 @@ export default function Deals(props: any) {
     };
     fetchData(`${DealUrl}/${selectedId}/`, 'DELETE', null as any, Header)
       .then((res: any) => {
-        console.log('delete:', res);
+        //console.log('delete:', res);
         if (!res.error) {
           deleteRowModalClose();
           getDeals();

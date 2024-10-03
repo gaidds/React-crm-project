@@ -179,15 +179,8 @@ const { state } = location;
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-  
-    // Check if quill is defined before accessing its root.innerHTML
-    if (quill) {
-      setFormData({ ...formData, description: quill.root.innerHTML });
-    } else {
-      console.error('Quill is not initialized yet, cannot retrieve description');
-    }
-  
-    // Proceed to submit the form
+    // Update formData's description field with the Quill editor's current content
+    setFormData({ ...formData, description: quill?.root.innerHTML });
     submitForm();
   };
   

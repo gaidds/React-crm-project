@@ -1,5 +1,5 @@
-import React, { SyntheticEvent, useEffect, useState } from 'react'
-import { Box, Button, Card, Stack, Tab, Table, TableBody, TableContainer, TableHead, TablePagination, TableRow, Tabs, Toolbar, Typography, Paper, TableCell, IconButton, Checkbox, Tooltip, TableSortLabel, alpha, MenuItem, Select, Avatar, Fab, Container, TextField } from '@mui/material'
+import React, { SyntheticEvent, useEffect, useState, ChangeEvent } from 'react'
+import { Box, Button, Card, Stack, Tab, Table, TableBody, TableContainer, TableHead, TablePagination, TableRow, Tabs, Toolbar, Typography, Paper, TableCell, IconButton, Checkbox, Tooltip, TableSortLabel, alpha, MenuItem, Select, Avatar, Fab, Container, TextField, AvatarGroup, SelectChangeEvent } from '@mui/material'
 import { FiPlus } from "@react-icons/all-files/fi/FiPlus";
 import { FiChevronLeft } from "@react-icons/all-files/fi/FiChevronLeft";
 import { FiChevronRight } from "@react-icons/all-files/fi/FiChevronRight";
@@ -7,7 +7,7 @@ import { FiChevronDown } from "@react-icons/all-files/fi/FiChevronDown";
 import { FiChevronUp } from "@react-icons/all-files/fi/FiChevronUp";
 import { CustomTab, CustomToolbar, FabLeft, FabRight } from '../../styles/CssStyled';
 import { getComparator, stableSort } from '../../components/Sorting';
-import { FaAd, FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { FaAd, FaEdit, FaFilter, FaTrashAlt } from 'react-icons/fa';
 import { fetchData } from '../../components/FetchData';
 import { AccountsUrl } from '../../services/ApiUrls';
 import { useNavigate } from 'react-router-dom';
@@ -18,6 +18,7 @@ import styled from '@emotion/styled';
 import '../../styles/style.css';
 import { EnhancedTableHead } from '../../components/EnchancedTableHead';
 import MyContext, { useMyContext } from '../../context/Context'
+import DynamicModal from '../../components/modal/modal';
 
 interface HeadCell {
     disablePadding: boolean;
@@ -46,16 +47,12 @@ const headCells: readonly HeadCell[] = [
         label: 'Created By'
     },
     {
-        id: 'country',
-        numeric: true,
+        id: 'assigned_to',
+        numeric: false,
         disablePadding: false,
-        label: 'Country'
-    }, {
-        id: 'tags',
-        numeric: true,
-        disablePadding: false,
-        label: 'Tags'
-    },
+        label: 'Assigned To',
+      },
+
     {
         id: 'actions',
         numeric: true,
@@ -63,68 +60,6 @@ const headCells: readonly HeadCell[] = [
         label: 'Actions'
     }
 ]
-
-// function EnhancedTableHead(props: any) {
-//     const {
-//         onSelectAllClick, order, orderBy,
-//         numSelected, rowCount,
-//         numSelectedId, isSelectedId,
-//         onRequestSort
-//     } = props
-
-//     const createSortHandler =
-//         (property: any) => (event: React.MouseEvent<unknown>) => {
-//             onRequestSort(event, property);
-//         };
-
-//     return (
-//         <TableHead>
-//             <TableRow>
-//                 {/* <TableCell padding='checkbox'>
-//                     <Checkbox
-//                         onChange={onSelectAllClick}
-//                         checked={numSelected === rowCount}
-//                         sx={{ color: 'inherit' }}
-//                     />
-//                 </TableCell> */}
-//                 {
-//                     headCells.map((headCell) => (
-//                         headCell.label === 'Actions' || headCell.label === 'Tags' ?
-//                             <TableCell
-//                                 sx={{ fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}
-//                                 key={headCell.id}
-//                                 align={headCell.numeric ? 'left' : 'left'}
-//                                 padding={headCell.disablePadding ? 'none' : 'normal'}>{headCell.label}</TableCell>
-//                             : <TableCell
-//                                 sx={{ fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}
-//                                 key={headCell.id}
-//                                 align={headCell.numeric ? 'left' : 'left'}
-//                                 padding={headCell.disablePadding ? 'none' : 'normal'}
-//                                 sortDirection={orderBy === headCell.id ? order : false}
-//                             >
-//                                 <TableSortLabel
-//                                     active={orderBy === headCell.id}
-//                                     direction={orderBy === headCell.id ? order : 'asc'}
-//                                     onClick={createSortHandler(headCell.id)}
-//                                 >
-//                                     {headCell.label}
-//                                     {
-//                                         orderBy === headCell.id
-//                                             ? (
-//                                                 <Box component='span' sx={{ display: 'none' }}>
-//                                                     {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-//                                                 </Box>
-//                                             )
-//                                             : null
-//                                     }
-//                                 </TableSortLabel>
-//                             </TableCell>
-//                     ))
-//                 }
-//             </TableRow>
-//         </TableHead>
-//     )
-// }
 
 type Item = {
     id: string;
@@ -184,6 +119,8 @@ export default function Accounts() {
     const [closedRecordsPerPage, setClosedRecordsPerPage] = useState<number>(10);
     const [closedTotalPages, setClosedTotalPages] = useState<number>(0);
     const [closedLoading, setClosedLoading] = useState(true);
+    const [data, setData] = useState<any[]>([]);
+
 
     useEffect(() => {
         getAccounts()
@@ -206,7 +143,7 @@ export default function Accounts() {
             await fetchData(`${AccountsUrl}/?offset=${tab === "open" ? openOffset : closeOffset}&limit=${tab === "open" ? openRecordsPerPage : closedRecordsPerPage}`, 'GET', null as any, Header)
                 .then((res: any) => {
                     if (!res.error) {
-                        // console.log(res, 'accounts')
+                        //console.log(res, 'accounts');
                         setOpenAccounts(res?.active_accounts?.open_accounts)
                         // setOpenAccountsCount(res?.active_accounts?.active_users_count)
                         // setOpenAccountsOffset(res?.active_accounts?.offset)
@@ -221,6 +158,7 @@ export default function Accounts() {
                         setLeads(res?.leads)
                         setTags(res?.tags)
                         setTeams(res?.teams)
+                        setData(res || []);
                         setLoading(false)
                     }
                 })
@@ -234,18 +172,20 @@ export default function Accounts() {
     const accountDetail = (accountId: string) => {
         navigate(`/app/accounts/${accountId}`, { state: { accountId, detail: true, contacts: contacts || [], status: status || [], tags: tags || [], users: users || [], countries: countries || [], teams: teams || [], leads: leads || [] } })
     }
-    const handleRecordsPerPage = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        if (tab == 'open') {
-            setOpenLoading(true)
-            setOpenRecordsPerPage(parseInt(event.target.value));
+    const handleRecordsPerPage = (event: SelectChangeEvent<number>) => {
+        const selectedValue = Number(event.target.value); // Explicitly convert value to number
+    
+        if (tab === 'open') {
+            setOpenLoading(true);
+            setOpenRecordsPerPage(selectedValue); // Use the converted number
             setOpenCurrentPage(1);
         } else {
-            setClosedLoading(true)
-            setClosedRecordsPerPage(parseInt(event.target.value));
+            setClosedLoading(true);
+            setClosedRecordsPerPage(selectedValue); // Use the converted number
             setClosedCurrentPage(1);
         }
-
     };
+    
     const handlePreviousPage = () => {
         if (tab == 'open') {
             setOpenLoading(true)
@@ -338,7 +278,7 @@ export default function Accounts() {
           }
         fetchData(`${AccountsUrl}/${selectedId}/`, 'DELETE', null as any, Header)
             .then((res: any) => {
-                console.log('delete:', res);
+                //console.log('delete:', res);
                 if (!res.error) {
                     deleteRowModalClose()
                     getAccounts()
@@ -405,7 +345,7 @@ export default function Accounts() {
           }
         fetchData(`${AccountsUrl}/${id}/`, 'GET', null as any, Header)
             .then((res) => {
-                console.log(res, 'resDetail');
+                //console.log(res, 'resDetail');
                 if (!res.error) {
                     const accountDetails = res?.account_obj
                     navigate('/app/accounts/edit-account', {
@@ -437,7 +377,7 @@ export default function Accounts() {
             })
     }
     const handleDelete = (id: any) => {
-        console.log(id, 's;ected')
+        //console.log(id, 's;ected')
     }
     const showAddButton = userRole !== 'USER' && userRole !== 'SALES REP';
     const modalDialog = 'Are You Sure You want to delete this Account?'
@@ -450,70 +390,139 @@ export default function Accounts() {
 
     return (
         <Box sx={{ mt: '60px' }}>
-            <CustomToolbar>
-                <Tabs defaultValue={tab} onChange={handleChangeTab} sx={{ mt: '26px' }}>
-                    <CustomTab value="open" label="Open"
-                        sx={{
-                            backgroundColor: tab === 'open' ? '#F0F7FF' : '#284871',
-                            color: tab === 'open' ? '#3f51b5' : 'white',
-                        }} />
-                    <CustomTab value="closed" label="Closed"
-                        sx={{
-                            backgroundColor: tab === 'closed' ? '#F0F7FF' : '#284871',
-                            color: tab === 'closed' ? '#3f51b5' : 'white',
-                            ml: '5px',
-                        }}
-                    />
-                </Tabs>
+            <CustomToolbar
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    mb: 3,
+                    }}
+            >
+            <Stack direction="row" spacing={2} alignItems="center">
+            <IconButton
+            sx={{
+                
+                color: '#37474F', // Dark gray filter color
+                borderRadius: '50%', // Make the icon circular
+                width: '40px',
+                height: '40px',
+                '&:hover': {
+                backgroundColor: '#CFD8DC', // Slight hover color
+                },
+                }}
+            >
+            <FaFilter style={{ fontSize: '20px' }} /> 
+            </IconButton>
 
-                <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <Select
-                        value={tab === 'open' ? openRecordsPerPage : closedRecordsPerPage}
-                        onChange={(e: any) => handleRecordsPerPage(e)}
-                        open={selectOpen}
-                        onOpen={() => setSelectOpen(true)}
-                        onClose={() => setSelectOpen(false)}
-                        className={`custom-select`}
-                        onClick={() => setSelectOpen(!selectOpen)}
-                        IconComponent={() => (
-                            <div onClick={() => setSelectOpen(!selectOpen)} className="custom-select-icon">
-                                {selectOpen ? <FiChevronUp style={{ marginTop: '12px' }} /> : <FiChevronDown style={{ marginTop: '12px' }} />}
-                            </div>
-                        )}
-                        sx={{
-                            '& .MuiSelect-select': { overflow: 'visible !important' }
-                        }}
-                    >
-                        {recordsList?.length && recordsList.map((item: any, i: any) => (
-                            <MenuItem key={i} value={item[0]}>
-                                {item[1]}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                    <Box sx={{ borderRadius: '7px', backgroundColor: 'white', height: '40px', minHeight: '40px', maxHeight: '40px', display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 1, p: '0px' }}>
-                        <FabLeft onClick={handlePreviousPage} disabled={tab === 'open' ? openCurrentPage === 1 : closedCurrentPage === 1}>
-                            <FiChevronLeft style={{ height: '15px' }} />
-                        </FabLeft>
-                        <Typography sx={{ mt: 0, textTransform: 'lowercase', fontSize: '15px', color: '#1A3353', textAlign: 'center' }}>
-                            {tab === 'open' ? `${openCurrentPage} to ${openTotalPages}` : `${closedCurrentPage} to ${closedTotalPages}`}
-
-                        </Typography>
-                        <FabRight onClick={handleNextPage} disabled={tab === 'open' ? (openCurrentPage === openTotalPages) : (closedCurrentPage === closedTotalPages)}>
-                            <FiChevronRight style={{ height: '15px' }} />
-                        </FabRight>
-                    </Box>
-                    {showAddButton && (
-                        <Button
-                            variant='contained'
-                            startIcon={<FiPlus className='plus-icon' />}
-                            onClick={onAddAccount}
-                            className={'add-button'}
-                        >
-                            Add Account
-                        </Button>
+            {showAddButton && (
+                 <>
+                 <DynamicModal
+                   mode="add"
+                   page="Accounts"
+                   data={data}
+                   onSaveSuccess={async () => {
+                     await getAccounts();
+                   }}
+                 />
+               </>
             )}
-                </Stack>
-            </CustomToolbar>
+            </Stack>
+
+    {/* Right Section: Records per Page and Page Navigation */}
+    
+    <Stack direction="row" alignItems="center" spacing={2} justifyContent="flex-end">
+      {/* Records per Page Dropdown */}
+     
+      <Select
+        value={tab === 'open' ? openRecordsPerPage : closedRecordsPerPage}
+        onChange={(event: SelectChangeEvent<number>) =>
+          handleRecordsPerPage(event)
+        } // Fixing the onChange type
+        sx={{
+            backgroundColor: 'white',
+            minWidth: '80px',
+            borderRadius: '8px',
+            '& .MuiOutlinedInput-notchedOutline': { border: 'none' }, // Remove default border
+            padding: '6px', // Adjust padding for dropdown text
+            fontSize: '14px',
+            color: '#000', // Black text
+            height: '35px'
+
+          }}
+        >
+        {recordsList?.length &&
+          recordsList.map((item, i) => (
+            <MenuItem key={i} value={item[0]}>
+              {item[1]}
+            </MenuItem>
+          ))}
+      </Select>
+    
+      {/* Page Navigation */}
+      <Box
+        sx={{
+            display: 'flex',
+            alignItems: 'center',
+            backgroundColor: 'white', // Same white background as the Records per page
+            borderRadius: '10px', // Rounded corners to match design
+            padding: '0px 8px', // Padding inside the pagination controls
+            border: '1px solid #ccc', // Add light border
+            height: '36px', // Same height as Records per Page dropdown for uniformity
+          }}
+        >
+        {/* Previous Page Button */}
+        <IconButton
+          onClick={handlePreviousPage}
+          disabled={tab === 'open' ? openCurrentPage === 1 : closedCurrentPage === 1}
+          sx={{
+            padding: 0,
+            '&:disabled': { color: '#D3D3D3' }, // Grey when disabled
+            color: '#000000',
+            '&:hover': {
+              backgroundColor: 'rgba(0, 0, 0, 0.1)',
+            },
+          }}
+        >
+          <FiChevronLeft style={{ fontSize: '18px' }} />
+        </IconButton>
+
+        {/* Current Page / Total Pages */}
+        <Typography
+          sx={{
+            fontSize: '14px',
+            color: '#000000',
+            textAlign: 'center',
+            padding: '0px 8px', // Adjust spacing for page number text
+          }}
+        >
+          {tab === 'open'
+            ? `${openCurrentPage} of ${openTotalPages}`
+            : `${closedCurrentPage} of ${closedTotalPages}`}
+        </Typography>
+
+        {/* Next Page Button */}
+        <IconButton
+          onClick={handleNextPage}
+          disabled={
+            tab === 'open'
+              ? openCurrentPage === openTotalPages
+              : closedCurrentPage === closedTotalPages
+          }
+          sx={{
+            padding: 0,
+            '&:disabled': { color: '#D3D3D3' }, // Grey when disabled
+            color: '#000000',
+            '&:hover': {
+              backgroundColor: 'rgba(0, 0, 0, 0.1)',
+            },
+          }}
+        >
+          <FiChevronRight style={{ fontSize: '18px' }} />
+        </IconButton>
+      </Box>
+    </Stack>
+  </CustomToolbar>
             <Container sx={{ width: '100%', maxWidth: '100%', minWidth: '100%' }}>
                 <Box sx={{ width: '100%', minWidth: '100%', m: '15px 0px 0px 0px' }}>
                     <Paper sx={{ width: 'calc(100% - 15px)', mb: 2, p: '15px 15px 15px 15px', borderRadius:'16px'}}>
@@ -549,20 +558,6 @@ export default function Accounts() {
                                                                 key={index}
                                                                 sx={{ border: 0, '&:nth-of-type(even)': { backgroundColor: 'whitesmoke' }, color: 'rgb(26, 51, 83)', textTransform: 'capitalize' }}
                                                             >
-                                                                {/* <TableCell
-                                                                    padding='checkbox'
-                                                                    sx={{ border: 0, color: 'inherit' }}
-                                                                    align='left'
-                                                                >
-                                                                    <Checkbox
-                                                                        checked={isSelectedId[rowIndex] || false}
-                                                                        onChange={() => handleRowSelect(item.id)}
-                                                                        inputProps={{
-                                                                            'aria-labelledby': labelId,
-                                                                        }}
-                                                                        sx={{ border: 0, color: 'inherit' }}
-                                                                    />
-                                                                </TableCell> */}
                                                                 <TableCell
                                                                     className='tableCell-link'
                                                                     onClick={() => accountDetail(item.id)}
@@ -577,19 +572,30 @@ export default function Accounts() {
                                                                         <Avatar src={item?.created_by?.profile_pic} alt={item?.created_by?.email} /><Stack sx={{ ml: 1 }}>{item?.created_by?.email ? item?.created_by?.email : '---'}</Stack>
                                                                     </Stack>
                                                                 </TableCell>
-                                                                <TableCell className='tableCell'>
-                                                                    {item?.lead?.country ? item?.lead?.country : '---'}
-                                                                </TableCell>
-                                                                <TableCell className='tableCell'>
-                                                                    {item?.tags?.length ? item?.tags.map((tag: any, i: any) => <Stack sx={{ mr: 0.5 }}> Tags(tag)</Stack>) : '---'}
-                                                                </TableCell>
+                                                                <TableCell className='tableCell' sx={{display:"flex", justifyContent: "flex-start"}}>
+                                                                    <AvatarGroup max={4}>
+                                                                    {item?.assigned_to?.length ? item.assigned_to.map((assignee: any, i: any) => (
+                                                                        <Avatar
+                                                                        key={i}
+                                                                        src={assignee.user_details?.profile_pic || undefined}
+                                                                        alt={assignee.user_details?.email || 'Unknown'}
+                                                                        />
+                                                                    )) : '---'}
+                                                                    </AvatarGroup>
+                                                                </TableCell>                                                 
                                                                 <TableCell className='tableCell'>
                                                                 {(userRole === 'ADMIN' || 
                                                                     item.created_by.id === userId || 
                                                                     item.assigned_to.some((assignee: any) => assignee.id === profileId)) && (
-                                                                        <FaEdit
-                                                                            style={{ cursor: 'pointer', marginRight: '10px' }}
-                                                                            onClick={() => EditItem(item.id)}
+                                                                        <DynamicModal
+                                                                            mode="edit"
+                                                                            page="Accounts"
+                                                                            id={item.id}
+                                                                            data={data}
+                                                                            icon={true}
+                                                                            onSaveSuccess={async () => {
+                                                                            await getAccounts();
+                                                                            }}
                                                                         />
                                                                     )}
                                                                     {(userRole === 'ADMIN' || item.created_by.id === userId) && (
@@ -604,23 +610,11 @@ export default function Accounts() {
                                                     })
                                                 : <TableRow> <TableCell colSpan={6} sx={{ border: 0 }}><Spinner /></TableCell></TableRow>
                                         }
-                                        {
-                                            // emptyRows > 0 && (
-                                            //     <TableRow
-                                            //         style={{
-                                            //             height: (dense ? 33 : 53) * emptyRows
-                                            //         }}
-                                            //     >
-                                            //         <TableCell colSpan={6} />
-                                            //     </TableRow>
-                                            // )
-
-                                        }
                                     </TableBody> :
                                     <TableBody>
                                         {
-                                            closedAccounts?.length > 0
-                                                ? stableSort(closedAccounts, getComparator(order, orderBy)).map((item: any, index: any) => {
+                                            openAccounts?.length > 0
+                                                ? stableSort(openAccounts, getComparator(order, orderBy)).map((item: any, index: any) => {
                                                     // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: any, index: any) => {
                                                     const labelId = `enhanced-table-checkbox-${index}`
                                                     const rowIndex = selectedId.indexOf(item.id);
@@ -630,20 +624,6 @@ export default function Accounts() {
                                                             key={index}
                                                             sx={{ border: 0, '&:nth-of-type(even)': { backgroundColor: 'whitesmoke' }, color: 'rgb(26, 51, 83)', textTransform: 'capitalize' }}
                                                         >
-                                                            {/* <TableCell
-                                                                    padding='checkbox'
-                                                                    sx={{ border: 0, color: 'inherit' }}
-                                                                    align='left'
-                                                                >
-                                                                    <Checkbox
-                                                                        checked={isSelectedId[rowIndex] || false}
-                                                                        onChange={() => handleRowSelect(item.id)}
-                                                                        inputProps={{
-                                                                            'aria-labelledby': labelId,
-                                                                        }}
-                                                                        sx={{ border: 0, color: 'inherit' }}
-                                                                    />
-                                                                </TableCell> */}
                                                             <TableCell
                                                                 className='tableCell-link'
                                                                 onClick={() => accountDetail(item.id)}
@@ -657,6 +637,18 @@ export default function Accounts() {
                                                                 <Stack style={{ display: 'flex', flexDirection: 'row', alignItems: "center" }}>
                                                                     <Avatar src={item?.lead?.created_by?.profile_pic} alt={item?.lead?.created_by?.email} /><Stack sx={{ ml: 1 }}>{item?.lead?.account_name ? item?.lead?.account_name : '---'}</Stack>
                                                                 </Stack>
+                                                            </TableCell>
+                                                              {/* Add the Assigned To Column */}
+                                                            <TableCell className='tableCell'>
+                                                                <AvatarGroup max={4}>
+                                                                    {item?.assigned_to?.length ? item.assigned_to.map((assignee: any, i: any) => (
+                                                                        <Avatar
+                                                                            key={i}
+                                                                            src={assignee.user_details?.profile_pic || undefined}
+                                                                            alt={assignee.user_details?.email || 'Unknown'}
+                                                                        />
+                                                                    )) : '---'}
+                                                                </AvatarGroup>
                                                             </TableCell>
                                                             <TableCell className='tableCell'>
                                                                 {item?.lead?.country ? item?.lead?.country : '---'}
