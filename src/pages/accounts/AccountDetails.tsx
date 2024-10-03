@@ -258,7 +258,7 @@ const test = true
                   </p>
                   {<p>
                     {Array.isArray(data?.deals) ? (
-                      data.deals
+                      data?.deals
                       .filter((deal) => deal.account === accountId)
                       .map((deal, index) => (
                       <React.Fragment key={index}>
