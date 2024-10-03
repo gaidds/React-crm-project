@@ -1,4 +1,12 @@
-import { ChangeEvent, FC, useEffect, useState } from 'react';
+import {
+  ChangeEvent,
+  FC,
+  useEffect,
+  useState,
+  ReactElement,
+  isValidElement,
+  cloneElement,
+} from 'react';
 import { ImgUploaderProps } from './types';
 import { MdCloudUpload } from 'react-icons/md';
 import { MdCancel } from 'react-icons/md';
@@ -10,6 +18,7 @@ const ImgUploader: FC<ImgUploaderProps> = ({
   onChange,
   defaultValue,
   externalError,
+  customWidget,
 }) => {
   const [imgUrl, setImgUrl] = useState<string>(defaultValue || '');
   const [error, setError] = useState<string | null>(null);
@@ -75,6 +84,10 @@ const ImgUploader: FC<ImgUploaderProps> = ({
   };
 
   const isCancelDisabled = imgUrl === defaultValue || imgUrl === '';
+
+  if (customWidget) {
+    return <div id="upload_widget">{customWidget}</div>;
+  }
 
   return (
     <div>
