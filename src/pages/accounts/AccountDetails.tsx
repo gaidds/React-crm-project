@@ -16,6 +16,7 @@ interface Account {
   deals:string;
   account_obj: {
     name: string;
+    description: string;
     website: string;
     industry: string;
     org: {
@@ -49,7 +50,7 @@ interface Account {
   website: string;
   
  
-  description: string;
+  
   tags: string[];
   created_by: { id: string };
 }
@@ -304,7 +305,7 @@ const test = true
                 <Grid container>
                   <Grid item paddingRight={10}>
                     <DescriptionComponent
-                      initialDescription={account.description}
+                      initialDescription={account.account_obj.description}
                       onSave={handleSaveDescription}
                     />
                   </Grid>
