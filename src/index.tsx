@@ -4,14 +4,18 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { GoogleOAuthProvider } from '@react-oauth/google'
+import { MyContextProvider } from './context/Context';
 
+document.body.style.backgroundColor = '#E2E7EB';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
     <GoogleOAuthProvider clientId={process.env.REACT_APP_CLIENT_ID as string}>
-    <App />
+      <MyContextProvider>
+          <App />
+      </MyContextProvider>
     </GoogleOAuthProvider>
   </React.StrictMode>
 );

@@ -150,6 +150,7 @@ export function AddAccount() {
         e.preventDefault();
         submitForm();
     }
+    
     const submitForm = () => {
         const Header = {
             Accept: 'application/json',

@@ -28,6 +28,7 @@ import { AntSwitch, RequiredTextField } from '../../styles/CssStyled'
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown'
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp'
 import '../../styles/style.css'
+import MyContext, { useMyContext } from '../../context/Context'
 
 type FormErrors = {
     email?: string[];
@@ -60,13 +61,19 @@ interface FormData {
     // has_sales_access: boolean,
     // has_marketing_access: boolean,
     // is_organization_admin: boolean
-
-
 }
+
+const roleOptions = [
+    { label: 'ADMIN', value: 'ADMIN' },
+    { label: 'SALES MANAGER', value: 'SALES MANAGER' },
+    { label: 'SALES REPRESENTATIVE', value: 'SALES REP' },
+    { label: 'USER', value: 'USER' }
+];
+
 export function EditUser() {
     const { state } = useLocation()
     const navigate = useNavigate()
-
+    const { userRole, setUserRole } = useMyContext();
     const [reset, setReset] = useState(false)
     const [error, setError] = useState(false)
     const [errors, setErrors] = useState<FormErrors>({});
@@ -280,30 +287,33 @@ export function EditUser() {
                                                 />
                                             </div>
                                             <div className='fieldSubContainer'>
+                                            {userRole === 'ADMIN' && (
+                                                <>
                                                 <div className='fieldTitle'>Role</div>
                                                 <FormControl sx={{ width: '70%' }}>
-                                                    <Select
-                                                        name='role'
-                                                        value={formData.role}
-                                                        open={roleSelectOpen}
-                                                        onClick={() => setRoleSelectOpen(!roleSelectOpen)}
-                                                        IconComponent={() => (
-                                                            <div onClick={() => setRoleSelectOpen(!roleSelectOpen)} className="select-icon-background">
-                                                                {roleSelectOpen ? <FiChevronUp className='select-icon' /> : <FiChevronDown className='select-icon' />}
-                                                            </div>
-                                                        )}
-                                                        className={'select'}
-                                                        onChange={handleChange}
-                                                        error={!!errors?.role?.[0]}
-                                                    >
-                                                        {['ADMIN', 'USER'].map((option) => (
-                                                            <MenuItem key={option} value={option}>
-                                                                {option}
-                                                            </MenuItem>
-                                                        ))}
-                                                    </Select>
-                                                    {/* <FormHelperText>{errors?.[0] ? errors[0] : ''}</FormHelperText> */}
-                                                </FormControl>
+                                                <Select
+                name='role'
+                value={formData.role}
+                open={roleSelectOpen}
+                onClick={() => setRoleSelectOpen(!roleSelectOpen)}
+                IconComponent={() => (
+                    <div onClick={() => setRoleSelectOpen(!roleSelectOpen)} className="select-icon-background">
+                        {roleSelectOpen ? <FiChevronUp className='select-icon' /> : <FiChevronDown className='select-icon' />}
+                    </div>
+                )}
+                className={'select'}
+                onChange={handleChange}
+                error={!!errors?.role?.[0]}
+            >
+                {roleOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                    </MenuItem>
+                ))}
+            </Select>
+        </FormControl>
+        </>
+        )}
                                             </div>
                                         </div>
                                         <div className='fieldContainer2'>

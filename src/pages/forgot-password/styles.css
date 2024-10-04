@@ -1,0 +1,11 @@
+.forget-password-msg-container, .reset-forgot-password-error-msg-container{
+    position: relative;
+    width: 100%;
+}
+.forget-password-msg-, .reset-forgot-password-error-msg{
+    position: absolute;
+    margin-top: 16px;
+    top: 0;
+    left: 0;
+    right: 0;
+}
