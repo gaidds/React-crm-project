@@ -11,7 +11,7 @@ import { fetchData, Header } from '../FetchData';
 import { DealUrl, UsersUrl, UserUrl, AccountsUrl, ContactUrl } from '../../services/ApiUrls';
 import { SelectChangeEvent } from '@mui/material';
 import { FaEdit } from 'react-icons/fa';
-import { DealFormData, ContactFormData, AccountFormData, UserFormData , ModalProps, Deals, convertCountryNameToCode, FormErrors, ContactProfile, Profile} from './types';
+import { DealFormData, ContactFormData, AccountFormData, UserFormData , ModalProps, convertCountryNameToCode, FormErrors, ContactProfile, Profile} from './types';
 import { useState, useEffect } from 'react';
 import { User } from '../forms/types';
 
@@ -134,13 +134,12 @@ export default function DynamicModal({ mode, page, id, data, icon, text, onSaveS
    });
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
-  const [error, setError] = useState(false);
+  const setError = useState(false)[1];
   const [userErrors, setUserErrors] = useState<FormErrors>({});
 
   const handleOpen = () => {
     if (mode === 'edit') {
       if ( page === 'Deals') {
-      const deals: Deals = data.deals;
       const myDeal: DealFormData | undefined = data.deals.find((deal: any) => deal.id === id);
       if (myDeal) {
         //console.log('Pre-populating form with data:', myDeal);
