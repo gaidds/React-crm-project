@@ -30,7 +30,7 @@
 .organization-page-add-form{
     display: flex !important;
     justify-content: center !important;
-    align-items: center !important;
+    align-items: flex-start !important;
     flex-wrap: nowrap !important;
 
 }
