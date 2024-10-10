@@ -57,22 +57,51 @@ export default function DealsCardView(props: any) {
             Authorization: localStorage.getItem('Token'),
             org: localStorage.getItem('org')
         };
-        try {
-            const res = await fetchData(
-                `${DealUrl}`,
-                'GET',
-                null as any,
-                Header
-            );
-            if (!res.error) {
-                const fetchedDeals: Deal[] = res.deals || [];
-                setDeals(fetchedDeals);
-                setFilteredDeals(fetchedDeals);
-                setData(res || []);
+    
+        let allDeals: Deal[] = [];
+        let currentPage = 1;
+    
+        // Define the number of records per page
+        const recordsPerPage = 10; 
+    
+        while (true) {
+            try {
+                const offset = (currentPage - 1) * recordsPerPage;
+                const res = await fetchData(
+                    `${DealUrl}/?offset=${offset}&limit=${recordsPerPage}`,
+                    'GET',
+                    null as any,
+                    Header
+                );
+    
+                // Check for errors in the response
+                if (!res.error) {
+                    const fetchedDeals: Deal[] = res.deals || [];
+                    setData(res || []);
+                    
+                    // Add the fetched deals to the allDeals array
+                    allDeals = [...allDeals, ...fetchedDeals];
+    
+                    // If fewer deals than requested were returned, break the loop (no more deals)
+                    if (fetchedDeals.length < recordsPerPage) {
+                        break; 
+                    }
+    
+                    // Increment the current page
+                    currentPage++;
+                } else {
+                    console.error('Error in response:', res.error);
+                    break; // Break the loop on error
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                break; // Break the loop on fetch error
             }
-        } catch (error) {
-            console.error('Error fetching data:', error);
         }
+    
+        // Update the state with all retrieved deals
+        setDeals(allDeals);
+        setFilteredDeals(allDeals);
     };
 
     const showAddButton = userRole !== 'USER' && userRole !== 'SALES REP';
