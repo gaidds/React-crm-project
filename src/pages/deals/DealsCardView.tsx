@@ -77,6 +77,7 @@ export default function DealsCardView(props: any) {
                 // Check for errors in the response
                 if (!res.error) {
                     const fetchedDeals: Deal[] = res.deals || [];
+                    setData(res || []);
                     
                     // Add the fetched deals to the allDeals array
                     allDeals = [...allDeals, ...fetchedDeals];
@@ -101,7 +102,6 @@ export default function DealsCardView(props: any) {
         // Update the state with all retrieved deals
         setDeals(allDeals);
         setFilteredDeals(allDeals);
-        setData(allDeals); // or use the response data if needed
     };
 
     const showAddButton = userRole !== 'USER' && userRole !== 'SALES REP';
