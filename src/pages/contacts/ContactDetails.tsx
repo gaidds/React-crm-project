@@ -1,35 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Card,
-  Link,
-  Button,
-  Avatar,
-  Divider,
-  TextField,
-  Box,
-  IconButton,
-  Typography,
-  AvatarGroup,
-} from '@mui/material';
-import {
-  Fa500Px,
-  FaAccusoft,
-  FaAd,
-  FaAddressCard,
-  FaEnvelope,
-  FaRegAddressCard,
-  FaStar,
-  FaLinkedin,
-  FaTwitter,
-  FaFacebook,
-  FaEllipsisH,
-} from 'react-icons/fa';
-import { CustomAppBar } from '../../components/CustomAppBar';
+import {Avatar, Divider, Box, IconButton, Typography,} from '@mui/material';
+import { FaLinkedin, FaTwitter, FaFacebook} from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AntSwitch } from '../../styles/CssStyled';
 import { ContactUrl } from '../../services/ApiUrls';
 import { fetchData, Header } from '../../components/FetchData';
-import MyContext, { useMyContext } from '../../context/Context';
+import { useMyContext } from '../../context/Context';
+import DynamicModal from '../../components/modal/modal';
+import '../profile/styles.css';
 
 type response = {
   created_by: string;
@@ -80,32 +57,37 @@ export default function ContactDetails() {
   const { state } = useLocation();
   const [contactDetails, setContactDetails] = useState<response | null>(null);
   const [addressDetails, setAddressDetails] = useState<response | null>(null);
-  const [org, setOrg] = useState<response | null>(null);
   const { userRole, userId } = useMyContext();
+  const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
     getContactDetail(state.contactId.id);
+    getContacts();
   }, [state.contactId.id]);
 
+  const getContacts = async() => {
+    try{
+      await fetchData(`${ContactUrl}`, 'GET', null as any, Header).then((res)=>{
+        if(!res.error){
+          setData(res ||  []);
+        }
+      });
+    } catch(erro) {
+      console.error('Error fetching data', erro);
+    }
+  }
+
   const getContactDetail = (id: any) => {
-    const Header = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: localStorage.getItem('Token'),
-      org: localStorage.getItem('org'),
-    };
     fetchData(`${ContactUrl}/${id}/`, 'GET', null as any, Header).then(
       (res) => {
-        // console.log(res, 'res');
+        console.log(res, 'res');
         if (!res.error) {
           setContactDetails(res?.contact_obj);
           setAddressDetails(res?.address_obj);
-          setOrg(res?.org);
         }
       }
     );
   };
-
   //   useEffect(() => {
   // navigate(-1)
   //     fetchData(`${ContactUrl}/${state.contactId}/`, 'GET', null as any, Header)
@@ -125,50 +107,6 @@ export default function ContactDetails() {
   //         }
   //       })
   //   }, [])
-
-  const backbtnHandle = () => {
-    navigate('/app/contacts');
-  };
-
-  const editHandle = () => {
-    // navigate('/contacts/edit-contacts', { state: { value: contactDetails, address: newAddress } })
-    navigate('/app/contacts/edit-contact', {
-      state: {
-        value: {
-          salutation: contactDetails?.salutation,
-          first_name: contactDetails?.first_name,
-          last_name: contactDetails?.last_name,
-          primary_email: contactDetails?.primary_email,
-          secondary_email: contactDetails?.secondary_email,
-          mobile_number: contactDetails?.mobile_number,
-          secondary_number: contactDetails?.secondary_number,
-          date_of_birth: contactDetails?.date_of_birth,
-          organization: contactDetails?.organization,
-          title: contactDetails?.title,
-          language: contactDetails?.language,
-          do_not_call: contactDetails?.do_not_call,
-          department: contactDetails?.department,
-          address: addressDetails?.address_line,
-          street: addressDetails?.street,
-          city: addressDetails?.city,
-          state: addressDetails?.state,
-          country: addressDetails?.country,
-          postcode: addressDetails?.postcode,
-          description: contactDetails?.description,
-          linked_in_url: contactDetails?.linked_in_url,
-          facebook_url: contactDetails?.facebook_url,
-          twitter_username: contactDetails?.twitter_username,
-          profile_pic: contactDetails?.profile_pic,
-        },
-        id: state?.contactId?.id,
-        countries: state?.countries,
-      },
-    });
-  };
-
-  const module = 'Contacts';
-  const crntPage = 'Contact Detail';
-  const backBtn = 'Back To Contacts';
   console.log(addressDetails, 'address');
   // console.log(state, 'contact');
   interface AssignedToItem {
@@ -178,28 +116,26 @@ export default function ContactDetails() {
   const showEditButton =
     userRole === 'ADMIN' ||
     (userRole === 'SALES MANAGER' && contactDetails?.created_by === userId);
-  return (
-    <Box sx={{ height: '100%', border: '1px solid blue', p: '16px' }}>
-      <Box sx={{ height: '36px' }}>Header</Box>
-
-      <Box
-        sx={{
-          borderRadius: '16px',
-          boxSizing: 'border-box', // Fixed the property name (use camelCase)
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#FFFFFF',
-          position: 'absolute', // Use absolute positioning
-          p: '60px',
-          width: 'calc(100% - 260px)',
-          height: '80%',
-          overflow: 'hidden',
-          border: '1px solid red',
-          ml: '16px',
-          mt: '96px',
-        }}
-      >
+  
+    return (
+      <div className="profile-page-container">
+        <div className="profile-page-header">
+          {(userRole === 'ADMIN' ||
+            contactDetails?.created_by === userId)
+            && (
+            <DynamicModal
+                page="Contacts"
+                id={contactDetails?.id}
+                mode="edit"
+                data={data}
+                onSaveSuccess={async () => {
+                await getContactDetail(contactDetails?.id);
+                }}
+            />
+         )}
+        </div>
+      <div className='profile-page-body'>
+        <div className="profile-page-left-section">
         {/* Left section - Profile picture and name */}
         <Box
           sx={{
@@ -235,7 +171,7 @@ export default function ContactDetails() {
             </span>
           </div>
         </Box>
-
+      </div>
         {/* Right section - Contact information */}
         <Box
           sx={{
@@ -346,8 +282,9 @@ export default function ContactDetails() {
               <FaEllipsisH size={24} />
             </IconButton> */}
           </Box>
+          
         </Box>
-      </Box>
-    </Box>
+    </div>
+    </div>
   );
 }
