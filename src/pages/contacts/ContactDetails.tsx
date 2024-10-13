@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import {Avatar, Divider, Box, IconButton, Typography,} from '@mui/material';
-import { FaLinkedin, FaTwitter, FaFacebook} from 'react-icons/fa';
+import { Avatar, Divider, Box, IconButton, Typography } from '@mui/material';
+import { FaLinkedin, FaTwitter, FaFacebook } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ContactUrl } from '../../services/ApiUrls';
 import { fetchData, Header } from '../../components/FetchData';
@@ -32,16 +32,22 @@ type response = {
   secondary_number: string;
   title: string;
   twitter_username: string;
-  address_line: string;
-  city: string;
-  country: string;
-  postcode: string;
-  state: string;
-  street: string;
+  address: {
+    street: string;
+    city: string;
+    state: string;
+    postcode: string;
+    country: string;
+  };
   name: string;
   website: string;
   profile_pic: string;
+  accounts: any;
 };
+
+interface Data {
+  accounts: any[];
+}
 
 export const formatDate = (dateString: any) => {
   const options: Intl.DateTimeFormatOptions = {
@@ -58,24 +64,27 @@ export default function ContactDetails() {
   const [contactDetails, setContactDetails] = useState<response | null>(null);
   const [addressDetails, setAddressDetails] = useState<response | null>(null);
   const { userRole, userId } = useMyContext();
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<Data | null>(null);
 
   useEffect(() => {
     getContactDetail(state.contactId.id);
     getContacts();
+    console.log(data, 'Fetched contact data');
   }, [state.contactId.id]);
 
-  const getContacts = async() => {
-    try{
-      await fetchData(`${ContactUrl}`, 'GET', null as any, Header).then((res)=>{
-        if(!res.error){
-          setData(res ||  []);
+  const getContacts = async () => {
+    try {
+      await fetchData(`${ContactUrl}`, 'GET', null as any, Header).then(
+        (res) => {
+          if (!res.error) {
+            setData(res || []);
+          }
         }
-      });
-    } catch(erro) {
+      );
+    } catch (erro) {
       console.error('Error fetching data', erro);
     }
-  }
+  };
 
   const getContactDetail = (id: any) => {
     fetchData(`${ContactUrl}/${id}/`, 'GET', null as any, Header).then(
@@ -116,62 +125,60 @@ export default function ContactDetails() {
   const showEditButton =
     userRole === 'ADMIN' ||
     (userRole === 'SALES MANAGER' && contactDetails?.created_by === userId);
-  
-    return (
-      <div className="profile-page-container">
-        <div className="profile-page-header">
-          {(userRole === 'ADMIN' ||
-            contactDetails?.created_by === userId)
-            && (
-            <DynamicModal
-                page="Contacts"
-                id={contactDetails?.id}
-                mode="edit"
-                data={data}
-                onSaveSuccess={async () => {
-                await getContactDetail(contactDetails?.id);
-                }}
-            />
-         )}
-        </div>
-      <div className='profile-page-body'>
-        <div className="profile-page-left-section">
-        {/* Left section - Profile picture and name */}
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
 
-            width: '50%',
-          }}
-        >
-          <Avatar
-            style={{
-              width: '250px', // Size of the avatar
-              height: '250px',
-              marginBottom: '32px', // Space between avatar and name
+  return (
+    <div className="profile-page-container">
+      <div className="profile-page-header">
+        {(userRole === 'ADMIN' || contactDetails?.created_by === userId) && (
+          <DynamicModal
+            page="Contacts"
+            id={contactDetails?.id}
+            mode="edit"
+            data={data}
+            onSaveSuccess={async () => {
+              await getContactDetail(contactDetails?.id);
             }}
-            alt={contactDetails?.first_name || 'User Avatar'}
-            src={contactDetails?.profile_pic}
           />
-          <div
-            style={{
-              textAlign: 'center',
-              marginBottom: '84px',
+        )}
+      </div>
+      <div className="profile-page-body">
+        <div className="profile-page-left-section">
+          {/* Left section - Profile picture and name */}
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+
+              width: '50%',
             }}
           >
-            <span style={{ fontSize: '32px' }}>
-              {contactDetails?.first_name} {contactDetails?.last_name}
-            </span>
-          </div>
-          <div style={{ textAlign: 'center' }}>
-            <span style={{ fontSize: '24px' }}>
-              {contactDetails?.description}
-            </span>
-          </div>
-        </Box>
-      </div>
+            <Avatar
+              style={{
+                width: '250px', // Size of the avatar
+                height: '250px',
+                marginBottom: '32px', // Space between avatar and name
+              }}
+              alt={contactDetails?.first_name || 'User Avatar'}
+              src={contactDetails?.profile_pic}
+            />
+            <div
+              style={{
+                textAlign: 'center',
+                marginBottom: '84px',
+              }}
+            >
+              <span style={{ fontSize: '32px' }}>
+                {contactDetails?.first_name} {contactDetails?.last_name}
+              </span>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <span style={{ fontSize: '24px' }}>
+                {contactDetails?.description}
+              </span>
+            </div>
+          </Box>
+        </div>
         {/* Right section - Contact information */}
         <Box
           sx={{
@@ -218,10 +225,10 @@ export default function ContactDetails() {
           {/* Website */}
           <Box sx={{ display: 'flex', mb: '32px' }}>
             <Typography sx={{ fontWeight: 'bold', minWidth: '120px' }}>
-              Website
+              Department
             </Typography>
             <Typography>
-              {contactDetails?.website || 'www.bessie.com'}
+              {contactDetails?.department || 'www.bessie.com'}
             </Typography>
           </Box>
 
@@ -238,7 +245,18 @@ export default function ContactDetails() {
             <Typography sx={{ fontWeight: 'bold', minWidth: '120px' }}>
               Account
             </Typography>
-            <Typography>{contactDetails?.street}</Typography>
+            <Typography>
+              {Array.isArray(data)
+                ? data
+                    .filter((account) => account.contact === state.contactId.id)
+                    .map((account, index) => (
+                      <React.Fragment key={index}>
+                        {account.name}
+                        <br />
+                      </React.Fragment>
+                    ))
+                : 'No deals available'}
+            </Typography>
           </Box>
 
           {/* Address */}
@@ -246,7 +264,13 @@ export default function ContactDetails() {
             <Typography sx={{ fontWeight: 'bold', minWidth: '120px' }}>
               Address
             </Typography>
-            <Typography>{contactDetails?.street}</Typography>
+            <Typography>
+              {contactDetails?.address?.street},<br />
+              {contactDetails?.address?.postcode},{' '}
+              {contactDetails?.address?.city},<br />
+              {contactDetails?.address?.state},<br />
+              {contactDetails?.address?.country}
+            </Typography>
           </Box>
 
           {/* Social Media Links */}
@@ -282,9 +306,8 @@ export default function ContactDetails() {
               <FaEllipsisH size={24} />
             </IconButton> */}
           </Box>
-          
         </Box>
-    </div>
+      </div>
     </div>
   );
 }
