@@ -1,4 +1,4 @@
-import { Box, Button, Card, Stack, Tab, Table, TableBody, TableContainer, TableHead, TablePagination, TableRow, Tabs, Toolbar, Typography, Paper, Select, MenuItem, MenuProps, FormControl, InputLabel, InputBase, styled, TableCell, TableSortLabel, Container, Skeleton } from '@mui/material'
+import { Box, Button, Card, Stack, Tab, Table, TableBody, TableContainer, TableHead, TablePagination, TableRow, Tabs, Toolbar, Typography, Paper, Select, MenuItem, MenuProps, FormControl, InputLabel, InputBase, styled, TableCell, TableSortLabel, Container, Skeleton, IconButton } from '@mui/material'
 import React, { SyntheticEvent, useEffect, useState } from 'react'
 import { FiPlus } from "@react-icons/all-files/fi/FiPlus";
 import { FiChevronLeft } from "@react-icons/all-files/fi/FiChevronLeft";
@@ -9,13 +9,15 @@ import { fetchData, Header } from '../../components/FetchData';
 import { ContactUrl } from '../../services/ApiUrls';
 import { AntSwitch, CustomTab, CustomToolbar, FabLeft, FabRight, StyledTableCell, StyledTableRow } from '../../styles/CssStyled';
 import { useNavigate } from 'react-router-dom';
-import { FaTrashAlt, FaEdit} from 'react-icons/fa';
+import { FaTrashAlt, FaEdit } from 'react-icons/fa';
 import { DeleteModal } from '../../components/DeleteModal';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { EnhancedTableHead } from '../../components/EnchancedTableHead';
 import MyContext, { useMyContext } from '../../context/Context'
 import DynamicModal from '../../components/modal/modal';
+import { FaFilter } from 'react-icons/fa';
+import { LabelContact } from '../../components/label-contact';
 
 interface HeadCell {
     disablePadding: boolean;
@@ -49,6 +51,12 @@ const headCells: readonly HeadCell[] = [
         numeric: true,
         disablePadding: false,
         label: 'Email Address'
+    },
+    {
+        id: 'status',
+        numeric: true,
+        disablePadding: false,
+        label: 'Status'
     }, {
         id: 'mobile_number',
         numeric: true,
@@ -86,7 +94,7 @@ export default function Contacts() {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [recordsPerPage, setRecordsPerPage] = useState<number>(10);
     const [totalPages, setTotalPages] = useState<number>(0);
-    const { userRole, setUserRole, userId} = useMyContext();
+    const { userRole, setUserRole, userId } = useMyContext();
     const [data, setData] = useState<any[]>([]);
 
     console.log(userId, 'Contacts user id')
@@ -122,7 +130,7 @@ export default function Contacts() {
             'Content-Type': 'application/json',
             Authorization: localStorage.getItem('Token'),
             org: localStorage.getItem('org')
-          }
+        }
         try {
             const offset = (currentPage - 1) * recordsPerPage;
             await fetchData(`${ContactUrl}/?offset=${offset}&limit=${recordsPerPage}`, 'GET', null as any, Header)
@@ -164,16 +172,16 @@ export default function Contacts() {
             'Content-Type': 'application/json',
             Authorization: localStorage.getItem('Token'),
             org: localStorage.getItem('org')
-          }
+        }
         fetchData(`${ContactUrl}/${id}/`, 'GET', null as any, Header)
             .then((res) => {
                 // console.log(res, 'res');
                 if (!res.error) {
                     const contactDetails = res?.contact_obj
                     const addressDetails = res?.address_obj
-                    navigate('/app/contacts/edit-contact/', { 
-                        state: 
-                        { 
+                    navigate('/app/contacts/edit-contact/', {
+                        state:
+                        {
                             countries,
                             id: id,
                             value: {
@@ -200,8 +208,9 @@ export default function Contacts() {
                                 linked_in_url: contactDetails?.linked_in_url,
                                 facebook_url: contactDetails?.facebook_url,
                                 twitter_username: contactDetails?.twitter_username
-                            } 
-                    }});
+                            }
+                        }
+                    });
                 }
             })
     }
@@ -216,7 +225,7 @@ export default function Contacts() {
             'Content-Type': 'application/json',
             Authorization: localStorage.getItem('Token'),
             org: localStorage.getItem('org')
-          }
+        }
         fetchData(`${ContactUrl}/${selectedId}/`, 'DELETE', null as any, Header)
             .then((res: any) => {
                 // console.log('delete:', res);
@@ -295,18 +304,27 @@ export default function Contacts() {
     const showAddButton = userRole !== 'USER' && userRole !== 'SALES REP';
     const modalDialog = 'Are You Sure you want to delete this contact?'
     const modalTitle = 'Delete Contact'
-    
+
 
     const recordsList = [[10, '10 Records per page'], [20, '20 Records per page'], [30, '30 Records per page'], [40, '40 Records per page'], [50, '50 Records per page']]
     // console.log(contactList, 'cccc')
     // console.log(context, 'cc');
     return (
-        <Box sx={{
-            mt: '60px'
-            // , width: '1376px' 
-        }}>
-            <CustomToolbar sx={{ flexDirection: 'row-reverse' }}>
-                {/* <Tabs defaultValue={value} onChange={handleChangeTab} sx={{ mt: '27px' }}>
+        <Box sx={{ mt: '60px' }}>
+            <CustomToolbar
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    mb: 3,
+                }}
+            >
+                <Stack direction="row" spacing={2} alignItems="center">
+                    <IconButton color="primary">
+                        <FaFilter style={{ color: '#333F49' }} />
+                    </IconButton>
+                    {/* <Tabs defaultValue={value} onChange={handleChangeTab} sx={{ mt: '27px' }}>
                     <CustomTab value="Open" label="Open"
                         sx={{
                             backgroundColor: value === 'Open' ? '#F0F7FF' : '#223d60',
@@ -320,7 +338,16 @@ export default function Contacts() {
                         }}
                     ></CustomTab>
                 </Tabs> */}
-                <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                    {showAddButton && (
+                        <DynamicModal
+                            mode="add"
+                            page="Contacts"
+                            data={data}
+                            onSaveSuccess={async () => {
+                                await getContacts();
+                            }}
+                        />
+                    )}
                     <Select
                         value={recordsPerPage}
                         // onChange={(e: any) => setRecordsPerPage(e.target.value)}
@@ -355,27 +382,19 @@ export default function Contacts() {
                             <FiChevronRight style={{ height: '15px' }} />
                         </FabRight>
                     </Box>
-                    {showAddButton && (
-                         <DynamicModal
-                         mode="add"
-                         page="Contacts"
-                         data={data}
-                         onSaveSuccess={async () => {
-                           await getContacts();
-                         }}
-                       />
-            )}
                 </Stack>
             </CustomToolbar>
 
             <Container sx={{ width: '100%', maxWidth: '100%', minWidth: '100%' }}>
                 <Box sx={{ width: '100%', minWidth: '100%', m: '15px 0px 0px 0px' }}>
-                    <Paper sx={{ width: 'calc(100% - 15px)', mb: 2, p: '15px 15px 15px 15px', borderRadius:'16px'}}>
-                        <TableContainer sx={{borderRadius: '16px'}}>
-                            <Table    sx={{"& .MuiTableCell-head": {
-                                      color: "white",
-                                      backgroundColor: "#6B778C",
-                                  }}}>
+                    <Paper sx={{ width: 'calc(100% - 15px)', mb: 2, p: '15px 15px 15px 15px', borderRadius: '16px' }}>
+                        <TableContainer sx={{ borderRadius: '16px' }}>
+                            <Table sx={{
+                                "& .MuiTableCell-head": {
+                                    color: "white",
+                                    backgroundColor: "#6B778C",
+                                }
+                            }}>
                                 <EnhancedTableHead
                                     numSelected={selected.length}
                                     order={order}
@@ -404,7 +423,7 @@ export default function Contacts() {
                                             ? stableSort(contactList, getComparator(order, orderBy))
                                                 // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: any, index: any) => {
                                                 .map((item: any, index: any) => {
-                                                    
+
                                                     return (
                                                         <TableRow
                                                             tabIndex={-1}
@@ -414,7 +433,19 @@ export default function Contacts() {
                                                                 className='tableCell-link'
                                                                 onClick={() => contactHandle(item)}>{item.first_name + ' ' + item.last_name}</TableCell>
                                                             <TableCell className='tableCell'>{item.primary_email}</TableCell>
+                                                            <TableCell className='tableCell'>
+                                                                <LabelContact
+                                                                    tags={
+                                                                        item?.status === true
+                                                                            ? 'CLIENT'
+                                                                            : item?.status === false
+                                                                                ? 'LEAD'
+                                                                                : '---'
+                                                                    }
+                                                                />
+                                                            </TableCell>
                                                             <TableCell className='tableCell'>{item.mobile_number ? item.mobile_number : '---'}</TableCell>
+
                                                             {/* <StyledTableCell align='left'>
                                                 <AntSwitch checked={item.do_not_call} inputProps={{ 'aria-label': 'ant design' }} />
                                             </StyledTableCell> */}
@@ -428,7 +459,7 @@ export default function Contacts() {
                                                                             data={data}
                                                                             icon={true}
                                                                             onSaveSuccess={async () => {
-                                                                            await getContacts();
+                                                                                await getContacts();
                                                                             }}
                                                                         />
                                                                         <FaTrashAlt
