@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Avatar, Divider, Box, IconButton, Typography } from '@mui/material';
 import { FaLinkedin, FaTwitter, FaFacebook } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ContactUrl } from '../../services/ApiUrls';
+import { AccountsUrl, ContactUrl } from '../../services/ApiUrls';
 import { fetchData, Header } from '../../components/FetchData';
 import { useMyContext } from '../../context/Context';
 import DynamicModal from '../../components/modal/modal';
@@ -45,8 +45,9 @@ type response = {
   accounts: any;
 };
 
-interface Data {
-  accounts: any[];
+interface ActiveAccounts {
+  contacts: any[];
+  name: string;
 }
 
 export const formatDate = (dateString: any) => {
@@ -63,12 +64,14 @@ export default function ContactDetails() {
   const { state } = useLocation();
   const [contactDetails, setContactDetails] = useState<response | null>(null);
   const [addressDetails, setAddressDetails] = useState<response | null>(null);
+  const [accounts, setAccounts] = useState<string[]>([]);
   const { userRole, userId } = useMyContext();
-  const [data, setData] = useState<Data | null>(null);
+  const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
     getContactDetail(state.contactId.id);
     getContacts();
+    getAccounts();
     console.log(data, 'Fetched contact data');
   }, [state.contactId.id]);
 
@@ -78,6 +81,38 @@ export default function ContactDetails() {
         (res) => {
           if (!res.error) {
             setData(res || []);
+          }
+        }
+      );
+    } catch (erro) {
+      console.error('Error fetching data', erro);
+    }
+  };
+
+  const getAccounts = async () => {
+    try {
+      await fetchData(`${AccountsUrl}`, 'GET', null as any, Header).then(
+        (res) => {
+          if (!res.error) {
+            console.log(
+              '********************************************************',
+              res?.active_accounts?.open_accounts
+                .filter((account: any) =>
+                  account?.contacts?.find(
+                    (contact: any) => contact?.id === state.contactId?.id
+                  )
+                )
+                .map((a: any) => a.name)
+            );
+            setAccounts(
+              res?.active_accounts?.open_accounts
+                .filter((account: any) =>
+                  account?.contacts?.find(
+                    (contact: any) => contact?.id === state.contactId?.id
+                  )
+                )
+                .map((a: any) => a.name) || []
+            );
           }
         }
       );
@@ -195,7 +230,7 @@ export default function ContactDetails() {
 
           <Divider
             sx={{
-              mb: '32px', // Margin bottom
+              margin: '0 32px 32px 0',
               width: '100%', // Full width
               backgroundColor: 'black', // Set the color of the line to black
               height: '1px', // Optional: Adjust the thickness of the line
@@ -225,7 +260,7 @@ export default function ContactDetails() {
           {/* Website */}
           <Box sx={{ display: 'flex', mb: '32px' }}>
             <Typography sx={{ fontWeight: 'bold', minWidth: '120px' }}>
-              Department
+              Website
             </Typography>
             <Typography>
               {contactDetails?.department || 'www.bessie.com'}
@@ -246,16 +281,14 @@ export default function ContactDetails() {
               Account
             </Typography>
             <Typography>
-              {Array.isArray(data)
-                ? data
-                    .filter((account) => account.contact === state.contactId.id)
-                    .map((account, index) => (
-                      <React.Fragment key={index}>
-                        {account.name}
-                        <br />
-                      </React.Fragment>
-                    ))
-                : 'No deals available'}
+              {accounts?.length > 0
+                ? accounts.map((account, index) => (
+                    <React.Fragment key={index}>
+                      {account}
+                      <br />
+                    </React.Fragment>
+                  ))
+                : 'No accounts available'}
             </Typography>
           </Box>
 
