@@ -8,7 +8,6 @@ function TokenExpirationHandler() {
     const expirationTime = localStorage.getItem('TokenExpiration');
     if (expirationTime) {
       const timeout = parseInt(expirationTime, 10) - Date.now();
-      console.log(timeout)
 
       // Set a timeout to automatically remove the token when it expires
       const tokenExpirationTimeout = setTimeout(() => {
