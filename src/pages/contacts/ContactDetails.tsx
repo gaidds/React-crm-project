@@ -45,11 +45,6 @@ type response = {
   accounts: any;
 };
 
-interface ActiveAccounts {
-  contacts: any[];
-  name: string;
-}
-
 export const formatDate = (dateString: any) => {
   const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
@@ -60,7 +55,6 @@ export const formatDate = (dateString: any) => {
 };
 
 export default function ContactDetails() {
-  const navigate = useNavigate();
   const { state } = useLocation();
   const [contactDetails, setContactDetails] = useState<response | null>(null);
   const [addressDetails, setAddressDetails] = useState<response | null>(null);
@@ -94,16 +88,6 @@ export default function ContactDetails() {
       await fetchData(`${AccountsUrl}`, 'GET', null as any, Header).then(
         (res) => {
           if (!res.error) {
-            console.log(
-              '********************************************************',
-              res?.active_accounts?.open_accounts
-                .filter((account: any) =>
-                  account?.contacts?.find(
-                    (contact: any) => contact?.id === state.contactId?.id
-                  )
-                )
-                .map((a: any) => a.name)
-            );
             setAccounts(
               res?.active_accounts?.open_accounts
                 .filter((account: any) =>
@@ -260,7 +244,7 @@ export default function ContactDetails() {
           {/* Website */}
           <Box sx={{ display: 'flex', mb: '32px' }}>
             <Typography sx={{ fontWeight: 'bold', minWidth: '120px' }}>
-              Website
+              Department
             </Typography>
             <Typography>
               {contactDetails?.department || 'www.bessie.com'}
