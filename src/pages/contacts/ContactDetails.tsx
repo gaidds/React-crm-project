@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Avatar, Divider, Box, IconButton, Typography } from '@mui/material';
 import { FaLinkedin, FaTwitter, FaFacebook } from 'react-icons/fa';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { AccountsUrl, ContactUrl } from '../../services/ApiUrls';
 import { fetchData, Header } from '../../components/FetchData';
 import { useMyContext } from '../../context/Context';
 import DynamicModal from '../../components/modal/modal';
 import '../profile/styles.css';
+import DescriptionComponent from '../../components/ContactsDescription';
 
 type response = {
   created_by: string;
@@ -66,7 +67,6 @@ export default function ContactDetails() {
     getContactDetail(state.contactId.id);
     getContacts();
     getAccounts();
-    console.log(data, 'Fetched contact data');
   }, [state.contactId.id]);
 
   const getContacts = async () => {
@@ -80,6 +80,32 @@ export default function ContactDetails() {
       );
     } catch (erro) {
       console.error('Error fetching data', erro);
+    }
+  };
+
+  const fetchContact = async () => {
+    const Header = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: localStorage.getItem('Token'),
+      org: localStorage.getItem('org'),
+    };
+
+    try {
+      const response = await fetchData(
+        `${ContactUrl}/${state.contactId.id}`,
+        'GET',
+        null as any,
+        Header
+      );
+
+      if (response) {
+        setAccounts(response.account_obj);
+      } else {
+        console.error('No account data found');
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
     }
   };
 
@@ -108,7 +134,6 @@ export default function ContactDetails() {
   const getContactDetail = (id: any) => {
     fetchData(`${ContactUrl}/${id}/`, 'GET', null as any, Header).then(
       (res) => {
-        console.log(res, 'res');
         if (!res.error) {
           setContactDetails(res?.contact_obj);
           setAddressDetails(res?.address_obj);
@@ -116,30 +141,37 @@ export default function ContactDetails() {
       }
     );
   };
-  //   useEffect(() => {
-  // navigate(-1)
-  //     fetchData(`${ContactUrl}/${state.contactId}/`, 'GET', null as any, Header)
-  //       .then((data) => {
-  //         if (!data.error) {
-  // setData(Object.assign({}, data, { cases: data.cases }));
 
-  //           setContactDetails(data.contact_obj)
-  //           setNewaddress(...contactDetails, {
-  //             addreslane: data.contact_obj.address.address_line,
-  //             city: data.contact_obj.address.city,
-  //             state: data.contact_obj.address.state,
-  //             postcode: data.contact_obj.address.postcode,
-  //             country: data.contact_obj.address.country,
-  //             street: data.contact_obj.address.street
-  //           })
-  //         }
-  //       })
-  //   }, [])
-  console.log(addressDetails, 'address');
-  // console.log(state, 'contact');
-  interface AssignedToItem {
-    id: string;
-  }
+  const handleSaveDescription = (updatedDescription: string) => {
+    const submitForm = async () => {
+      const data = { description: updatedDescription };
+
+      const Header = {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: localStorage.getItem('Token') ?? '',
+        org: localStorage.getItem('org') ?? '',
+      };
+
+      try {
+        const res = await fetchData(
+          `${ContactUrl}/${state.contactId.id}/`,
+          'PATCH',
+          JSON.stringify(data),
+          Header
+        );
+        if (!res.error) {
+          await fetchContact(); // Re-fetch contact data after updating
+        } else {
+          console.error('Error updating description:', res.error);
+        }
+      } catch (error) {
+        console.error('Request failed:', error);
+      }
+    };
+
+    submitForm();
+  };
 
   const showEditButton =
     userRole === 'ADMIN' ||
@@ -148,7 +180,7 @@ export default function ContactDetails() {
   return (
     <div className="profile-page-container">
       <div className="profile-page-header">
-        {(userRole === 'ADMIN' || contactDetails?.created_by === userId) && (
+        {showEditButton && (
           <DynamicModal
             page="Contacts"
             id={contactDetails?.id}
@@ -162,42 +194,37 @@ export default function ContactDetails() {
       </div>
       <div className="profile-page-body">
         <div className="profile-page-left-section">
-          {/* Left section - Profile picture and name */}
           <Box
             sx={{
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-
               width: '50%',
             }}
           >
             <Avatar
               style={{
-                width: '250px', // Size of the avatar
+                width: '250px',
                 height: '250px',
-                marginBottom: '32px', // Space between avatar and name
+                marginBottom: '32px',
               }}
               alt={contactDetails?.first_name || 'User Avatar'}
               src={contactDetails?.profile_pic}
             />
-            <div
-              style={{
-                textAlign: 'center',
-                marginBottom: '84px',
-              }}
-            >
+            <div style={{ textAlign: 'center', marginBottom: '84px' }}>
               <span style={{ fontSize: '32px' }}>
                 {contactDetails?.first_name} {contactDetails?.last_name}
               </span>
             </div>
             <div style={{ textAlign: 'center' }}>
-              <span style={{ fontSize: '24px' }}>
-                {contactDetails?.description}
-              </span>
+              <DescriptionComponent
+                initialDescription={contactDetails?.description || ''}
+                onSave={handleSaveDescription}
+              />
             </div>
           </Box>
         </div>
+
         {/* Right section - Contact information */}
         <Box
           sx={{
@@ -325,6 +352,7 @@ export default function ContactDetails() {
           </Box>
         </Box>
       </div>
+         
     </div>
   );
 }
