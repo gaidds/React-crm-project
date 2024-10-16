@@ -30,7 +30,6 @@ import { EnhancedTableHead } from '../../components/EnchancedTableHead';
 import { useMyContext } from '../../context/Context';
 import DynamicModal from '../../components/modal/modal';
 import { FaFilter } from 'react-icons/fa';
-import { LabelContact } from '../../components/label-contact';
 
 interface HeadCell {
   disablePadding: boolean;
@@ -51,12 +50,6 @@ const headCells: readonly HeadCell[] = [
     numeric: true,
     disablePadding: false,
     label: 'Email Address',
-  },
-  {
-    id: 'status',
-    numeric: true,
-    disablePadding: false,
-    label: 'Status',
   },
   {
     id: 'mobile_number',
@@ -340,17 +333,6 @@ export default function Contacts() {
                             </TableCell>
                             <TableCell className="tableCell">
                               {item.primary_email}
-                            </TableCell>
-                            <TableCell className="tableCell">
-                              <LabelContact
-                                tags={
-                                  item?.status === true
-                                    ? 'CLIENT'
-                                    : item?.status === false
-                                    ? 'LEAD'
-                                    : '---'
-                                }
-                              />
                             </TableCell>
                             <TableCell className="tableCell">
                               {item.mobile_number ? item.mobile_number : '---'}
