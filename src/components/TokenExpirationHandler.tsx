@@ -12,6 +12,7 @@ function TokenExpirationHandler() {
       // Set a timeout to automatically remove the token when it expires
       const tokenExpirationTimeout = setTimeout(() => {
         localStorage.removeItem('Token');
+        localStorage.removeItem('org');
         localStorage.removeItem('TokenExpiration');
         navigate('/login');
       }, timeout);
