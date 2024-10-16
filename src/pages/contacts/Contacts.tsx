@@ -43,7 +43,13 @@ const headCells: readonly HeadCell[] = [
     id: 'first_name',
     numeric: false,
     disablePadding: false,
-    label: 'Name',
+    label: 'First Name',
+  },
+  {
+    id: 'last_name',
+    numeric: false,
+    disablePadding: false,
+    label: 'Last Name',
   },
   {
     id: 'primary_email',
@@ -329,7 +335,13 @@ export default function Contacts() {
                               className="tableCell-link"
                               onClick={() => contactHandle(item)}
                             >
-                              {item.first_name + ' ' + item.last_name}
+                              {item.first_name}
+                            </TableCell>
+                            <TableCell
+                              className="tableCell-link"
+                              onClick={() => contactHandle(item)}
+                            >
+                              {item.last_name}
                             </TableCell>
                             <TableCell className="tableCell">
                               {item.primary_email}
