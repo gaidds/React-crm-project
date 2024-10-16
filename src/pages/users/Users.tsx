@@ -31,13 +31,7 @@ import { useMyContext } from '../../context/Context';
 import DynamicModal from '../../components/modal/modal';
 import { FaFilter } from 'react-icons/fa';
 import { Label } from '../../components/label-user';
-
-interface HeadCell {
-  disablePadding: boolean;
-  id: any;
-  label: string;
-  numeric: boolean;
-}
+import { HeadCell, Item } from './types';
 
 const headCells: readonly HeadCell[] = [
   {
@@ -77,10 +71,6 @@ const headCells: readonly HeadCell[] = [
     label: 'Actions',
   },
 ];
-
-type Item = {
-  id: string;
-};
 
 const roleDisplayMap: { [key: string]: string } = {
   ADMIN: 'ADMIN',
