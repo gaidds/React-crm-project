@@ -7,7 +7,7 @@ const buttonStyle = {
   borderRadius: '30px',
   padding: '10px 20px',
   width: '100px', // Fixed width
-  height: '36px', // Fixed height
+  height: '72px', // Fixed height
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -49,7 +49,8 @@ const DescriptionComponent: React.FC<DescriptionEditorProps> = ({
   return (
     <Box
       sx={{
-        width: 300,
+        width: 500,
+        maxWidth: '800px',
         padding: 3,
         backgroundColor: '#fff',
         display: 'flex',
@@ -104,8 +105,10 @@ const DescriptionComponent: React.FC<DescriptionEditorProps> = ({
           <Typography
             variant="body2"
             sx={{
-              color: '#333',
+              color: 'black',
+              fontSize: '18px !important',
               marginBottom: 2,
+              fontWeight: 400,
               width: '100%', // Ensures the width of the description matches the container
               wordBreak: 'break-word', // Ensures long text wraps properly
             }}

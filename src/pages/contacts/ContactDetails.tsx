@@ -210,12 +210,12 @@ export default function ContactDetails() {
               </span>
             </div>
             <div style={{ textAlign: 'center' }}>
-              <DescriptionComponent
-                initialDescription={
-                  contactDetails?.description || 'Add description.'
-                }
-                onSave={handleSaveDescription}
-              />
+              {contactDetails && (
+                <DescriptionComponent
+                  initialDescription={contactDetails.description}
+                  onSave={handleSaveDescription}
+                />
+              )}
             </div>
           </Box>
         </div>
@@ -236,8 +236,8 @@ export default function ContactDetails() {
 
           <Divider
             sx={{
-              margin: '0 32px 32px 0',
-              width: '100%', // Full width
+              margin: '0 1024px 32px 0',
+              width: 'calc(100% - 80px)',
               backgroundColor: 'black', // Set the color of the line to black
               height: '1px', // Optional: Adjust the thickness of the line
             }}
