@@ -64,9 +64,11 @@ export default function ContactDetails() {
   const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
-    getContactDetail(state.contactId.id);
-    getContacts();
-    getAccounts();
+    if (state.contactId.id) {
+      fetchContact();
+      getContacts();
+      getAccounts();
+    }
   }, [state.contactId.id]);
 
   const getContacts = async () => {
@@ -100,6 +102,8 @@ export default function ContactDetails() {
       );
 
       if (response) {
+        setContactDetails(response.contact_obj);
+        setAddressDetails(response.address_obj);
         setAccounts(response.account_obj);
       } else {
         console.error('No account data found');
@@ -129,17 +133,6 @@ export default function ContactDetails() {
     } catch (erro) {
       console.error('Error fetching data', erro);
     }
-  };
-
-  const getContactDetail = (id: any) => {
-    fetchData(`${ContactUrl}/${id}/`, 'GET', null as any, Header).then(
-      (res) => {
-        if (!res.error) {
-          setContactDetails(res?.contact_obj);
-          setAddressDetails(res?.address_obj);
-        }
-      }
-    );
   };
 
   const handleSaveDescription = (updatedDescription: string) => {
@@ -187,7 +180,7 @@ export default function ContactDetails() {
             mode="edit"
             data={data}
             onSaveSuccess={async () => {
-              await getContactDetail(contactDetails?.id);
+              await fetchContact();
             }}
           />
         )}
@@ -218,7 +211,9 @@ export default function ContactDetails() {
             </div>
             <div style={{ textAlign: 'center' }}>
               <DescriptionComponent
-                initialDescription={contactDetails?.description || ''}
+                initialDescription={
+                  contactDetails?.description || 'Add description.'
+                }
                 onSave={handleSaveDescription}
               />
             </div>
