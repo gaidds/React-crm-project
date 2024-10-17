@@ -130,6 +130,9 @@ export default function Contacts() {
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
+    const contactHandle = (id: string) => {
+        navigate(`/app/contacts/${id}`);
+    };
 
   const DeleteItem = () => {
     const Header = {
@@ -164,12 +167,6 @@ export default function Contacts() {
     setLoading(true);
     setRecordsPerPage(parseInt(event.target.value));
     setCurrentPage(1);
-  };
-
-  const contactHandle = (contactId: any) => {
-    navigate(`/app/contacts/contact-details`, {
-      state: { contactId, detail: true, countries },
-    });
   };
 
   const deleteRow = (deleteId: any) => {
@@ -333,13 +330,13 @@ export default function Contacts() {
                           >
                             <TableCell
                               className="tableCell-link"
-                              onClick={() => contactHandle(item)}
+                              onClick={() => contactHandle(item.id)}
                             >
                               {item.first_name}
                             </TableCell>
                             <TableCell
                               className="tableCell-link"
-                              onClick={() => contactHandle(item)}
+                              onClick={() => contactHandle(item.id)}
                             >
                               {item.last_name}
                             </TableCell>

@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "@mui/types": "^7.2.4",
-    "@types/react": "^18.2.14",
+    "@types/react": "^18.3.11",
     "eslint-plugin-n": "^17.10.2"
   },
   "overrides": {
