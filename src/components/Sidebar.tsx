@@ -563,16 +563,8 @@ export default function Sidebar(props: any) {
           <Routes>
             <Route path="/app/contacts" element={<Contacts />} />
             <Route
-              path="/app/contacts/add-contacts"
-              element={<AddContacts />}
-            />
-            <Route
-              path="/app/contacts/contact-details"
+              path="/app/contacts/:contactId"
               element={<ContactDetails />}
-            />
-            <Route
-              path="/app/contacts/edit-contact"
-              element={<EditContact />}
             />
             <Route path="/app/accounts" element={<Accounts />} />
             <Route path="/app/accounts/add-account" element={<AddAccount />} />

@@ -1,17 +1,20 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import Login from './pages/auth/Login';
 import { Home } from './pages/home/Home';
 import PasswordResetPage from './pages/auth/PasswordResetPage';
 import ForgotPassword from './pages/forgot-password/ForgotPassword'; // Import the ForgotPassword component
 import ResetForgotPassword from './pages/forgot-password/ResetForgotPassword';
 import RegistrationPage from './pages/auth/RegistrationPage';import EditContacts from './pages/contacts/EditContacts';
+import TokenExpirationHandler from './components/TokenExpirationHandler'; 
 
 
 function App() {
+
   return (
     <>
       <Router>
+        <TokenExpirationHandler />
         <Routes>
           {/* Add new routes here */}
           <Route path="/" element={<Login />} />

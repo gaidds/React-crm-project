@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Avatar, Divider, Box, IconButton, Typography } from '@mui/material';
 import { FaLinkedin, FaTwitter, FaFacebook } from 'react-icons/fa';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { AccountsUrl, ContactUrl } from '../../services/ApiUrls';
 import { fetchData, Header } from '../../components/FetchData';
 import { useMyContext } from '../../context/Context';
@@ -9,7 +9,7 @@ import DynamicModal from '../../components/modal/modal';
 import '../profile/styles.css';
 import DescriptionComponent from '../../components/ContactsDescription';
 
-type response = {
+interface Contact {
   created_by: string;
   created_on: string;
   created_on_arrow: string;
@@ -56,20 +56,20 @@ export const formatDate = (dateString: any) => {
 };
 
 export default function ContactDetails() {
-  const { state } = useLocation();
-  const [contactDetails, setContactDetails] = useState<response | null>(null);
-  const [addressDetails, setAddressDetails] = useState<response | null>(null);
+  const { contactId } = useParams<{ contactId: string }>();
+  const [contactDetails, setContactDetails] = useState<Contact | null>(null);
+  const [addressDetails, setAddressDetails] = useState<Contact | null>(null);
   const [accounts, setAccounts] = useState<string[]>([]);
   const { userRole, userId } = useMyContext();
   const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
-    if (state.contactId.id) {
+    if (contactId) {
       fetchContact();
       getContacts();
       getAccounts();
     }
-  }, [state.contactId.id]);
+  }, [contactId]);
 
   const getContacts = async () => {
     try {
@@ -86,27 +86,20 @@ export default function ContactDetails() {
   };
 
   const fetchContact = async () => {
-    const Header = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: localStorage.getItem('Token'),
-      org: localStorage.getItem('org'),
-    };
-
     try {
       const response = await fetchData(
-        `${ContactUrl}/${state.contactId.id}`,
+        `${ContactUrl}/${contactId}`,
         'GET',
         null as any,
         Header
       );
-
+  
       if (response) {
         setContactDetails(response.contact_obj);
         setAddressDetails(response.address_obj);
         setAccounts(response.account_obj);
       } else {
-        console.error('No account data found');
+        console.error('No contact data found');
       }
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -122,7 +115,7 @@ export default function ContactDetails() {
               res?.active_accounts?.open_accounts
                 .filter((account: any) =>
                   account?.contacts?.find(
-                    (contact: any) => contact?.id === state.contactId?.id
+                    (contact: any) => contact?.id === contactId
                   )
                 )
                 .map((a: any) => a.name) || []
@@ -138,17 +131,9 @@ export default function ContactDetails() {
   const handleSaveDescription = (updatedDescription: string) => {
     const submitForm = async () => {
       const data = { description: updatedDescription };
-
-      const Header = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: localStorage.getItem('Token') ?? '',
-        org: localStorage.getItem('org') ?? '',
-      };
-
       try {
         const res = await fetchData(
-          `${ContactUrl}/${state.contactId.id}/`,
+          `${ContactUrl}/${contactId}/`,
           'PATCH',
           JSON.stringify(data),
           Header
@@ -347,7 +332,6 @@ export default function ContactDetails() {
           </Box>
         </Box>
       </div>
-         
     </div>
   );
 }

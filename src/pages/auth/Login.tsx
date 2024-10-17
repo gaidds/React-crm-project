@@ -20,6 +20,7 @@ import { fetchData } from '../../components/FetchData';
 import { AuthUrl, LoginUrl, AuthConfigUrl } from '../../services/ApiUrls';
 import '../../styles/style.css';
 import './styles.css';
+import { jwtDecode } from 'jwt-decode';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -71,6 +72,9 @@ export default function Login() {
       fetchData(`${AuthUrl}/`, 'POST', JSON.stringify(apiToken), head)
         .then((res) => {
           if (res.access_token) {
+            const decodedToken: any = jwtDecode(res.access_token);
+            const expirationTime = decodedToken.exp * 1000;
+            localStorage.setItem('TokenExpiration', expirationTime.toString());
             localStorage.setItem('Token', `Bearer ${res.access_token}`);
             setToken(true);
           } else {
@@ -95,6 +99,10 @@ export default function Login() {
     fetchData('auth/login/', 'POST', JSON.stringify(payload), head)
       .then((res) => {
         if (res && res.access) {
+          console.log()
+          const decodedToken: any = jwtDecode(res.access);
+          const expirationTime = decodedToken.exp * 1000;
+          localStorage.setItem('TokenExpiration', expirationTime.toString());
           localStorage.setItem('Token', `Bearer ${res.access}`);
           setToken(true);
           navigate('/app');
@@ -263,3 +271,5 @@ export default function Login() {
     </div>
   );
 }
+
+
