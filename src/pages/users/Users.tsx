@@ -163,7 +163,7 @@ export default function Users() {
   };
 
   const userDetail = (userId: any) => {
-    navigate(`/app/user-details/${userId}`);
+    navigate(`/app/users/${userId}`);
   };
 
   const handleRecordsPerPage = (
