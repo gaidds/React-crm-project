@@ -8,6 +8,7 @@ import { useMyContext } from '../../context/Context';
 import DynamicModal from '../../components/modal/modal';
 import '../profile/styles.css';
 import DescriptionComponent from '../../components/ContactsDescription';
+import './styles.css';
 
 interface Contact {
   created_by: string;
@@ -44,7 +45,7 @@ interface Contact {
   website: string;
   profile_pic: string;
   accounts: any;
-};
+}
 
 export const formatDate = (dateString: any) => {
   const options: Intl.DateTimeFormatOptions = {
@@ -93,7 +94,7 @@ export default function ContactDetails() {
         null as any,
         Header
       );
-  
+
       if (response) {
         setContactDetails(response.contact_obj);
         setAddressDetails(response.address_obj);
@@ -156,8 +157,8 @@ export default function ContactDetails() {
     (userRole === 'SALES MANAGER' && contactDetails?.created_by === userId);
 
   return (
-    <div className="profile-page-container">
-      <div className="profile-page-header">
+    <div className="contact-page-container">
+      <div className="contact-page-header">
         {showEditButton && (
           <DynamicModal
             page="Contacts"
@@ -170,8 +171,8 @@ export default function ContactDetails() {
           />
         )}
       </div>
-      <div className="profile-page-body">
-        <div className="profile-page-left-section">
+      <div className="contact-page-body">
+        <div className="contact-page-left-section">
           <Box
             sx={{
               display: 'flex',
@@ -284,7 +285,7 @@ export default function ContactDetails() {
           </Box>
 
           {/* Address */}
-          <Box sx={{ display: 'flex', mb: '100px' }}>
+          <Box sx={{ display: 'flex', mb: '32px' }}>
             <Typography sx={{ fontWeight: 'bold', minWidth: '120px' }}>
               Address
             </Typography>
@@ -298,7 +299,7 @@ export default function ContactDetails() {
           </Box>
 
           {/* Social Media Links */}
-          <Box sx={{ display: 'flex', gap: '60px', mt: '32px' }}>
+          <Box sx={{ display: 'flex', gap: '32px' }}>
             <a
               href={contactDetails?.linked_in_url}
               target="_blank"
@@ -326,9 +327,6 @@ export default function ContactDetails() {
                 <FaFacebook size={48} />
               </IconButton>
             </a>
-            {/* <IconButton aria-label="More options" sx={{ color: '#000000' }}>
-              <FaEllipsisH size={24} />
-            </IconButton> */}
           </Box>
         </Box>
       </div>
