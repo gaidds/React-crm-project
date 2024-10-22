@@ -18,7 +18,7 @@ const ProfilePage: FC = () => {
   const [userData, setUserData] = useState<any>();
 
   const isProfileOwner = () => {
-    return currentUserData.id === id;
+    return currentUserData && id && currentUserData.id === id;
   };
 
   const getUsers = async () => {
@@ -45,24 +45,29 @@ const ProfilePage: FC = () => {
           }
         }
       );
-    } catch (error) {}
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
   };
+
   useEffect(() => {
     if (isProfileOwner()) {
       setUserData(currentUserData);
-    } else {
+    } else if (id) {
       (async () => await getUser())();
     }
-  }, []);
+  }, [id, currentUserData]);
 
   useEffect(() => {
     (async () => await getUsers())();
-    (async () => await getUser())();
+    if (id) {
+      (async () => await getUser())();
+    }
   }, [id]);
 
   return (
     <div className="profile-page-container">
-      {(isProfileOwner() || currentUserData.role === 'ADMIN') && (
+      {(isProfileOwner() || currentUserData?.role === 'ADMIN') && (
         <div className="profile-page-header">
           <DynamicModal
             page="Users"
@@ -88,12 +93,12 @@ const ProfilePage: FC = () => {
           />
           <Avatar
             className="porfile-page-user-img"
-            alt={userData?.user_details.first_name || undefined}
-            src={userData?.user_details.profile_pic}
+            alt={userData?.user_details?.first_name || undefined}
+            src={userData?.user_details?.profile_pic}
           />
           <div className="profile-page-user-name-container">
-            <span>{userData?.user_details.first_name || 'Welcome!'}</span>
-            <span>{userData?.user_details.last_name}</span>
+            <span>{userData?.user_details?.first_name || 'Welcome!'}</span>
+            <span>{userData?.user_details?.last_name}</span>
           </div>
         </div>
         <div className="profile-page-right-section">
@@ -106,9 +111,10 @@ const ProfilePage: FC = () => {
           </Typography>
 
           <div className="profil-page-user-details-container">
-            {' '}
             <MdEmail className="profile-page-user-details-icon" />
-            <Typography variant="h6">{userData?.user_details.email}</Typography>
+            <Typography variant="h6">
+              {userData?.user_details?.email}
+            </Typography>
           </div>
           <div className="profil-page-user-details-container">
             <FaPhone className="profile-page-user-details-icon" />
@@ -118,12 +124,12 @@ const ProfilePage: FC = () => {
             <IoLocationSharp className="profile-page-user-details-icon" />
             <div>
               <Typography variant="h6">
-                {`${userData?.address.street}, ${userData?.address.postcode},`}
+                {`${userData?.address?.street}, ${userData?.address?.postcode},`}
               </Typography>
               <Typography variant="h6">
-                {`${userData?.address.city}, ${userData?.address.state},`}
+                {`${userData?.address?.city}, ${userData?.address?.state},`}
               </Typography>
-              <Typography variant="h6">{userData?.address.country}</Typography>
+              <Typography variant="h6">{userData?.address?.country}</Typography>
             </div>
           </div>
         </div>
