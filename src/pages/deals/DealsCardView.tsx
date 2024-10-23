@@ -122,19 +122,19 @@ export default function DealsCardView(props: any) {
 
     return (
 
-      <Box sx={{ mt: '60px', height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <CustomToolbar sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', mb: 3, }}>
-                <Stack direction="row" spacing={2} alignItems="center">
+      <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <CustomToolbar sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', m: '16px 0px' }}>
+                <Stack direction="row" alignItems="center">
                 <FilterComponent deals={deals} onApplyFilters={handleApplyFilters} />
                     {showAddButton && (
-                        <>
+                        <div style={{marginLeft: '16px'}}>
                         <DynamicModal mode='add' page='Deals' data={data} onSaveSuccess={async () => {
                                                                                                   await getDeals();
                                                                                                 }}/>
-                    </>
+                    </div>
                     )}
                 </Stack>
-                <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'right', mt: '26px' }}>
+                <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'right'}}>
                     <Button
                         variant={tab === 'card-view' ? 'contained' : 'outlined'}
                         onClick={() => handleChangeTab('card-view')}
@@ -165,8 +165,8 @@ export default function DealsCardView(props: any) {
                 </Box>
             </CustomToolbar>
             <Container sx={{ width: '100%', maxWidth: '100%', minWidth: '100%' }}>
-                <Box sx={{ width: '100%', minWidth: '100%', m: '15px 0px 0px 0px' }}>
-                    <Paper sx={{ width: 'calc(100% - 15px)', mb: 2, p: '0px 15px 15px 15px', borderRadius:'16px'}}>
+                <Box sx={{ width: '100%', minWidth: '100%' }}>
+                    <Paper sx={{ width: '100%', mb: 2, p: '0px 15px 15px 15px', borderRadius:'16px'}}>
                         <Box sx={{pt:3, flexShrink: 0 }}>
                             <StagesBar stages={stagesData} />
                         </Box>

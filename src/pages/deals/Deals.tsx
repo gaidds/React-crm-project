@@ -395,7 +395,6 @@ export default function Deals(props: any) {
             flexGrow: 1,
             display: 'flex',
             justifyContent: 'right',
-            mt: '26px',
           }}
         >
           <Button
