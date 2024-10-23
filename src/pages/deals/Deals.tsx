@@ -287,14 +287,15 @@ export default function Deals(props: any) {
     return result;
   };
   return (
-    <Box sx={{ mt: '60px' }}>
+    <Box>
       <CustomToolbar
         sx={{
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
-          mb: 3,
+          mb: 2,
+          mt: 2,
         }}
       >
         <Stack direction="row" spacing={2} alignItems="center">
