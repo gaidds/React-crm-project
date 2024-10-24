@@ -190,14 +190,14 @@ export default function Contacts() {
     [50, '50 Records per page'],
   ];
   return (
-    <Box sx={{ mt: '60px' }}>
+    <Box>
       <CustomToolbar
         sx={{
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
-          mb: 3,
+          mt: '16px'
         }}
       >
         <Stack direction="row" spacing={2} alignItems="center">
