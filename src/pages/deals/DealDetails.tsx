@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { DealUrl } from '../../services/ApiUrls';
 import { fetchData } from '../../components/FetchData';
-import { Box, Container, Paper, Grid } from '@mui/material';
+import { Box, Paper, Grid } from '@mui/material';
 import { CustomToolbar } from '../../styles/CssStyled';
 import DynamicModal from '../../components/modal/modal';
 import { useMyContext } from '../../context/Context';

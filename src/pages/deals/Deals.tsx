@@ -4,7 +4,6 @@ import {
   AvatarGroup,
   Box,
   Button,
-  IconButton,
   Stack,
   Typography,
   Select,
@@ -18,30 +17,25 @@ import {
   Container,
   Tabs,
 } from '@mui/material';
-import React, { SyntheticEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Spinner } from '../../components/Spinner';
-import { FiPlus } from '@react-icons/all-files/fi/FiPlus';
 import { FiChevronLeft } from '@react-icons/all-files/fi/FiChevronLeft';
 import { FiChevronRight } from '@react-icons/all-files/fi/FiChevronRight';
 import {
-  CustomTab,
   CustomToolbar,
   FabLeft,
   FabRight,
-  StyledTableCell,
-  StyledTableRow,
 } from '../../styles/CssStyled';
 import { useNavigate } from 'react-router-dom';
 import { fetchData } from '../../components/FetchData';
-import { getComparator, stableSort } from '../../components/Sorting';
 import { Label } from '../../components/Label';
-import { FaFilter, FaTrashAlt } from 'react-icons/fa';
+import { FaTrashAlt } from 'react-icons/fa';
 import DynamicModal from '../../components/modal/modal';
 import { DeleteModal } from '../../components/DeleteModal';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { EnhancedTableHead } from '../../components/EnchancedTableHead';
-import MyContext, { useMyContext } from '../../context/Context';
+import { useMyContext } from '../../context/Context';
 import FilterComponent from '../../components/filters/DealsFIlter';
 
 // Define TypeScript interfaces for your data
@@ -120,9 +114,9 @@ export interface Deal {
 }
 
 export default function Deals(props: any) {
-  const { userRole, setUserRole, userId } = useMyContext();
+  const { userRole, userId } = useMyContext();
   const [deals, setDeals] = useState<Deal[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const setLoading = useState<boolean>(true)[1];
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [recordsPerPage, setRecordsPerPage] = useState<number>(10);
   const [totalPages, setTotalPages] = useState<number>(0);
@@ -156,7 +150,6 @@ export default function Deals(props: any) {
         null as any,
         Header
       ).then((res) => {
-        //console.log(res, 'deals');
         if (!res.error) {
           const fetchedDeals: Deal[] = res.deals || [];
           setDeals(fetchedDeals);
@@ -188,26 +181,6 @@ export default function Deals(props: any) {
     setOrderBy(property);
   };
 
-  const handleRowSelect = (accountId: string) => {
-    const selectedIndex = selected.indexOf(accountId);
-    let newSelected: string[] = [...selected];
-    let newSelectedIds: string[] = [...selectedId];
-    let newIsSelectedId: boolean[] = [...isSelectedId];
-
-    if (selectedIndex === -1) {
-      newSelected.push(accountId);
-      newSelectedIds.push(accountId);
-      newIsSelectedId.push(true);
-    } else {
-      newSelected.splice(selectedIndex, 1);
-      newSelectedIds.splice(selectedIndex, 1);
-      newIsSelectedId.splice(selectedIndex, 1);
-    }
-
-    setSelected(newSelected);
-    setSelectedId(newSelectedIds);
-    setIsSelectedId(newIsSelectedId);
-  };
 
   const deleteRow = (id: any) => {
     setSelectedId(id);
@@ -227,7 +200,6 @@ export default function Deals(props: any) {
     };
     fetchData(`${DealUrl}/${selectedId}/`, 'DELETE', null as any, Header)
       .then((res: any) => {
-        //console.log('delete:', res);
         if (!res.error) {
           deleteRowModalClose();
           getDeals();
@@ -269,23 +241,6 @@ export default function Deals(props: any) {
     [50, '50 Records per page'],
   ];
 
-  const styleStage = (stage: string) => {
-    let result = '';
-    switch (stage) {
-      case 'ASSIGNED LEAD':
-        result = 'bg-red';
-        break;
-      case 'QUALIFCATION':
-        result = '#004E85';
-        break;
-      case 'IN PROCESS':
-        result = 'bg-black';
-        break;
-      default:
-        result = '';
-    }
-    return result;
-  };
   return (
     <Box>
       <CustomToolbar
@@ -380,7 +335,6 @@ export default function Deals(props: any) {
               }}
             >
               {currentPage} to {totalPages}
-              {/* {renderPageNumbers()} */}
             </Typography>
             <FabRight
               onClick={handleNextPage}
