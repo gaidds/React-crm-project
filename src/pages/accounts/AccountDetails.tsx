@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { AccountsUrl } from '../../services/ApiUrls';
 import { fetchData } from '../../components/FetchData';
 import { Box, Container, Paper, Grid } from '@mui/material';
-import { AuthBackground, CustomToolbar } from '../../styles/CssStyled';
+import { CustomToolbar } from '../../styles/CssStyled';
 import DynamicModal from '../../components/modal/modal';
 import { useMyContext } from '../../context/Context';
 import ContactDetails from '../../components/ContactInfo';
@@ -139,11 +139,7 @@ const AccountDetails: React.FC = () => {
 
     submitForm();
   };
-  const test = true;
-  // Show loading message if account data is not yet available
-  // if (test) {
-  //   return (<Box style={{height:1000, width:1000, backgroundColor: "red"}}>Loading...</Box>)
-  // }
+
   console.log('account', account);
   if (!account) {
     return <Box>Loading...</Box>;
