@@ -274,7 +274,7 @@ export default function Deals(props: any) {
             flexDirection: 'row',
             alignItems: 'center',
             mr: 2,
-            ml: 1,
+            ml: 2,
           }}
         >
           <Select
