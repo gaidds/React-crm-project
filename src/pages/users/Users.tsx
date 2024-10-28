@@ -82,7 +82,7 @@ const roleDisplayMap: { [key: string]: string } = {
 export default function Users() {
   const navigate = useNavigate();
   const { userRole, userId } = useMyContext();
-  const [tab, setTab] = useState('active');
+  const tab = useState('active')[0];
   const setLoading = useState(true)[1];
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('Website');
@@ -511,9 +511,8 @@ export default function Users() {
                                 />
                               )}
                               {userRole === 'ADMIN' && (
-                                <IconButton>
+                                <IconButton onClick={() => deleteRow(item.id)}>
                                   <FaTrashAlt
-                                    onClick={() => deleteRow(item.id)}
                                     style={{
                                       fill: '#1A3353',
                                       cursor: 'pointer',
@@ -528,10 +527,9 @@ export default function Users() {
                       })
                     ) : (
                       <TableRow>
-                        {' '}
                         <TableCell colSpan={8} sx={{ border: 0 }}>
                           <Spinner />
-                        </TableCell>{' '}
+                        </TableCell>
                       </TableRow>
                     )}
                   </TableBody>
@@ -572,9 +570,8 @@ export default function Users() {
                               {item?.role ? item.role : '---'}
                             </TableCell>
                             <TableCell className="tableCell">
-                              <IconButton>
+                              <IconButton onClick={() => EditItem(item.id)}>
                                 <FaEdit
-                                  onClick={() => EditItem(item.id)}
                                   style={{
                                     fill: '#1A3353',
                                     cursor: 'pointer',
@@ -582,9 +579,8 @@ export default function Users() {
                                   }}
                                 />
                               </IconButton>
-                              <IconButton>
+                              <IconButton onClick={() => deleteRow(item?.id)}>
                                 <FaTrashAlt
-                                  onClick={() => deleteRow(item?.id)}
                                   style={{
                                     fill: '#1A3353',
                                     cursor: 'pointer',
@@ -598,10 +594,9 @@ export default function Users() {
                       })
                     ) : (
                       <TableRow>
-                        {' '}
                         <TableCell colSpan={8} sx={{ border: 0 }}>
                           <Spinner />
-                        </TableCell>{' '}
+                        </TableCell>
                       </TableRow>
                     )}
                   </TableBody>
