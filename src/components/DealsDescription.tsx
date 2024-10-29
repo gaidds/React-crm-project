@@ -1,28 +1,15 @@
 import React, { useState } from 'react';
 import { Box, Button, TextField, Typography } from '@mui/material';
 
-const buttonStyle = {
-  borderColor: '#65558F',
-  color: '#65558F',
-  borderRadius: '30px',
-  padding: '10px 20px',
-  width: '100px', // Fixed width
-  height: '36px', // Fixed height
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  textAlign: 'center',
-  '&:hover': {
-    backgroundColor: '#89829e',
-  },
-};
-
 interface DescriptionEditorProps {
   initialDescription: string;
   onSave: (updatedDescription: string) => void;
 }
 
-const DescriptionComponent: React.FC<DescriptionEditorProps> = ({ initialDescription, onSave }) => {
+const DescriptionComponent: React.FC<DescriptionEditorProps> = ({
+  initialDescription,
+  onSave,
+}) => {
   const [isEditing, setIsEditing] = useState(false);
   const [description, setDescription] = useState(initialDescription);
   const [tempDescription, setTempDescription] = useState(initialDescription);
@@ -75,7 +62,9 @@ const DescriptionComponent: React.FC<DescriptionEditorProps> = ({ initialDescrip
             variant="outlined"
             sx={{ marginBottom: 2 }}
           />
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+          <Box
+            sx={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}
+          >
             <Button variant="text" color="primary" onClick={handleSaveClick}>
               Save
             </Button>
