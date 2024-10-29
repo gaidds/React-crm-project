@@ -6,7 +6,7 @@ import { AccountsUrl, ContactUrl } from '../../services/ApiUrls';
 import { fetchData, Header } from '../../components/FetchData';
 import { useMyContext } from '../../context/Context';
 import DynamicModal from '../../components/modal/modal';
-import '../profile/styles.css';
+import '../users/styles.css';
 import DescriptionComponent from '../../components/ContactsDescription';
 import './styles.css';
 
@@ -59,7 +59,7 @@ export const formatDate = (dateString: any) => {
 export default function ContactDetails() {
   const { contactId } = useParams<{ contactId: string }>();
   const [contactDetails, setContactDetails] = useState<Contact | null>(null);
-  const [addressDetails, setAddressDetails] = useState<Contact | null>(null);
+  const setAddressDetails = useState<Contact | null>(null)[1];
   const [accounts, setAccounts] = useState<string[]>([]);
   const { userRole, userId } = useMyContext();
   const [data, setData] = useState<any[]>([]);

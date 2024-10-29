@@ -1,294 +1,141 @@
-import React, { useEffect, useState } from 'react';
-import { Card, Avatar, Box } from '@mui/material';
-import { CustomAppBar } from '../../components/CustomAppBar';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { AntSwitch } from '../../styles/CssStyled';
-import { UserUrl } from '../../services/ApiUrls';
-import { fetchData } from '../../components/FetchData';
+import { FC, useEffect, useState } from 'react';
+import './styles.css';
+import { fetchData, Header } from '../../components/FetchData';
+import { UsersUrl, UserUrl } from '../../services/ApiUrls';
+import DynamicModal from '../../components/modal/modal';
+import { Chip, Avatar, Typography } from '@mui/material';
+import { MdEmail } from 'react-icons/md';
+import { FaPhone } from 'react-icons/fa';
+import { IoLocationSharp } from 'react-icons/io5';
+import { useParams } from 'react-router-dom';
 import { useMyContext } from '../../context/Context';
-import { response } from './types';
 
-export const formatDate = (dateString: any) => {
-  const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+const UserDetails: FC = () => {
+  const { id } = useParams();
+  const [data, setData] = useState<any[]>([]);
+  const { userData: currentUserData, setUserData: setCurrentUserData } =
+    useMyContext();
+  const [userData, setUserData] = useState<any>();
+
+  const isProfileOwner = () => {
+    return currentUserData && id && currentUserData.id === id;
   };
-  return new Date(dateString).toLocaleDateString(undefined, options);
-};
 
-const roleDisplayMap: { [key: string]: string } = {
-  ADMIN: 'ADMIN',
-  'SALES MANAGER': 'SALES MANAGER',
-  'SALES REP': 'SALES REPRESENTATIVE',
-  USER: 'USER',
-};
+  const getUsers = async () => {
+    try {
+      await fetchData(`${UsersUrl}`, 'GET', null as any, Header).then((res) => {
+        if (!res.error) {
+          setData(res || []);
+        }
+      });
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
-export default function UserDetails() {
-  const { userRole, setUserRole, userId } = useMyContext();
-  const navigate = useNavigate();
-  const { state } = useLocation();
-  const [userDetails, setUserDetails] = useState<response | null>(null);
+  const getUser = async () => {
+    try {
+      await fetchData(`${UserUrl}/${id}`, 'GET', null as any, Header).then(
+        (res) => {
+          if (!res.error) {
+            if (isProfileOwner()) {
+              setCurrentUserData(res.data.profile_obj || []);
+            }
+            setUserData(res.data.profile_obj || []);
+          }
+        }
+      );
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
 
   useEffect(() => {
-    getUserDetail(state.userId);
-  }, [state.userId]);
+    if (isProfileOwner()) {
+      setUserData(currentUserData);
+    } else if (id) {
+      (async () => await getUser())();
+    }
+  }, [id, currentUserData]);
 
-  const getUserDetail = (id: any) => {
-    const Header = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: localStorage.getItem('Token'),
-      org: localStorage.getItem('org'),
-    };
-    fetchData(`${UserUrl}/${id}/`, 'GET', null as any, Header).then((res) => {
-      console.log(res, 'res');
-      if (!res.error) {
-        setUserDetails(res?.data?.profile_obj);
-      }
-    });
-  };
-
-  const backbtnHandle = () => {
-    navigate('/app/users');
-  };
-
-  const editHandle = () => {
-    navigate('/app/users/edit-user', {
-      state: {
-        value: {
-          email: userDetails?.user_details?.email,
-          role: userDetails?.role,
-          phone: userDetails?.phone,
-          alternate_phone: userDetails?.alternate_phone,
-          address_line: userDetails?.address?.address_line,
-          street: userDetails?.address?.street,
-          city: userDetails?.address?.city,
-          state: userDetails?.address?.state,
-          pincode: userDetails?.address?.postcode,
-          country: userDetails?.address?.country,
-          profile_pic: userDetails?.user_details?.profile_pic,
-          has_sales_access: userDetails?.has_sales_access,
-          has_marketing_access: userDetails?.has_marketing_access,
-          is_organization_admin: userDetails?.is_organization_admin,
-        },
-        id: state?.userId,
-      },
-    });
-  };
-
-  const module = 'Users';
-  const crntPage = 'User Detail';
-  const backBtn = 'Back To Users';
-  const isAdmin = userRole === 'ADMIN';
-  const isMyself = userId === userDetails?.user_details.id;
-  const showEditButton = isAdmin || isMyself;
+  useEffect(() => {
+    (async () => await getUsers())();
+    if (id) {
+      (async () => await getUser())();
+    }
+  }, [id]);
 
   return (
-    <Box sx={{ mt: '60px' }}>
-      <div>
-        <CustomAppBar
-          backbtnHandle={backbtnHandle}
-          module={module}
-          backBtn={backBtn}
-          crntPage={crntPage}
-          editHandle={showEditButton ? editHandle : null}
-        />
-        <Box
-          sx={{
-            mt: '120px',
-            p: '20px',
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Box sx={{ width: '100%' }}>
-            <Card sx={{ borderRadius: '16px' }}>
-              <div
-                style={{
-                  padding: '20px',
-                  borderBottom: '1px solid lightgray',
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}
-              >
-                <div
-                  style={{
-                    fontWeight: 600,
-                    fontSize: '18px',
-                    color: '#1a3353f0',
-                  }}
-                >
-                  User Information
-                </div>
-              </div>
-              <div
-                style={{
-                  padding: '20px',
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <div style={{ width: '32%' }}>
-                  <div className="title2">Email Name</div>
-                  <div className="title3">
-                    {userDetails?.user_details?.email || '---'}
-                  </div>
-                </div>
-                <div style={{ width: '32%' }}>
-                  <div className="title2">Is Active</div>
-                  <div className="title3">
-                    <AntSwitch checked={userDetails?.user_details?.is_active} />
-                  </div>
-                </div>
-                <div style={{ width: '32%' }}>
-                  <div className="title2">Profile pic</div>
-                  <div className="title3">
-                    <Avatar alt={'sdf'}>
-                      {userDetails?.user_details?.profile_pic}
-                    </Avatar>
-                  </div>
-                </div>
-              </div>
-              <div
-                style={{
-                  padding: '20px',
-                  marginTop: '15px',
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <div style={{ width: '32%' }}>
-                  <div className="title2">Role</div>
-                  <div
-                    style={{
-                      fontSize: '16px',
-                      color: '#1E90FF',
-                      marginTop: '5%',
-                    }}
-                  >
-                    {userDetails?.role
-                      ? roleDisplayMap[userDetails.role]
-                      : '---'}
-                  </div>
-                </div>
-                <div style={{ width: '32%' }}>
-                  <div className="title2">Mobile Number</div>
-                  <div className="title3">{userDetails?.phone || '---'}</div>
-                </div>
-                <div style={{ width: '32%' }}>
-                  <div className="title2">Marketing Access</div>
-                  <div className="title3">
-                    <AntSwitch checked={userDetails?.has_marketing_access} />
-                  </div>
-                </div>
-              </div>
-              <div
-                style={{
-                  padding: '20px',
-                  marginTop: '15px',
-                  display: 'flex',
-                  flexDirection: 'row',
-                }}
-              >
-                <div style={{ width: '34%' }}>
-                  <div className="title2">Sales Access</div>
-                  <div className="title3">
-                    <AntSwitch checked={userDetails?.has_sales_access} />
-                  </div>
-                </div>
-                <div style={{ width: '32%' }}>
-                  <div className="title2">Date of joining</div>
-                  <div className="title3">
-                    {userDetails?.date_of_joining || '---'}
-                  </div>
-                </div>
-              </div>
-              <div style={{ marginTop: '15px' }}>
-                <div
-                  style={{
-                    padding: '20px',
-                    borderBottom: '1px solid lightgray',
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  <div
-                    style={{
-                      fontWeight: 600,
-                      fontSize: '18px',
-                      color: '#1a3353f0',
-                    }}
-                  >
-                    Address
-                  </div>
-                </div>
-                <div
-                  style={{
-                    padding: '20px',
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  <div style={{ width: '32%' }}>
-                    <div className="title2">Address Lane</div>
-                    <div className="title3">
-                      {userDetails?.address?.address_line || '---'}
-                    </div>
-                  </div>
-                  <div style={{ width: '32%' }}>
-                    <div className="title2">Street</div>
-                    <div className="title3">
-                      {userDetails?.address?.street || '---'}
-                    </div>
-                  </div>
-                  <div style={{ width: '32%' }}>
-                    <div className="title2">City</div>
-                    <div className="title3">
-                      {userDetails?.address?.city || '---'}
-                    </div>
-                  </div>
-                </div>
-                <div
-                  style={{
-                    padding: '20px',
-                    marginTop: '15px',
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  <div style={{ width: '32%' }}>
-                    <div className="title2">Pincode</div>
-                    <div className="title3">
-                      {userDetails?.address?.postcode || '---'}
-                    </div>
-                  </div>
-                  <div style={{ width: '32%' }}>
-                    <div className="title2">State</div>
-                    <div className="title3">
-                      {userDetails?.address?.state || '---'}
-                    </div>
-                  </div>
-                  <div style={{ width: '32%' }}>
-                    <div className="title2">Country</div>
-                    <div className="title3">
-                      {userDetails?.address?.country || '---'}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </Box>
-        </Box>
+    <div className="profile-page-container">
+      {(isProfileOwner() || currentUserData?.role === 'ADMIN') && (
+        <div className="profile-page-header">
+          <DynamicModal
+            page="Users"
+            mode="edit"
+            id={id}
+            data={data}
+            onSaveSuccess={async () => {
+              await getUsers();
+              await getUser();
+            }}
+          />
+        </div>
+      )}
+
+      <div className="profile-page-body">
+        <div className="profile-page-left-section">
+          <Chip
+            className={`profile-user-status ${
+              !userData?.is_active && 'profile-user-status-inactive'
+            }`}
+            label={userData?.is_active ? 'ACTIVE' : 'INACTIVE'}
+            variant="outlined"
+          />
+          <Avatar
+            className="porfile-page-user-img"
+            alt={userData?.user_details?.first_name || undefined}
+            src={userData?.user_details?.profile_pic}
+          />
+          <div className="profile-page-user-name-container">
+            <span>{userData?.user_details?.first_name || 'Welcome!'}</span>
+            <span>{userData?.user_details?.last_name}</span>
+          </div>
+        </div>
+        <div className="profile-page-right-section">
+          <Typography
+            className="profile-page-user-role"
+            variant="h3"
+            gutterBottom
+          >
+            {userData?.role}
+          </Typography>
+
+          <div className="profil-page-user-details-container">
+            <MdEmail className="profile-page-user-details-icon" />
+            <Typography variant="h6">
+              {userData?.user_details?.email}
+            </Typography>
+          </div>
+          <div className="profil-page-user-details-container">
+            <FaPhone className="profile-page-user-details-icon" />
+            <Typography variant="h6">{userData?.phone}</Typography>
+          </div>
+          <div className="profil-page-user-details-container">
+            <IoLocationSharp className="profile-page-user-details-icon" />
+            <div>
+              <Typography variant="h6">
+                {`${userData?.address?.street}, ${userData?.address?.postcode},`}
+              </Typography>
+              <Typography variant="h6">
+                {`${userData?.address?.city}, ${userData?.address?.state},`}
+              </Typography>
+              <Typography variant="h6">{userData?.address?.country}</Typography>
+            </div>
+          </div>
+        </div>
       </div>
-    </Box>
+    </div>
   );
-}
+};
+
+export default UserDetails;
