@@ -76,13 +76,12 @@ export default function Contacts() {
 
   const [loading, setLoading] = useState(true);
   const [contactList, setContactList] = useState([]);
-  const [countries, setCountries] = useState([]);
 
   const [deleteRowModal, setDeleteRowModal] = useState(false);
 
-  const [selected, setSelected] = useState<string[]>([]);
+  const selected = useState<string[]>([])[0];
   const [selectedId, setSelectedId] = useState('');
-  const [isSelectedId, setIsSelectedId] = useState([]);
+  const isSelectedId = useState([])[0];
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('first_name');
 
@@ -90,7 +89,7 @@ export default function Contacts() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [recordsPerPage, setRecordsPerPage] = useState<number>(10);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const { userRole, setUserRole, userId } = useMyContext();
+  const { userRole, userId } = useMyContext();
   const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
@@ -115,7 +114,6 @@ export default function Contacts() {
         if (!data.error) {
           setContactList(data.contact_obj_list);
           setData(data);
-          setCountries(data?.countries);
           setTotalPages(Math.ceil(data?.contacts_count / recordsPerPage));
           setLoading(false);
         }
@@ -130,9 +128,9 @@ export default function Contacts() {
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
-    const contactHandle = (id: string) => {
-        navigate(`/app/contacts/${id}`);
-    };
+  const contactHandle = (id: string) => {
+    navigate(`/app/contacts/${id}`);
+  };
 
   const DeleteItem = () => {
     const Header = {
@@ -197,7 +195,7 @@ export default function Contacts() {
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
-          mt: '16px'
+          mt: '16px',
         }}
       >
         <Stack direction="row" spacing={2} alignItems="center">
@@ -310,68 +308,65 @@ export default function Contacts() {
                   headCells={headCells}
                 />
                 <TableBody>
-                  {contactList?.length
-                    ? stableSort(
-                        contactList,
-                        getComparator(order, orderBy)
-                      ).map((item: any, index: any) => {
-                        return (
-                          <TableRow
-                            tabIndex={-1}
-                            key={index}
-                            sx={{
-                              border: 0,
-                              '&:nth-of-type(even)': {
-                                backgroundColor: 'whitesmoke',
-                              },
-                              color: 'rgb(26, 51, 83)',
-                              textTransform: 'capitalize',
-                            }}
+                  {stableSort(contactList, getComparator(order, orderBy)).map(
+                    (item: any, index: any) => {
+                      return (
+                        <TableRow
+                          tabIndex={-1}
+                          key={index}
+                          sx={{
+                            border: 0,
+                            '&:nth-of-type(even)': {
+                              backgroundColor: 'whitesmoke',
+                            },
+                            color: 'rgb(26, 51, 83)',
+                            textTransform: 'capitalize',
+                          }}
+                        >
+                          <TableCell
+                            className="tableCell-link"
+                            onClick={() => contactHandle(item.id)}
                           >
-                            <TableCell
-                              className="tableCell-link"
-                              onClick={() => contactHandle(item.id)}
-                            >
-                              {item.first_name}
-                            </TableCell>
-                            <TableCell
-                              className="tableCell-link"
-                              onClick={() => contactHandle(item.id)}
-                            >
-                              {item.last_name}
-                            </TableCell>
-                            <TableCell className="tableCell">
-                              {item.primary_email}
-                            </TableCell>
-                            <TableCell className="tableCell">
-                              {item.mobile_number ? item.mobile_number : '---'}
-                            </TableCell>
-                            <TableCell className="tableCell">
-                              {userRole === 'ADMIN' ||
-                              (userRole === 'SALES MANAGER' &&
-                                item.created_by === userId) ? (
-                                <>
-                                  <DynamicModal
-                                    mode="edit"
-                                    page="Contacts"
-                                    id={item.id}
-                                    data={data}
-                                    icon={true}
-                                    onSaveSuccess={async () => {
-                                      await getContacts();
-                                    }}
-                                  />
-                                  <FaTrashAlt
-                                    style={{ cursor: 'pointer' }}
-                                    onClick={() => deleteRow(item.id)}
-                                  />
-                                </>
-                              ) : null}
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })
-                    : ''}
+                            {item.first_name}
+                          </TableCell>
+                          <TableCell
+                            className="tableCell-link"
+                            onClick={() => contactHandle(item.id)}
+                          >
+                            {item.last_name}
+                          </TableCell>
+                          <TableCell className="tableCell">
+                            {item.primary_email}
+                          </TableCell>
+                          <TableCell className="tableCell">
+                            {item.mobile_number ? item.mobile_number : '---'}
+                          </TableCell>
+                          <TableCell className="tableCell">
+                            {userRole === 'ADMIN' ||
+                            (userRole === 'SALES MANAGER' &&
+                              item.created_by === userId) ? (
+                              <>
+                                <DynamicModal
+                                  mode="edit"
+                                  page="Contacts"
+                                  id={item.id}
+                                  data={data}
+                                  icon={true}
+                                  onSaveSuccess={async () => {
+                                    await getContacts();
+                                  }}
+                                />
+                                <FaTrashAlt
+                                  style={{ cursor: 'pointer' }}
+                                  onClick={() => deleteRow(item.id)}
+                                />
+                              </>
+                            ) : null}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    }
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>
