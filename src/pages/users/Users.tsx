@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -109,25 +109,18 @@ export default function Users() {
   const [inactiveTotalPages, setInactiveTotalPages] = useState<number>(0);
   const setInactiveLoading = useState(true)[1];
 
-  useEffect(() => {
-    getUsers();
-  }, [
-    activeCurrentPage,
-    activeRecordsPerPage,
-    inactiveCurrentPage,
-    inactiveRecordsPerPage,
-  ]);
-
-  const getUsers = async () => {
+  const getUsers = useCallback(async () => {
     const Header = {
       Accept: 'application/json',
       'Content-Type': 'application/json',
       Authorization: localStorage.getItem('Token'),
       org: localStorage.getItem('org'),
     };
+
     try {
       const activeOffset = (activeCurrentPage - 1) * activeRecordsPerPage;
       const inactiveOffset = (inactiveCurrentPage - 1) * inactiveRecordsPerPage;
+
       await fetchData(
         `${UsersUrl}/?offset=${
           tab === 'active' ? activeOffset : inactiveOffset
@@ -137,7 +130,7 @@ export default function Users() {
         'GET',
         null as any,
         Header
-      ).then((res: any) => {
+      ).then((res) => {
         if (!res.error) {
           setData(res || []);
           setActiveUsers(res?.active_users?.active_users);
@@ -160,7 +153,20 @@ export default function Users() {
     } catch (error) {
       console.error('Error fetching data:', error);
     }
-  };
+  }, [
+    activeCurrentPage,
+    activeRecordsPerPage,
+    inactiveCurrentPage,
+    inactiveRecordsPerPage,
+    tab,
+    setActiveUsersOffset,
+    setInactiveUsersOffset,
+    setLoading,
+  ]);
+
+  useEffect(() => {
+    getUsers();
+  }, [getUsers]);
 
   const userDetail = (userId: any) => {
     navigate(`/app/users/${userId}`);
@@ -169,7 +175,7 @@ export default function Users() {
   const handleRecordsPerPage = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
-    if (tab == 'active') {
+    if (tab === 'active') {
       setActiveLoading(true);
       setActiveRecordsPerPage(parseInt(event.target.value));
       setActiveCurrentPage(1);
@@ -180,7 +186,7 @@ export default function Users() {
     }
   };
   const handlePreviousPage = () => {
-    if (tab == 'active') {
+    if (tab === 'active') {
       setActiveLoading(true);
       setActiveCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
     } else {
@@ -190,7 +196,7 @@ export default function Users() {
   };
 
   const handleNextPage = () => {
-    if (tab == 'active') {
+    if (tab === 'active') {
       setActiveLoading(true);
       setActiveCurrentPage((prevPage) =>
         Math.min(prevPage + 1, activeTotalPages)
@@ -288,7 +294,7 @@ export default function Users() {
     }
   };
 
-  const showAddButton = userRole == 'ADMIN';
+  const showAddButton = userRole === 'ADMIN';
   const modalDialog = 'Are You Sure You want to delete this User?';
   const modalTitle = 'Delete User';
 
@@ -301,14 +307,15 @@ export default function Users() {
   ];
 
   return (
-    <Box sx={{ mt: '60px' }}>
+    <Box>
       <CustomToolbar
         sx={{
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
-          mb: 3,
+          mb: 2,
+          mt: 2,
         }}
       >
         <Stack direction="row" spacing={2} alignItems="center">
