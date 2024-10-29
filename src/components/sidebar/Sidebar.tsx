@@ -9,6 +9,7 @@ import {
   FaSlidersH,
   FaUserFriends,
 } from 'react-icons/fa';
+import { IoIosArrowDropleft, IoIosArrowDropright } from 'react-icons/io';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { fetchData } from '../FetchData';
 import { ProfileUrl } from '../../services/ApiUrls';
@@ -170,12 +171,16 @@ const Sidebar = () => {
     <Box>
       <div className="sidbar">
         <Box className="sidebar-top-container">
-          <div
-            className="sidebar-logo-container"
-            onClick={() => setOpen(!open)}
-          >
+          <div className="sidebar-logo-container">
             <img className="sidebar-logo" src={logo} alt="App Logo" />
             {open && <span className="sidebar-app-name">Bottle CRM</span>}
+            <div className="sidebar-open-icon" onClick={() => setOpen(!open)}>
+              {open ? (
+                <IoIosArrowDropleft size={22} />
+              ) : (
+                <IoIosArrowDropright size={22} />
+              )}
+            </div>
           </div>
         </Box>
         <Box className="sidebar-nav-top">
