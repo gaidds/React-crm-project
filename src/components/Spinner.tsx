@@ -1,15 +1,22 @@
-import React from 'react'
-import {
-  Typography,
-  CircularProgress,
-  Box
-} from '@mui/material'
+import React from 'react';
+import { Typography, CircularProgress, Box } from '@mui/material';
 
-export function Spinner () {
+export function Spinner() {
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 20 }}>
+    <Box
+      sx={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        p: 3,
+      }}
+    >
       <CircularProgress />
-      <Typography sx={{ fontWeight: '19px', ml: 1 }}>Loading....</Typography>
+      <Typography sx={{ fontWeight: '19px', ml: 1, mt: 2 }}>
+        Loading....
+      </Typography>
     </Box>
-  )
+  );
 }
