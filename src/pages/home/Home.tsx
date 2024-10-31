@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Box, CircularProgress, Container } from '@mui/material';
-import Sidebar from '../../components/Sidebar';
+import Sidebar from '../../components/sidebar/Sidebar';
 import Organization from '../organization/Organization';
 import { fetchData } from '../../components/FetchData';
 import { OrgUrl } from '../../services/ApiUrls';
+import './styles.css';
 
 export const Home = (props: any) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [org, setOrg] = useState(false);
   const [loading, setLoading] = useState<boolean>(true);
@@ -37,11 +39,29 @@ export const Home = (props: any) => {
     if (!localStorage.getItem('Token')) {
       navigate('/login');
     }
+    if (location.pathname === '/app') {
+      navigate('/app/contacts');
+    }
     getOrganization();
-  }, [navigate]);
+  }, [navigate, location.pathname]);
 
   if (!loading) {
-    return <Box>{org ? <Sidebar open={true} /> : <Organization />}</Box>;
+    return (
+      <Box height={100}>
+        {org ? (
+          <div className="home-page-container">
+            <div className="home-page-sidebar-container">
+              <Sidebar />
+            </div>
+            <div className="home-page-pages-container">
+              <Outlet />
+            </div>
+          </div>
+        ) : (
+          <Organization />
+        )}
+      </Box>
+    );
   } else {
     return (
       <Container maxWidth="sm">
