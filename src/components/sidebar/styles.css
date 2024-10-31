@@ -50,6 +50,14 @@
     z-index: 9999;
 }
 
+.sidebar-open-icon svg{
+    transition: transform .5s;
+}
+
+.sidebar-open-icon svg:hover{
+    transform: scale(1.2);
+}
+
 .sidebar-nav-top{
     box-sizing: border-box;
     flex: 1 1 auto;
