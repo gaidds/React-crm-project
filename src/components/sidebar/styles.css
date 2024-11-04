@@ -1,0 +1,103 @@
+.sidbar{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    background-color: #031C30;
+    border: none;
+    box-sizing: border-box;
+}
+
+.sidebar-top-container{
+    box-sizing: border-box;
+    display: 'flex';
+    align-items: center;
+    background-color: #031C30;
+    color: white;
+    padding: 16px;
+}
+
+.sidebar-logo-container{
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.sidebar-logo{
+    width: 40px;
+}
+
+.sidebar-app-name{
+    margin: 0 12px;
+    font-weight: bold;
+    text-wrap: nowrap;
+}
+
+.sidebar-open-icon{
+    position: absolute;
+    right: -24px;
+    padding: 2px;
+    background-color: #031C30;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 9999;
+}
+
+.sidebar-open-icon svg{
+    transition: transform .5s;
+}
+
+.sidebar-open-icon svg:hover{
+    transform: scale(1.2);
+}
+
+.sidebar-nav-top{
+    box-sizing: border-box;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-nav-bottom{
+     display: flex; 
+     flex-direction: column;
+}
+
+/* NAV STYLES */
+
+.nav-btn{
+    padding: 8px !important;
+    width: fit-content !important;
+    margin: 8px 16px !important;
+    display: flex;
+    align-items: center;
+    border-radius: 12px !important;
+    
+}
+
+.nav-icon-container{
+    width: auto !important;
+}
+
+.nav-icon {
+    fill: #FFFFFF;
+    margin: 0;
+    padding: 0;
+}
+
+.selected-nav-btn .nav-icon {
+    fill: #7B61FF
+}
+
+.nav-text {
+    text-transform: capitalize;
+    color: #FFFFFF;
+    margin-left: 16px;
+}
