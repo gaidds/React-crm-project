@@ -16,12 +16,10 @@ export const CompanyUrl = 'leads/company';
 export const CompaniesUrl = 'leads/companies';
 // Deal
 export const DealUrl = 'deals';
-// Lead
-export const LeadUrl = 'deals';
+// Dashboard
+export const DashboardUrl = 'dashboard';
 // Contact
 export const ContactUrl = 'contacts';
-// Opportunity
-export const OpportunityUrl = 'opportunities';
 // ACCOUNTS
 export const AccountsUrl = 'accounts';
 // CASES
