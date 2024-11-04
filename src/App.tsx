@@ -16,6 +16,7 @@ import Deals from './pages/deals/Deals';
 import DealsCardView from './pages/deals/DealsCardView';
 import DealDetails from './pages/deals/DealDetails';
 import UserDetails from './pages/users/UserDetails';
+import Dashboard from './pages/dashboard/Dashboard';
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
             <Route path="deals/card-view" element={<DealsCardView />} />
             <Route path="deals/:dealId" element={<DealDetails />} />
             <Route path="profile/:id" element={<UserDetails />} />
+            <Route path="dashboard" element={<Dashboard />} />
           </Route>
         </Routes>
       </Router>
