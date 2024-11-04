@@ -4,9 +4,12 @@ import { DashboardResponse } from './types';
 import { fetchData, Header } from '../../components/FetchData';
 import { DashboardUrl } from '../../services/ApiUrls';
 import './styles.css';
+import DashboardCard from '../../components/dashboard-card/DashboardCard';
+import { FaLongArrowAltDown, FaLongArrowAltUp } from 'react-icons/fa';
 
 const Dashboard: FC = () => {
   const [data, setData] = useState<DashboardResponse>();
+  console.log(data)
 
   useEffect(()=>{fetchDashboard();});
 
@@ -26,7 +29,23 @@ const Dashboard: FC = () => {
 
   return <div className="dashboard-container">
     <div className="dashboard-top-section">
-    <div>{/* add the Net income section to the dashboard */} </div>
+    <div><DashboardCard
+            title="Net Income"
+            content={'€ ' + data?.total_revenue_in_euros
+            }
+            subContent={
+              data?.net_income_growth_trendline && data?.net_income_growth_trendline > 0 ? (
+                <div>
+                  <FaLongArrowAltUp /> {`${data?.net_income_growth_trendline}% from last month`}
+                </div>
+              ) : (
+                <div>
+                  <FaLongArrowAltDown /> {`${data?.net_income_growth_trendline}% from last month`}
+                </div>
+              )
+            }
+            subContentColor={data?.net_income_growth_trendline && data?.net_income_growth_trendline > 0 ? 'green' : 'red'}
+          /> </div>
     <div> {/* add the Deals Number section to the dashboard */} </div>
     <div> {/* add the Win Ratio section to the dashboard */} </div>
     </div>
