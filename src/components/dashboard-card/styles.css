@@ -1,0 +1,34 @@
+.dashboard-card-container{
+    width: 100%;
+    height: 100%;
+    background-color: #DED8E1;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    padding: 16px;
+    border-radius: 16px;
+}
+
+.dashboard-card-title{
+    color: #0000007d;
+    margin: 0;
+    padding: 0;
+}
+
+.dashboard-card-content{
+    margin-left: 16px;
+    margin-top: 16px;
+    font-size: 32px;
+}
+
+.dashboard-card-sub-content{
+    margin-left: 32px;
+    margin-top: 16px;
+}
+
+.dashboard-card-sub-content-red{
+    color: #CA1D1F;
+}
+.dashboard-card-sub-content-green{
+    color: #267202;
+}
