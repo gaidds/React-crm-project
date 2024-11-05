@@ -9,9 +9,10 @@ import { FaLongArrowAltDown, FaLongArrowAltUp } from 'react-icons/fa';
 
 const Dashboard: FC = () => {
   const [data, setData] = useState<DashboardResponse>();
-  console.log(data)
 
-  useEffect(()=>{fetchDashboard();});
+  useEffect(() => {
+    fetchDashboard();
+  }, []);
 
   const fetchDashboard = async () => {
     try {
