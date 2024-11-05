@@ -9,9 +9,11 @@ import { FaLongArrowAltDown, FaLongArrowAltUp } from 'react-icons/fa';
 
 const Dashboard: FC = () => {
   const [data, setData] = useState<DashboardResponse>();
-  console.log(data)
+  console.log(data);
 
-  useEffect(()=>{fetchDashboard();});
+  useEffect(() => {
+    fetchDashboard();
+  });
 
   const fetchDashboard = async () => {
     try {
@@ -27,37 +29,74 @@ const Dashboard: FC = () => {
     }
   };
 
-  return <div className="dashboard-container">
-    <div className="dashboard-top-section">
-    <div><DashboardCard
+  return (
+    <div className="dashboard-container">
+      <div className="dashboard-top-section">
+        <div>
+          <DashboardCard
             title="Net Income"
-            content={'€ ' + data?.total_revenue_in_euros
-            }
+            content={'€ ' + data?.total_revenue_in_euros}
             subContent={
-              data?.net_income_growth_trendline && data?.net_income_growth_trendline > 0 ? (
+              data?.net_income_growth_trendline &&
+              data?.net_income_growth_trendline > 0 ? (
                 <div>
-                  <FaLongArrowAltUp /> {`${data?.net_income_growth_trendline}% from last month`}
+                  <FaLongArrowAltUp />{' '}
+                  {`${data?.net_income_growth_trendline}% from last month`}
                 </div>
               ) : (
                 <div>
-                  <FaLongArrowAltDown /> {`${data?.net_income_growth_trendline}% from last month`}
+                  <FaLongArrowAltDown />{' '}
+                  {`${data?.net_income_growth_trendline}% from last month`}
                 </div>
               )
             }
-            subContentColor={data?.net_income_growth_trendline && data?.net_income_growth_trendline > 0 ? 'green' : 'red'}
-          /> </div>
-    <div> {/* add the Deals Number section to the dashboard */} </div>
-    <div> {/* add the Win Ratio section to the dashboard */} </div>
+            subContentColor={
+              data?.net_income_growth_trendline &&
+              data?.net_income_growth_trendline > 0
+                ? 'green'
+                : 'red'
+            }
+          />{' '}
+        </div>
+        <div>
+          <DashboardCard
+            title="Deals"
+            content={'' + data?.deals_count}
+            subContent={
+              data?.deals_change_trendline &&
+              data?.deals_change_trendline > 0 ? (
+                <div>
+                  <FaLongArrowAltUp />{' '}
+                  {`${data?.deals_change_trendline}% from last month`}
+                </div>
+              ) : (
+                <div>
+                  <FaLongArrowAltDown />{' '}
+                  {`${data?.deals_change_trendline}% from last month`}
+                </div>
+              )
+            }
+            subContentColor={
+              data?.deals_change_trendline && data?.deals_change_trendline > 0
+                ? 'green'
+                : 'red'
+            }
+          />{' '}
+        </div>
+        <div> {/* add the Win Ratio section to the dashboard */} </div>
+      </div>
+      <div>
+        <div>{/* add the Deal Sources section to the dashboard */}</div>
+        <div>{/* add the Deal Overview section to the dashboard */}</div>
+      </div>
+      <div>
+        <div>{/* add the Top Deals section to the dashboard */}</div>
+        <div>
+          {/* add the Customers by Countries section to the dashboard */}
+        </div>
+      </div>
     </div>
-    <div>
-      <div>{/* add the Deal Sources section to the dashboard */}</div>
-      <div>{/* add the Deal Overview section to the dashboard */}</div>
-    </div>
-    <div>
-      <div>{/* add the Top Deals section to the dashboard */}</div>
-      <div>{/* add the Customers by Countries section to the dashboard */}</div>
-    </div>
-  </div>
+  );
 };
 
 export default Dashboard;
