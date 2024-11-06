@@ -65,25 +65,10 @@ const Dashboard: FC = () => {
           <DashboardCard
             title="Deals"
             content={'' + data?.deals_count}
-            subContent={
-              data?.deals_change_trendline &&
-              data?.deals_change_trendline > 0 ? (
-                <div>
-                  <FaLongArrowAltUp />{' '}
-                  {`${data?.deals_change_trendline}% from last month`}
-                </div>
-              ) : (
-                <div>
-                  <FaLongArrowAltDown />{' '}
-                  {`${data?.deals_change_trendline}% from last month`}
-                </div>
-              )
-            }
-            subContentColor={
-              data?.deals_change_trendline && data?.deals_change_trendline > 0
-                ? 'green'
-                : 'red'
-            }
+            subContent={createSubContent(data?.deals_change_trendline || 0)}
+            subContentColor={createSubContentColor(
+              data?.deals_change_trendline || 0
+            )}
           />
         </div>
         <div> {/* add the Win Ratio section to the dashboard */} </div>
