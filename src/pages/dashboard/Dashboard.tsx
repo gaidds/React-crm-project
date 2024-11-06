@@ -61,7 +61,16 @@ const Dashboard: FC = () => {
             )}
           />
         </div>
-        <div> {/* add the Deals Number section to the dashboard */} </div>
+        <div>
+          <DashboardCard
+            title="Deals"
+            content={'' + data?.deals_count}
+            subContent={createSubContent(data?.deals_change_trendline || 0)}
+            subContentColor={createSubContentColor(
+              data?.deals_change_trendline || 0
+            )}
+          />
+        </div>
         <div> {/* add the Win Ratio section to the dashboard */} </div>
       </div>
       <div>
