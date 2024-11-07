@@ -5,9 +5,6 @@ import {
   Box,
   Button,
   Stack,
-  Typography,
-  Select,
-  MenuItem,
   TableContainer,
   Table,
   TableCell,
@@ -15,28 +12,20 @@ import {
   Paper,
   TableBody,
   Container,
-  Tabs,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Spinner } from '../../components/Spinner';
-import { FiChevronLeft } from '@react-icons/all-files/fi/FiChevronLeft';
-import { FiChevronRight } from '@react-icons/all-files/fi/FiChevronRight';
-import {
-  CustomToolbar,
-  FabLeft,
-  FabRight,
-} from '../../styles/CssStyled';
+import { CustomToolbar } from '../../styles/CssStyled';
 import { useNavigate } from 'react-router-dom';
 import { fetchData } from '../../components/FetchData';
 import { Label } from '../../components/Label';
 import { FaTrashAlt } from 'react-icons/fa';
 import DynamicModal from '../../components/modal/modal';
 import { DeleteModal } from '../../components/DeleteModal';
-import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
-import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { EnhancedTableHead } from '../../components/EnchancedTableHead';
 import { useMyContext } from '../../context/Context';
 import FilterComponent from '../../components/filters/DealsFIlter';
+import Pagination from '../../components/pagination/Pagination';
 
 // Define TypeScript interfaces for your data
 
@@ -114,20 +103,19 @@ export interface Deal {
 }
 
 export default function Deals(props: any) {
+  const navigate = useNavigate();
   const { userRole, userId } = useMyContext();
   const [deals, setDeals] = useState<Deal[]>([]);
-  const setLoading = useState<boolean>(true)[1];
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [recordsPerPage, setRecordsPerPage] = useState<number>(10);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const [selected, setSelected] = useState<string[]>([]);
+  const selected = useState<string[]>([])[0];
   const [selectedId, setSelectedId] = useState<string[]>([]);
-  const [isSelectedId, setIsSelectedId] = useState<boolean[]>([]);
+  const isSelectedId = useState<boolean[]>([])[0];
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('name');
   const [deleteRowModal, setDeleteRowModal] = useState(false);
 
-  const [selectOpen, setSelectOpen] = useState(false);
   const [data, setData] = useState<any[]>([]);
   const [tab, setTab] = useState('list-view');
   const [filteredDeals, setFilteredDeals] = useState<Deal[]>([]);
@@ -181,7 +169,6 @@ export default function Deals(props: any) {
     setOrderBy(property);
   };
 
-
   const deleteRow = (id: any) => {
     setSelectedId(id);
     setDeleteRowModal(!deleteRowModal);
@@ -207,24 +194,16 @@ export default function Deals(props: any) {
       })
       .catch(() => {});
   };
-  const handlePreviousPage = () => {
-    setLoading(true);
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
-  const handleNextPage = () => {
-    setLoading(true);
-    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
-  };
-
-  const handleRecordsPerPage = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    setLoading(true);
-    setRecordsPerPage(parseInt(event.target.value));
+  const handleSelectChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+    setRecordsPerPage(Number(e.target.value));
     setCurrentPage(1);
   };
-  const navigate = useNavigate();
+
   const handleItemClick = (id: string) => {
     navigate(`/app/deals/${id}`);
   };
@@ -232,14 +211,6 @@ export default function Deals(props: any) {
   const modalDialog = 'Are You Sure You want to delete selected Deal?';
   const modalTitle = 'Delete Deal';
   const showAddButton = userRole !== 'USER' && userRole !== 'SALES REP';
-
-  const recordsList = [
-    [10, '10 Records per page'],
-    [20, '20 Records per page'],
-    [30, '30 Records per page'],
-    [40, '40 Records per page'],
-    [50, '50 Records per page'],
-  ];
 
   return (
     <Box>
@@ -277,72 +248,13 @@ export default function Deals(props: any) {
             ml: 2,
           }}
         >
-          <Select
-            value={recordsPerPage}
-            onChange={(e: any) => handleRecordsPerPage(e)}
-            open={selectOpen}
-            onOpen={() => setSelectOpen(true)}
-            onClose={() => setSelectOpen(false)}
-            className={`custom-select`}
-            onClick={() => setSelectOpen(!selectOpen)}
-            IconComponent={() => (
-              <div
-                onClick={() => setSelectOpen(!selectOpen)}
-                className="custom-select-icon"
-              >
-                {selectOpen ? (
-                  <FiChevronUp style={{ marginTop: '12px' }} />
-                ) : (
-                  <FiChevronDown style={{ marginTop: '12px' }} />
-                )}
-              </div>
-            )}
-            sx={{
-              '& .MuiSelect-select': { overflow: 'visible !important' },
-            }}
-          >
-            {recordsList?.length &&
-              recordsList.map((item: any, i: any) => (
-                <MenuItem key={i} value={item[0]}>
-                  {item[1]}
-                </MenuItem>
-              ))}
-          </Select>
-          <Box
-            sx={{
-              borderRadius: '7px',
-              backgroundColor: 'white',
-              height: '40px',
-              minHeight: '40px',
-              maxHeight: '40px',
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              mr: 1,
-              p: '0px',
-            }}
-          >
-            <FabLeft onClick={handlePreviousPage} disabled={currentPage === 1}>
-              <FiChevronLeft style={{ height: '15px' }} />
-            </FabLeft>
-            <Typography
-              sx={{
-                mt: 0,
-                textTransform: 'lowercase',
-                fontSize: '15px',
-                color: '#1A3353',
-                textAlign: 'center',
-              }}
-            >
-              {currentPage} to {totalPages}
-            </Typography>
-            <FabRight
-              onClick={handleNextPage}
-              disabled={currentPage === totalPages}
-            >
-              <FiChevronRight style={{ height: '15px' }} />
-            </FabRight>
-          </Box>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            recordsPerPage={recordsPerPage}
+            handlePageChange={handlePageChange}
+            handleSelectChange={handleSelectChange}
+          />
         </Stack>
         <Box
           sx={{
@@ -411,9 +323,7 @@ export default function Deals(props: any) {
                 />
                 <TableBody>
                   {filteredDeals.length > 0 ? (
-                    filteredDeals.map((deal, index) => {
-                      const labelId = `enhanced-table-checkbox-${index}`;
-                      const rowIndex = selectedId.indexOf(deal.id);
+                    filteredDeals.map((deal) => {
                       return (
                         <TableRow
                           tabIndex={-1}
