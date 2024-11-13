@@ -7,31 +7,25 @@ import {
   TableBody,
   TableContainer,
   TableRow,
-  Typography,
   Paper,
   TableCell,
   IconButton,
-  Select,
-  MenuItem,
   Container,
 } from '@mui/material';
 import { EnhancedTableHead } from '../../components/EnchancedTableHead';
 import { getComparator, stableSort } from '../../components/Sorting';
 import { DeleteModal } from '../../components/DeleteModal';
 import { Spinner } from '../../components/Spinner';
-import { FiChevronLeft } from '@react-icons/all-files/fi/FiChevronLeft';
-import { FiChevronRight } from '@react-icons/all-files/fi/FiChevronRight';
-import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
-import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 import { fetchData } from '../../components/FetchData';
 import { UsersUrl, UserUrl } from '../../services/ApiUrls';
-import { CustomToolbar, FabLeft, FabRight } from '../../styles/CssStyled';
+import { CustomToolbar } from '../../styles/CssStyled';
 import { useMyContext } from '../../context/Context';
 import DynamicModal from '../../components/modal/modal';
 import { FaFilter } from 'react-icons/fa';
 import { Label } from '../../components/label-user';
 import { HeadCell, Item } from './types';
+import Pagination from '../../components/pagination/Pagination';
 
 const headCells: readonly HeadCell[] = [
   {
@@ -93,7 +87,6 @@ export default function Users() {
   const setInactiveUsersOffset = useState(0)[1];
   const [deleteRowModal, setDeleteRowModal] = useState(false);
 
-  const [selectOpen, setSelectOpen] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
   const [selectedId, setSelectedId] = useState<string[]>([]);
   const [isSelectedId, setIsSelectedId] = useState<boolean[]>([]);
@@ -172,42 +165,30 @@ export default function Users() {
     navigate(`/app/users/${userId}`);
   };
 
-  const handleRecordsPerPage = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handlePageChange = (page: number) => {
     if (tab === 'active') {
       setActiveLoading(true);
-      setActiveRecordsPerPage(parseInt(event.target.value));
-      setActiveCurrentPage(1);
+      setActiveCurrentPage(page);
     } else {
       setInactiveLoading(true);
-      setInactiveRecordsPerPage(parseInt(event.target.value));
-      setInactiveCurrentPage(1);
-    }
-  };
-  const handlePreviousPage = () => {
-    if (tab === 'active') {
-      setActiveLoading(true);
-      setActiveCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-    } else {
-      setInactiveLoading(true);
-      setInactiveCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+      setInactiveCurrentPage(page);
     }
   };
 
-  const handleNextPage = () => {
+  const handleSelectChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+    const value = Number(e.target.value);
+
     if (tab === 'active') {
       setActiveLoading(true);
-      setActiveCurrentPage((prevPage) =>
-        Math.min(prevPage + 1, activeTotalPages)
-      );
+      setActiveRecordsPerPage(value);
+      setActiveCurrentPage(1);
     } else {
       setInactiveLoading(true);
-      setInactiveCurrentPage((prevPage) =>
-        Math.min(prevPage + 1, inactiveTotalPages)
-      );
+      setInactiveRecordsPerPage(value);
+      setActiveCurrentPage(1);
     }
   };
+
   const handleRequestSort = (event: any, property: any) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -298,14 +279,6 @@ export default function Users() {
   const modalDialog = 'Are You Sure You want to delete this User?';
   const modalTitle = 'Delete User';
 
-  const recordsList = [
-    [10, '10 Records per page'],
-    [20, '20 Records per page'],
-    [30, '30 Records per page'],
-    [40, '40 Records per page'],
-    [50, '50 Records per page'],
-  ];
-
   return (
     <Box>
       <CustomToolbar
@@ -334,87 +307,19 @@ export default function Users() {
               />
             </>
           )}
-          <Select
-            value={
+          <Pagination
+            currentPage={
+              tab === 'active' ? activeCurrentPage : inactiveCurrentPage
+            }
+            totalPages={
+              tab === 'active' ? activeTotalPages : inactiveTotalPages
+            }
+            recordsPerPage={
               tab === 'active' ? activeRecordsPerPage : inactiveRecordsPerPage
             }
-            onChange={(e: any) => handleRecordsPerPage(e)}
-            open={selectOpen}
-            onOpen={() => setSelectOpen(true)}
-            onClose={() => setSelectOpen(false)}
-            className={`custom-select`}
-            onClick={() => setSelectOpen(!selectOpen)}
-            IconComponent={() => (
-              <div
-                onClick={() => setSelectOpen(!selectOpen)}
-                className="custom-select-icon"
-              >
-                {selectOpen ? (
-                  <FiChevronUp style={{ marginTop: '12px' }} />
-                ) : (
-                  <FiChevronDown style={{ marginTop: '12px' }} />
-                )}
-              </div>
-            )}
-            sx={{
-              '& .MuiSelect-select': { overflow: 'visible !important' },
-            }}
-          >
-            {recordsList?.length &&
-              recordsList.map((item: any, i: any) => (
-                <MenuItem key={i} value={item[0]}>
-                  {item[1]}
-                </MenuItem>
-              ))}
-          </Select>
-          <Box
-            sx={{
-              borderRadius: '7px',
-              backgroundColor: 'white',
-              height: '40px',
-              minHeight: '40px',
-              maxHeight: '40px',
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              mr: 1,
-              p: '0px',
-            }}
-          >
-            <FabLeft
-              onClick={handlePreviousPage}
-              disabled={
-                tab === 'active'
-                  ? activeCurrentPage === 1
-                  : inactiveCurrentPage === 1
-              }
-            >
-              <FiChevronLeft style={{ height: '15px' }} />
-            </FabLeft>
-            <Typography
-              sx={{
-                mt: 0,
-                textTransform: 'lowercase',
-                fontSize: '15px',
-                color: '#1A3353',
-                textAlign: 'center',
-              }}
-            >
-              {tab === 'active'
-                ? `${activeCurrentPage} to ${activeTotalPages}`
-                : `${inactiveCurrentPage} to ${inactiveTotalPages}`}
-            </Typography>
-            <FabRight
-              onClick={handleNextPage}
-              disabled={
-                tab === 'active'
-                  ? activeCurrentPage === activeTotalPages
-                  : inactiveCurrentPage === inactiveTotalPages
-              }
-            >
-              <FiChevronRight style={{ height: '15px' }} />
-            </FabRight>
-          </Box>
+            handlePageChange={handlePageChange}
+            handleSelectChange={handleSelectChange}
+          />
         </Stack>
       </CustomToolbar>
       <Container sx={{ width: '100%', maxWidth: '100%', minWidth: '100%' }}>
