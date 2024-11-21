@@ -25,15 +25,15 @@ interface DealSourcesBarChartProps {
 
 const DealSourcesBarChart: FC<DealSourcesBarChartProps> = ({ data }) => {
   const sourcesData = [
-    { name: 'NONE', color: '#004E85' },
-    { name: 'CALL', color: '#1C7EC3' },
-    { name: 'EMAIL', color: '#1CBEC3' },
-    { name: 'EXISTING CUSTOMER', color: '#EBDA25' },
-    { name: 'PARTNER', color: '#94C31C' },
-    { name: 'PUBLIC RELATIONS', color: '#075F18' },
-    { name: 'CAMPAIGN', color: '#075F18' },
-    { name: 'WEBSITE', color: '#075F18' },
-    { name: 'OTHER', color: '#075F18' },
+    { name: 'NONE', color: '#F4B400' }, // Yellow-Orange
+    { name: 'CALL', color: '#4285F4' }, // Blue
+    { name: 'EMAIL', color: '#1CBEC3' }, // Greenish
+    { name: 'EXISTING CUSTOMER', color: '#5555FF' }, // Bright Blue
+    { name: 'PARTNER', color: '#FF4444' }, // Reddish
+    { name: 'PUBLIC RELATIONS', color: '#0A7300' }, // Dark Green
+    { name: 'CAMPAIGN', color: '#FF8900' }, // Orange
+    { name: 'WEBSITE', color: '#00D9E2' }, // Light Cyan
+    { name: 'OTHER', color: '#FF00FF' }, // Magenta
   ];
 
   // Match colors based on data keys
