@@ -45,7 +45,7 @@ const Dashboard: FC = () => {
 
   const createSubContentColor = (growth: number) =>
     growth >= 0 ? 'green' : 'red';
-
+  console.log(data);
   return (
     <div className="dashboard-container">
       <div className="dashboard-top-section">
@@ -71,7 +71,18 @@ const Dashboard: FC = () => {
             )}
           />
         </div>
-        <div> {/* add the Win Ratio section to the dashboard */} </div>
+        <div>
+          <DashboardCard
+            title="Won Deals"
+            content={data?.win_ratio + '%'}
+            subContent={createSubContent(
+              data?.percentage_change_closed_won || 0
+            )}
+            subContentColor={createSubContentColor(
+              data?.percentage_change_closed_won || 0
+            )}
+          />
+        </div>
       </div>
       <div>
         <div>{/* add the Deal Sources section to the dashboard */}</div>
