@@ -23,3 +23,9 @@ export type DashboardResponse = {
     deal_stage_counts: Record<string, number>;
     top_five_deals: Deal[];
   };
+
+  export type DealStage = {
+    state: string;
+    count: number; 
+    color: string;
+  };
