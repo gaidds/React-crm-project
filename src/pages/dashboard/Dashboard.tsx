@@ -78,9 +78,9 @@ const Dashboard: FC = () => {
         />
         <div> {/* add the Win Ratio section to the dashboard */} </div>
       </div>
-      <div>
-        <div>{/* add the Deal Sources section to the dashboard */}</div>
-        <div> 
+      <div className='dashboard-mid-section'>
+        <div className='dashboard-deal-sources-chart'>{/* add the Deal Sources section to the dashboard */}</div>
+        <div className='dashboard-deal-stages-chart'> 
           <DashboardCard
           title="Deals Overview"
           content={<DealStagesDonutChart data={dealStages} />  } 
