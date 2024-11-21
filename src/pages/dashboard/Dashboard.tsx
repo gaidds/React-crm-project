@@ -6,6 +6,7 @@ import { DashboardUrl } from '../../services/ApiUrls';
 import './styles.css';
 import DashboardCard from '../../components/dashboard-card/DashboardCard';
 import { FaLongArrowAltDown, FaLongArrowAltUp } from 'react-icons/fa';
+import MapDashboard from './MapDashboard';
 
 const Dashboard: FC = () => {
   const [data, setData] = useState<DashboardResponse>();
@@ -80,7 +81,11 @@ const Dashboard: FC = () => {
       <div>
         <div>{/* add the Top Deals section to the dashboard */}</div>
         <div>
-          {/* add the Customers by Countries section to the dashboard */}
+        <DashboardCard
+            title="Deals"
+            content={<MapDashboard dealsByCountry={data?.deals_group_by_country || {}} />}
+            />
+        
         </div>
       </div>
     </div>

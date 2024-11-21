@@ -13,3 +13,61 @@
     justify-content: space-between;
     align-items: center;
 }
+/* MapDashboard.css */
+
+.map-dashboard {
+    width: 100%;
+  }
+  
+  .map-container {
+width: 100%;
+  }
+  
+  .geo {
+    fill: #a7a7a9;
+    stroke: #d6d6da;
+  }
+  
+  .marker-circle {
+    r: 15;
+    fill: #ed6666;
+    cursor: pointer;
+  }
+  
+  .marker-text {
+    text-anchor: middle; 
+    fill: #fff;
+    font-size: small;
+    cursor: pointer;
+  }
+  
+  .deal-info {
+    width: 250px; /* Expanded width to fit more content */
+    background-color: rgba(135, 182, 247, 0.9); /* Vibrant blue background */
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    border: 2px solid #ffffff;
+    padding: 15px; /* Comfortable padding for content readability */
+    font-size: 14px;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  
+  
+  .deal-info h3 {
+    margin-top: 0;
+    font-size: 16px;
+    text-align: center;
+  }
+  
+  .deal-info ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .deal-info li {
+    margin-bottom: 10px;
+    border-bottom: 1px solid white;
+    padding-bottom: 5px;
+  }
