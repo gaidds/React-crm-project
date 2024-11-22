@@ -1,4 +1,4 @@
-type Deal = {
+export type Deal = {
     id: string;
     name: string;
     assigned_to: {
@@ -23,3 +23,7 @@ export type DashboardResponse = {
     deal_stage_counts: Record<string, number>;
     top_five_deals: Deal[];
   };
+
+  export interface TopDealsTableProps{
+    data: Deal[];
+  }
