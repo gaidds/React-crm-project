@@ -13,3 +13,31 @@
     justify-content: space-between;
     align-items: center;
 }
+
+.top-deals-table-container table{
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.top-deals-table-container table thead{
+    background-color:#6B778C ;
+}
+
+.top-deals-table-container th{
+    font-size: 14px;
+    padding: 8px 12px;
+    text-align: start;
+}
+
+.top-deals-table-container tbody tr:nth-child(even){
+    background-color: whitesmoke;
+}
+
+.top-deals-table-container td{
+    font-size: 14px;
+    padding: 8px 12px;
+}
+
+.top-deals-table-container td p{
+    margin: 0;
+}
