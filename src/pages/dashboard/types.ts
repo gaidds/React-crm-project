@@ -1,4 +1,3 @@
-// Define the types
 export type Deal = {
   id: string;
   name: string;
@@ -36,3 +35,9 @@ export interface DashboardResponse {
   top_five_deals: Deal[];
   deals_group_by_country: DealsByCountry;  // This is the actual object you need to pass
 }
+
+  export type DealStage = {
+    state: string;
+    count: number; 
+    color: string;
+  };
