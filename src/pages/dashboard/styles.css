@@ -13,3 +13,37 @@
     justify-content: space-between;
     align-items: center;
 }
+
+.dashboard-mid-section{
+    display: flex;
+    margin-top: 24px;
+}
+
+.dashboard-deal-sources-chart{
+    width: 60%;
+}
+.dashboard-deal-stages-chart{
+    width: 40%;
+
+}
+/* Dashboard */
+
+.deal-stages-donut-chart {
+    width: 100%;
+    margin: 0 ;
+    display: flex;
+    box-sizing: border-box;
+
+  }
+
+  .deal-overview-stages-bar{
+    margin-right: 24px;
+    width: 40%;
+  }
+
+  .deal-overview-chart{
+    width: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
