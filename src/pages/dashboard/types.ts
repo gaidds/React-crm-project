@@ -9,14 +9,14 @@ export type Deal = {
   close_date: string;
 };
 
-export interface Deal1 {
+export interface Mapdeals {
   id: string;
   name: string;
   value: number;
 }
 
 export interface DealsByCountry {
-  [countryCode: string]: Deal1[];  // country code as key, array of deals as value
+  [countryCode: string]: Mapdeals[];  // country code as key, array of deals as value
 }
 
 export interface DealsByCountryProps {
