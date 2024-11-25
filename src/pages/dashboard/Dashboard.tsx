@@ -83,7 +83,6 @@ const Dashboard: FC = () => {
 
   const createSubContentColor = (growth: number) =>
     growth >= 0 ? 'green' : 'red';
-  console.log(data);
   return (
     <div className="dashboard-container">
       <div className="dashboard-top-section">

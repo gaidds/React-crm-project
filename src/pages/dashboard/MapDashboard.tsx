@@ -17,20 +17,6 @@ interface MapDashboardProps {
 }
 
 const MapDashboard: FC<MapDashboardProps> = ({ dealsByCountry }) => {
-  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
-  const [selectedDeals, setSelectedDeals] = useState<any[] | null>(null);
-
-  const handlePinClick = (country: string) => {
-    const countryDeals = dealsByCountry[country as keyof DealsByCountryProps];
-    if (countryDeals && countryDeals.length > 0) {
-      setSelectedCountry(country);
-      setSelectedDeals(countryDeals);
-    } else {
-      setSelectedCountry(null);
-      setSelectedDeals(null);
-    }
-  };
-
   return (
     <div className="map-dashboard">
       <ComposableMap className="map-container">
@@ -56,10 +42,7 @@ const MapDashboard: FC<MapDashboardProps> = ({ dealsByCountry }) => {
               title={`${country}: ${totalDeals} deals`}
               arrow
             >
-              <Marker
-                coordinates={coordinates}
-                onClick={() => handlePinClick(country)}
-              >
+              <Marker coordinates={coordinates}>
                 <circle className="marker-circle"></circle>
                 <text className="marker-text">{totalDeals}</text>
               </Marker>
@@ -67,21 +50,6 @@ const MapDashboard: FC<MapDashboardProps> = ({ dealsByCountry }) => {
           );
         })}
       </ComposableMap>
-
-      {selectedCountry && selectedDeals && selectedDeals.length > 0 && (
-        <div className="deal-info">
-          <h3>Deals in {selectedCountry}</h3>
-          <ul>
-            {selectedDeals.map((deal) => (
-              <li key={deal.id}>
-                <strong>Name:</strong> {deal.name}
-                <br />
-                <strong>Value:</strong> {deal.value}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
     </div>
   );
 };
