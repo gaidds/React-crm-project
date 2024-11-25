@@ -5,7 +5,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    height: 100%;
+    min-height: 100%;
     width: 100%;
     padding: 24px;
 }
@@ -60,7 +60,7 @@ width: 100%;
     fill: #a7a7a9;
     stroke: #d6d6da;
   }
-  
+
   .marker-circle {
     r: 15;
     fill: #ed6666;
@@ -68,7 +68,8 @@ width: 100%;
   }
   
   .marker-text {
-    text-anchor: middle; 
+    text-anchor: middle; /* Centers horizontally */
+    dominant-baseline: middle; 
     fill: #fff;
     font-size: small;
     cursor: pointer;

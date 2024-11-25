@@ -133,16 +133,19 @@ const Dashboard: FC = () => {
           />
         </div>
       </div>
-      <div>
-        <div>
+      <div className="dashboard-mid-section">
+        <div className="dashboard-deal-sources-chart">
           <div>{/* add the Top Deals section to the dashboard */}</div>
         </div>
-        <div>
-        <DashboardCard
+        <div className="dashboard-deal-stages-chart">
+          <DashboardCard
             title="Deals"
-            content={<MapDashboard dealsByCountry={data?.deals_group_by_country || {}} />}
-            />
-        
+            content={
+              <MapDashboard
+                dealsByCountry={data?.deals_group_by_country || {}}
+              />
+            }
+          />
         </div>
       </div>
     </div>
