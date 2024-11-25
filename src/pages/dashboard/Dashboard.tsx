@@ -6,6 +6,7 @@ import './styles.css';
 import DashboardCard from '../../components/dashboard-card/DashboardCard';
 import DealStagesDonutChart from './DealStagesDonutChart';
 import { FaLongArrowAltDown, FaLongArrowAltUp } from 'react-icons/fa';
+import MapDashboard from './MapDashboard';
 
 const Dashboard: FC = () => {
   const [data, setData] = useState<DashboardResponse>();
@@ -82,7 +83,6 @@ const Dashboard: FC = () => {
 
   const createSubContentColor = (growth: number) =>
     growth >= 0 ? 'green' : 'red';
-  console.log(data);
   return (
     <div className="dashboard-container">
       <div className="dashboard-top-section">
@@ -132,12 +132,19 @@ const Dashboard: FC = () => {
           />
         </div>
       </div>
-      <div>
-        <div>
+      <div className="dashboard-mid-section">
+        <div className="dashboard-deal-sources-chart">
           <div>{/* add the Top Deals section to the dashboard */}</div>
         </div>
-        <div>
-          {/* add the Customers by Countries section to the dashboard */}
+        <div className="dashboard-deal-stages-chart">
+          <DashboardCard
+            title="Deals"
+            content={
+              <MapDashboard
+                dealsByCountry={data?.deals_group_by_country || {}}
+              />
+            }
+          />
         </div>
       </div>
     </div>
