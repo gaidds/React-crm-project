@@ -6,20 +6,14 @@ import {
   TableBody,
   TableContainer,
   TableRow,
-  Typography,
   Paper,
   TableCell,
   IconButton,
-  MenuItem,
-  Select,
   Avatar,
   Container,
   AvatarGroup,
-  SelectChangeEvent,
 } from '@mui/material';
-import { FiChevronLeft } from '@react-icons/all-files/fi/FiChevronLeft';
-import { FiChevronRight } from '@react-icons/all-files/fi/FiChevronRight';
-import { CustomToolbar, FabLeft, FabRight } from '../../styles/CssStyled';
+import { CustomToolbar } from '../../styles/CssStyled';
 import { getComparator, stableSort } from '../../components/Sorting';
 import { FaFilter, FaTrashAlt } from 'react-icons/fa';
 import { fetchData } from '../../components/FetchData';
@@ -32,6 +26,7 @@ import { EnhancedTableHead } from '../../components/EnchancedTableHead';
 import { useMyContext } from '../../context/Context';
 import DynamicModal from '../../components/modal/modal';
 import { Item, HeadCell } from './types';
+import Pagination from '../../components/pagination/Pagination';
 
 const headCells: readonly HeadCell[] = [
   {
@@ -83,23 +78,18 @@ export default function Accounts() {
 
   const [openCurrentPage, setOpenCurrentPage] = useState<number>(1);
   const [openRecordsPerPage, setOpenRecordsPerPage] = useState<number>(10);
-  const openTotalPages = useState<number>(1)[0];
+  const [openTotalPages, setOpenTotalPages] = useState<number>(1);
   const setOpenLoading = useState(true)[1];
 
   const [closedCurrentPage, setClosedCurrentPage] = useState<number>(1);
   const [closedRecordsPerPage, setClosedRecordsPerPage] = useState<number>(10);
-  const closedTotalPages = useState<number>(0)[0];
+  const [closedTotalPages, setClosedTotalPages] = useState<number>(0);
   const setClosedLoading = useState(true)[1];
   const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
     getAccounts();
-  }, [
-    openCurrentPage,
-    openRecordsPerPage,
-    closedCurrentPage,
-    closedRecordsPerPage,
-  ]);
+  }, [openCurrentPage, openRecordsPerPage]);
 
   const getAccounts = async () => {
     const Header = {
@@ -124,6 +114,16 @@ export default function Accounts() {
           setClosedAccounts(res?.closed_accounts?.close_accounts);
           setData(res || []);
           setLoading(false);
+          setOpenTotalPages(
+            Math.ceil(
+              res?.active_accounts?.open_accounts_count / openRecordsPerPage
+            )
+          );
+          setClosedTotalPages(
+            Math.ceil(
+              res?.closed_accounts?.closed_accounts_count / openRecordsPerPage
+            )
+          );
         }
       });
     } catch (error) {
@@ -135,41 +135,29 @@ export default function Accounts() {
     navigate(`/app/accounts/${accountId}`);
   };
 
-  const handleRecordsPerPage = (event: SelectChangeEvent<number>) => {
-    const selectedValue = Number(event.target.value);
-
+  const handlePageChange = (page: number) => {
     if (tab === 'open') {
       setOpenLoading(true);
-      setOpenRecordsPerPage(selectedValue);
+      setOpenCurrentPage(page);
+    } else {
+      setClosedLoading(true);
+      setClosedCurrentPage(page);
+    }
+  };
+
+  const handleSelectChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+    const value = Number(e.target.value);
+    if (tab === 'open') {
+      setOpenLoading(true);
+      setOpenRecordsPerPage(value);
       setOpenCurrentPage(1);
     } else {
       setClosedLoading(true);
-      setClosedRecordsPerPage(selectedValue);
+      setClosedRecordsPerPage(value);
       setClosedCurrentPage(1);
     }
   };
 
-  const handlePreviousPage = () => {
-    if (tab == 'open') {
-      setOpenLoading(true);
-      setOpenCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-    } else {
-      setClosedLoading(true);
-      setClosedCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-    }
-  };
-
-  const handleNextPage = () => {
-    if (tab == 'open') {
-      setOpenLoading(true);
-      setOpenCurrentPage((prevPage) => Math.min(prevPage + 1, openTotalPages));
-    } else {
-      setClosedLoading(true);
-      setClosedCurrentPage((prevPage) =>
-        Math.min(prevPage + 1, closedTotalPages)
-      );
-    }
-  };
   const handleRequestSort = (event: any, property: any) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -205,14 +193,6 @@ export default function Accounts() {
   const showAddButton = userRole !== 'USER' && userRole !== 'SALES REP';
   const modalDialog = 'Are You Sure You want to delete this Account?';
   const modalTitle = 'Delete Account';
-
-  const recordsList = [
-    [10, '10 Records per page'],
-    [20, '20 Records per page'],
-    [30, '30 Records per page'],
-    [40, '40 Records per page'],
-    [50, '50 Records per page'],
-  ];
 
   return (
     <Box sx={{ mt: '16px' }}>
@@ -261,77 +241,15 @@ export default function Accounts() {
           {/* Right Section: Records per Page and Page Navigation */}
 
           <Stack direction="row" alignItems="center" ml="16px">
-            {/* Records per Page Dropdown */}
-
-            <Select
-              value={tab === 'open' ? openRecordsPerPage : closedRecordsPerPage}
-              onChange={(event: SelectChangeEvent<number>) =>
-                handleRecordsPerPage(event)
+            <Pagination
+              currentPage={tab === 'open' ? openCurrentPage : closedCurrentPage}
+              totalPages={tab === 'open' ? openTotalPages : closedTotalPages}
+              recordsPerPage={
+                tab === 'open' ? openRecordsPerPage : closedRecordsPerPage
               }
-              className="custom-select"
-            >
-              {recordsList?.length &&
-                recordsList.map((item, i) => (
-                  <MenuItem key={i} value={item[0]}>
-                    {item[1]}
-                  </MenuItem>
-                ))}
-            </Select>
-
-            {/* Page Navigation */}
-            <Box
-              sx={{
-                borderRadius: '7px',
-                backgroundColor: 'white',
-                height: '40px',
-                minHeight: '40px',
-                maxHeight: '40px',
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                mr: 1,
-                p: '0px',
-              }}
-            >
-              {/* Previous Page Button */}
-              <FabLeft
-                onClick={handlePreviousPage}
-                disabled={
-                  tab === 'open'
-                    ? openCurrentPage === 1
-                    : closedCurrentPage === 1
-                }
-              >
-                <FiChevronLeft style={{ height: '15px' }} />
-              </FabLeft>
-
-              {/* Current Page / Total Pages */}
-              <Typography
-                sx={{
-                  mt: 0,
-                  textTransform: 'lowercase',
-                  fontSize: '15px',
-                  color: '#1A3353',
-                  textAlign: 'center',
-                }}
-              >
-                {tab === 'open'
-                  ? `${openCurrentPage} to ${openTotalPages}`
-                  : `${closedCurrentPage} to ${closedTotalPages}`}
-              </Typography>
-
-              {/* Next Page Button */}
-              <FabRight
-                onClick={handleNextPage}
-                disabled={
-                  tab === 'open'
-                    ? openCurrentPage === openTotalPages
-                    : closedCurrentPage === closedTotalPages
-                }
-              >
-                <FiChevronRight style={{ height: '15px' }} />
-              </FabRight>
-            </Box>
+              handlePageChange={handlePageChange}
+              handleSelectChange={handleSelectChange}
+            />
           </Stack>
         </Box>
       </CustomToolbar>

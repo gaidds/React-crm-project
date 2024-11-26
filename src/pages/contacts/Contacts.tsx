@@ -5,31 +5,25 @@ import {
   TableBody,
   TableContainer,
   TableRow,
-  Typography,
   Paper,
-  Select,
-  MenuItem,
   TableCell,
   Container,
   IconButton,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { FiChevronLeft } from '@react-icons/all-files/fi/FiChevronLeft';
-import { FiChevronRight } from '@react-icons/all-files/fi/FiChevronRight';
 import { getComparator, stableSort } from '../../components/Sorting';
 import { Spinner } from '../../components/Spinner';
 import { fetchData } from '../../components/FetchData';
 import { ContactUrl } from '../../services/ApiUrls';
-import { CustomToolbar, FabLeft, FabRight } from '../../styles/CssStyled';
+import { CustomToolbar } from '../../styles/CssStyled';
 import { useNavigate } from 'react-router-dom';
 import { FaTrashAlt } from 'react-icons/fa';
 import { DeleteModal } from '../../components/DeleteModal';
-import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
-import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { EnhancedTableHead } from '../../components/EnchancedTableHead';
 import { useMyContext } from '../../context/Context';
 import DynamicModal from '../../components/modal/modal';
 import { FaFilter } from 'react-icons/fa';
+import Pagination from '../../components/pagination/Pagination';
 
 interface HeadCell {
   disablePadding: boolean;
@@ -84,8 +78,6 @@ export default function Contacts() {
   const isSelectedId = useState([])[0];
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('first_name');
-
-  const [selectOpen, setSelectOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [recordsPerPage, setRecordsPerPage] = useState<number>(10);
   const [totalPages, setTotalPages] = useState<number>(0);
@@ -149,28 +141,11 @@ export default function Contacts() {
       .catch(() => {});
   };
 
-  const handlePreviousPage = () => {
-    setLoading(true);
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-  };
-
-  const handleNextPage = () => {
-    setLoading(true);
-    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
-  };
-
-  const handleRecordsPerPage = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    setLoading(true);
-    setRecordsPerPage(parseInt(event.target.value));
-    setCurrentPage(1);
-  };
-
   const deleteRow = (deleteId: any) => {
     setDeleteRowModal(true);
     setSelectedId(deleteId);
   };
+
   const deleteRowModalClose = () => {
     setDeleteRowModal(false);
     setSelectedId('');
@@ -180,13 +155,14 @@ export default function Contacts() {
   const modalDialog = 'Are You Sure you want to delete this contact?';
   const modalTitle = 'Delete Contact';
 
-  const recordsList = [
-    [10, '10 Records per page'],
-    [20, '20 Records per page'],
-    [30, '30 Records per page'],
-    [40, '40 Records per page'],
-    [50, '50 Records per page'],
-  ];
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleSelectChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+    setRecordsPerPage(Number(e.target.value));
+  };
+
   return (
     <Box>
       <CustomToolbar
@@ -212,70 +188,13 @@ export default function Contacts() {
               }}
             />
           )}
-          <Select
-            value={recordsPerPage}
-            onChange={(e: any) => handleRecordsPerPage(e)}
-            open={selectOpen}
-            onOpen={() => setSelectOpen(true)}
-            onClose={() => setSelectOpen(false)}
-            className={`custom-select`}
-            onClick={() => setSelectOpen(!selectOpen)}
-            IconComponent={() => (
-              <div
-                onClick={() => setSelectOpen(!selectOpen)}
-                className="custom-select-icon"
-              >
-                {selectOpen ? (
-                  <FiChevronUp style={{ marginTop: '12px' }} />
-                ) : (
-                  <FiChevronDown style={{ marginTop: '12px' }} />
-                )}
-              </div>
-            )}
-            sx={{ '& .MuiSelect-select': { overflow: 'visible !important' } }}
-          >
-            {recordsList?.length &&
-              recordsList.map((item: any, i: any) => (
-                <MenuItem key={i} value={item[0]}>
-                  {item[1]}
-                </MenuItem>
-              ))}
-          </Select>
-          <Box
-            sx={{
-              borderRadius: '7px',
-              backgroundColor: 'white',
-              height: '40px',
-              minHeight: '40px',
-              maxHeight: '40px',
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              mr: 1,
-              p: '0px',
-            }}
-          >
-            <FabLeft onClick={handlePreviousPage} disabled={currentPage === 1}>
-              <FiChevronLeft style={{ height: '15px' }} />
-            </FabLeft>
-            <Typography
-              sx={{
-                mt: 0,
-                textTransform: 'lowercase',
-                fontSize: '15px',
-                color: '#1A3353',
-                textAlign: 'center',
-              }}
-            >
-              {currentPage} to {totalPages}
-            </Typography>
-            <FabRight
-              onClick={handleNextPage}
-              disabled={currentPage === totalPages}
-            >
-              <FiChevronRight style={{ height: '15px' }} />
-            </FabRight>
-          </Box>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            recordsPerPage={recordsPerPage}
+            handlePageChange={handlePageChange}
+            handleSelectChange={handleSelectChange}
+          />
         </Stack>
       </CustomToolbar>
 
