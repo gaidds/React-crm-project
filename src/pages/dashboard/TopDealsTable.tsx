@@ -41,7 +41,7 @@ const TopDealsTable: FC<TopDealsTableProps> = ({ data }) => {
                       <td key={deal.id + key}>
                         {Array.isArray(value) && value.length !== 0
                           ? value.map((elem) => (
-                              <div key={elem.id}>
+                              <div className="assigned-to-item" key={elem.id}>
                                 <Link to={`/app/users/${elem.id}`}>
                                   {elem.name || '---'}
                                 </Link>

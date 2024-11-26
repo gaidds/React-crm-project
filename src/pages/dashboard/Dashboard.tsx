@@ -113,8 +113,8 @@ const Dashboard: FC = () => {
           )}
         />
       </div>
-      <div className="dashboard-mid-section">
-        <div className="dashboard-deal-sources-chart">
+      <div className="dashboard-section">
+        <div className="dashboard-section-left">
           <DashboardCard
             title="Deal Sources"
             content={
@@ -122,23 +122,21 @@ const Dashboard: FC = () => {
             }
           />
         </div>
-        <div className="dashboard-deal-stages-chart">
+        <div className="dashboard-section-right">
           <DashboardCard
             title="Deals Overview"
             content={<DealStagesDonutChart data={dealStages} />}
           />
         </div>
       </div>
-      <div className="dashboard-mid-section">
-        <div className="dashboard-deal-sources-chart">
-          <div>
-            <DashboardCard
-              title="Top Deals"
-              content={<TopDealsTable data={data?.top_five_deals || []} />}
-            />
-          </div>
+      <div className="dashboard-section">
+        <div className="dashboard-section-left">
+          <DashboardCard
+            title="Top Deals"
+            content={<TopDealsTable data={data?.top_five_deals || []} />}
+          />
         </div>
-        <div className="dashboard-deal-stages-chart">
+        <div className="dashboard-section-right">
           <DashboardCard
             title="Deals"
             content={
