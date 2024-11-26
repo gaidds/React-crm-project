@@ -1,15 +1,18 @@
-import React, { FC } from 'react';
-import { useState, useEffect } from 'react';
-import { DashboardResponse } from './types';
+import React, { FC, useState, useEffect } from 'react';
+import { DashboardResponse, DealStage } from './types';
 import { fetchData, Header } from '../../components/FetchData';
 import { DashboardUrl } from '../../services/ApiUrls';
 import './styles.css';
 import DashboardCard from '../../components/dashboard-card/DashboardCard';
+import DealStagesDonutChart from './DealStagesDonutChart';
+import DealSourcesBarChart from './DealSourcesBarChart';
 import { FaLongArrowAltDown, FaLongArrowAltUp } from 'react-icons/fa';
 import TopDealsTable from './TopDealsTable';
+import MapDashboard from './MapDashboard';
 
 const Dashboard: FC = () => {
   const [data, setData] = useState<DashboardResponse>();
+  const [dealStages, setDealStages] = useState<DealStage[]>([]);
 
   useEffect(() => {
     fetchDashboard();
@@ -21,6 +24,45 @@ const Dashboard: FC = () => {
         (res) => {
           if (!res.error) {
             setData(res || []);
+            // Prepare data for the deal stages chart
+            const stagesData: DealStage[] = [
+              {
+                state: 'ASSIGNED LEAD',
+                count: res?.deal_stage_counts['ASSIGNED LEAD'] || 0,
+                color: '#004E85',
+              },
+              {
+                state: 'IN PROCESS',
+                count: res?.deal_stage_counts['IN PROCESS'] || 0,
+                color: '#1C7EC3',
+              },
+              {
+                state: 'OPPORTUNITY',
+                count: res?.deal_stage_counts['OPPORTUNITY'] || 0,
+                color: '#1CBEC3',
+              },
+              {
+                state: 'QUALIFICATION',
+                count: res?.deal_stage_counts['QUALIFICATION'] || 0,
+                color: '#EBDA25',
+              },
+              {
+                state: 'NEGOTIATION',
+                count: res?.deal_stage_counts['NEGOTIATION'] || 0,
+                color: '#94C31C',
+              },
+              {
+                state: 'CLOSED WON',
+                count: res?.deal_stage_counts['CLOSED WON'] || 0,
+                color: '#075F18',
+              },
+              {
+                state: 'CLOSED LOST',
+                count: res?.deal_stage_counts['CLOSED LOST'] || 0,
+                color: '#CA1D1F',
+              },
+            ];
+            setDealStages(stagesData);
           }
         }
       );
@@ -30,63 +72,81 @@ const Dashboard: FC = () => {
   };
 
   const createSubContent = (growth: number) => {
-    let result = (
+    return growth >= 0 ? (
+      <div>
+        <FaLongArrowAltUp /> {`${growth}% from last month`}
+      </div>
+    ) : (
       <div>
         <FaLongArrowAltDown /> {`${growth}% from last month`}
       </div>
     );
-    if (growth >= 0)
-      result = (
-        <div>
-          <FaLongArrowAltUp /> {`${growth}% from last month`}
-        </div>
-      );
-    return result;
   };
 
   const createSubContentColor = (growth: number) =>
     growth >= 0 ? 'green' : 'red';
-
   return (
     <div className="dashboard-container">
       <div className="dashboard-top-section">
-        <div>
+        <DashboardCard
+          title="Net Income"
+          content={'€ ' + data?.total_revenue_in_euros}
+          subContent={createSubContent(data?.net_income_growth_trendline || 0)}
+          subContentColor={createSubContentColor(
+            data?.net_income_growth_trendline || 0
+          )}
+        />
+        <DashboardCard
+          title="Deals"
+          content={'' + data?.deals_count}
+          subContent={createSubContent(data?.deals_change_trendline || 0)}
+          subContentColor={createSubContentColor(
+            data?.deals_change_trendline || 0
+          )}
+        />
+        <DashboardCard
+          title="Won Deals"
+          content={data?.win_ratio + '%'}
+          subContent={createSubContent(data?.percentage_change_closed_won || 0)}
+          subContentColor={createSubContentColor(
+            data?.percentage_change_closed_won || 0
+          )}
+        />
+      </div>
+      <div className="dashboard-mid-section">
+        <div className="dashboard-deal-sources-chart">
           <DashboardCard
-            title="Net Income"
-            content={'€ ' + data?.total_revenue_in_euros}
-            subContent={createSubContent(
-              data?.net_income_growth_trendline || 0
-            )}
-            subContentColor={createSubContentColor(
-              data?.net_income_growth_trendline || 0
-            )}
+            title="Deal Sources"
+            content={
+              <DealSourcesBarChart data={data?.deal_sources_count || {}} />
+            }
           />
         </div>
-        <div>
+        <div className="dashboard-deal-stages-chart">
+          <DashboardCard
+            title="Deals Overview"
+            content={<DealStagesDonutChart data={dealStages} />}
+          />
+        </div>
+      </div>
+      <div className="dashboard-mid-section">
+        <div className="dashboard-deal-sources-chart">
+          <div>
+            <DashboardCard
+              title="Top Deals"
+              content={<TopDealsTable data={data?.top_five_deals || []} />}
+            />
+          </div>
+        </div>
+        <div className="dashboard-deal-stages-chart">
           <DashboardCard
             title="Deals"
-            content={'' + data?.deals_count}
-            subContent={createSubContent(data?.deals_change_trendline || 0)}
-            subContentColor={createSubContentColor(
-              data?.deals_change_trendline || 0
-            )}
+            content={
+              <MapDashboard
+                dealsByCountry={data?.deals_group_by_country || {}}
+              />
+            }
           />
-        </div>
-        <div> {/* add the Win Ratio section to the dashboard */} </div>
-      </div>
-      <div>
-        <div>{/* add the Deal Sources section to the dashboard */}</div>
-        <div>{/* add the Deal Overview section to the dashboard */}</div>
-      </div>
-      <div>
-        <div>
-          <DashboardCard
-            title="Top Deals"
-            content={<TopDealsTable data={data?.top_five_deals || []} />}
-          />
-        </div>
-        <div>
-          {/* add the Customers by Countries section to the dashboard */}
         </div>
       </div>
     </div>
