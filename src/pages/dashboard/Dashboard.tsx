@@ -7,6 +7,7 @@ import DashboardCard from '../../components/dashboard-card/DashboardCard';
 import DealStagesDonutChart from './DealStagesDonutChart';
 import DealSourcesBarChart from './DealSourcesBarChart';
 import { FaLongArrowAltDown, FaLongArrowAltUp } from 'react-icons/fa';
+import MapDashboard from './MapDashboard';
 
 const Dashboard: FC = () => {
   const [data, setData] = useState<DashboardResponse>();
@@ -86,7 +87,6 @@ const Dashboard: FC = () => {
 
   const createSubContentColor = (growth: number) =>
     growth >= 0 ? 'green' : 'red';
-
   return (
     <div className="dashboard-container">
       <div className="dashboard-top-section">
@@ -106,10 +106,17 @@ const Dashboard: FC = () => {
             data?.deals_change_trendline || 0
           )}
         />
-        <div> {/* add the Win Ratio section to the dashboard */} </div>
+        <DashboardCard
+          title="Won Deals"
+          content={data?.win_ratio + '%'}
+          subContent={createSubContent(data?.percentage_change_closed_won || 0)}
+          subContentColor={createSubContentColor(
+            data?.percentage_change_closed_won || 0
+          )}
+        />
       </div>
-      <div>
-        <div>
+      <div className="dashboard-mid-section">
+        <div className="dashboard-deal-sources-chart">
           <DashboardCard
             title="Deal Sources"
             content={
@@ -117,19 +124,26 @@ const Dashboard: FC = () => {
             }
           />
         </div>
-        <div>
+        <div className="dashboard-deal-stages-chart">
           <DashboardCard
             title="Deals Overview"
             content={<DealStagesDonutChart data={dealStages} />}
           />
         </div>
       </div>
-      <div>
-        <div>
+      <div className="dashboard-mid-section">
+        <div className="dashboard-deal-sources-chart">
           <div>{/* add the Top Deals section to the dashboard */}</div>
         </div>
-        <div>
-          {/* add the Customers by Countries section to the dashboard */}
+        <div className="dashboard-deal-stages-chart">
+          <DashboardCard
+            title="Deals"
+            content={
+              <MapDashboard
+                dealsByCountry={data?.deals_group_by_country || {}}
+              />
+            }
+          />
         </div>
       </div>
     </div>
