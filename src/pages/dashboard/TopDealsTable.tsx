@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { TopDealsTableProps } from './types';
+import { Link } from 'react-router-dom';
 import './styles.css';
 
 const TopDealsTable: FC<TopDealsTableProps> = ({ data }) => {
@@ -40,12 +41,38 @@ const TopDealsTable: FC<TopDealsTableProps> = ({ data }) => {
                       <td key={deal.id + key}>
                         {Array.isArray(value) && value.length !== 0
                           ? value.map((elem) => (
-                              <p key={elem.id}>{elem.name || '---'}</p>
+                              <div key={elem.id}>
+                                <Link to={`/app/users/${elem.id}`}>
+                                  {elem.name || '---'}
+                                </Link>
+                              </div>
                             ))
                           : '---'}
                       </td>
                     );
                   }
+                  if (key === 'name')
+                    return (
+                      <td key={deal.id + key}>
+                        {deal.name ? (
+                          <Link to={`/app/deals/${deal.id}`}>{deal.name}</Link>
+                        ) : (
+                          '---'
+                        )}
+                      </td>
+                    );
+                  if (key === 'account_name')
+                    return (
+                      <td key={deal.id + key}>
+                        {deal.account_name ? (
+                          <Link to={`/app/accounts/${deal.account_id}`}>
+                            {deal.account_name}
+                          </Link>
+                        ) : (
+                          '---'
+                        )}
+                      </td>
+                    );
                   return (
                     <td key={deal.id + key}>{(value as string) || '---'}</td>
                   );
