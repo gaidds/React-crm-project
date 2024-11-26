@@ -41,3 +41,7 @@ export interface DashboardResponse {
     count: number; 
     color: string;
   };
+
+  export interface TopDealsTableProps{
+    data: Deal[];
+  }
