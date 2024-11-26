@@ -5,12 +5,16 @@ import { DashboardUrl } from '../../services/ApiUrls';
 import './styles.css';
 import DashboardCard from '../../components/dashboard-card/DashboardCard';
 import DealStagesDonutChart from './DealStagesDonutChart';
+import DealSourcesBarChart from './DealSourcesBarChart';
 import { FaLongArrowAltDown, FaLongArrowAltUp } from 'react-icons/fa';
 import MapDashboard from './MapDashboard';
 
 const Dashboard: FC = () => {
   const [data, setData] = useState<DashboardResponse>();
   const [dealStages, setDealStages] = useState<DealStage[]>([]);
+  const [dealSources, setDealSources] = useState<
+    { source: string; count: number }[]
+  >([]);
 
   useEffect(() => {
     fetchDashboard();
@@ -86,44 +90,39 @@ const Dashboard: FC = () => {
   return (
     <div className="dashboard-container">
       <div className="dashboard-top-section">
-        <div>
-          <DashboardCard
-            title="Net Income"
-            content={'€ ' + data?.total_revenue_in_euros}
-            subContent={createSubContent(
-              data?.net_income_growth_trendline || 0
-            )}
-            subContentColor={createSubContentColor(
-              data?.net_income_growth_trendline || 0
-            )}
-          />
-        </div>
-        <div>
-          <DashboardCard
-            title="Deals"
-            content={'' + data?.deals_count}
-            subContent={createSubContent(data?.deals_change_trendline || 0)}
-            subContentColor={createSubContentColor(
-              data?.deals_change_trendline || 0
-            )}
-          />
-        </div>
-        <div>
-          <DashboardCard
-            title="Won Deals"
-            content={data?.win_ratio + '%'}
-            subContent={createSubContent(
-              data?.percentage_change_closed_won || 0
-            )}
-            subContentColor={createSubContentColor(
-              data?.percentage_change_closed_won || 0
-            )}
-          />
-        </div>
+        <DashboardCard
+          title="Net Income"
+          content={'€ ' + data?.total_revenue_in_euros}
+          subContent={createSubContent(data?.net_income_growth_trendline || 0)}
+          subContentColor={createSubContentColor(
+            data?.net_income_growth_trendline || 0
+          )}
+        />
+        <DashboardCard
+          title="Deals"
+          content={'' + data?.deals_count}
+          subContent={createSubContent(data?.deals_change_trendline || 0)}
+          subContentColor={createSubContentColor(
+            data?.deals_change_trendline || 0
+          )}
+        />
+        <DashboardCard
+          title="Won Deals"
+          content={data?.win_ratio + '%'}
+          subContent={createSubContent(data?.percentage_change_closed_won || 0)}
+          subContentColor={createSubContentColor(
+            data?.percentage_change_closed_won || 0
+          )}
+        />
       </div>
       <div className="dashboard-mid-section">
         <div className="dashboard-deal-sources-chart">
-          {/* add the Deal Sources section to the dashboard */}
+          <DashboardCard
+            title="Deal Sources"
+            content={
+              <DealSourcesBarChart data={data?.deal_sources_count || {}} />
+            }
+          />
         </div>
         <div className="dashboard-deal-stages-chart">
           <DashboardCard

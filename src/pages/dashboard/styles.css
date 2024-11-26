@@ -1,83 +1,83 @@
 /* Dashboard */
 
 .dashboard-container{
-    background-color: white;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    min-height: 100%;
-    width: 100%;
-    padding: 24px;
+  background-color: white;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  width: 100%;
+  padding: 24px;
 }
 
 .dashboard-top-section{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
 }
 
 .dashboard-mid-section{
-  display: flex;
-  margin-top: 24px;
+display: flex;
+margin-top: 24px;
 }
 
 .dashboard-deal-sources-chart{
-  width: 60%;
+width: 60%;
+margin-right: 24px;
 }
 .dashboard-deal-stages-chart{
-  width: 40%;
+width: 40%;
 
 }
 
 /* Deals Overview Donut Chart*/
 
 .deal-stages-donut-chart {
-  width: 100%;
-  margin: 0 ;
-  display: flex;
-  box-sizing: border-box;
+width: 100%;
+margin: 0 ;
+display: flex;
+box-sizing: border-box;
 
 }
 
 .deal-overview-stages-bar{
-  margin-right: 24px;
-  width: 40%;
+margin-right: 24px;
+width: 40%;
 }
 
 .deal-overview-chart{
-  width: 60%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+width: 60%;
+display: flex;
+justify-content: center;
+align-items: center;
 }
 
 /* MapDashboard */
 
 .map-dashboard {
-    width: 100%;
-  }
-  
-  .map-container {
+  width: 100%;
+}
+
+.map-container {
 width: 100%;
-  }
-  
-  .geo {
-    fill: #a7a7a9;
-    stroke: #d6d6da;
-  }
+}
 
-  .marker-circle {
-    r: 15;
-    fill: #ed6666;
-    cursor: pointer;
-  }
-  
-  .marker-text {
-    text-anchor: middle; /* Centers horizontally */
-    dominant-baseline: middle; 
-    fill: #fff;
-    font-size: small;
-    cursor: pointer;
-  }
-  
+.geo {
+  fill: #a7a7a9;
+  stroke: #d6d6da;
+}
 
+.marker-circle {
+  r: 15;
+  fill: #ed6666;
+  cursor: pointer;
+}
+
+.marker-text {
+  text-anchor: middle; /* Centers horizontally */
+  dominant-baseline: middle; 
+  fill: #fff;
+  font-size: small;
+  cursor: pointer;
+}
