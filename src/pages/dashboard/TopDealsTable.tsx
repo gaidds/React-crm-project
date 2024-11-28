@@ -74,7 +74,10 @@ const TopDealsTable: FC<TopDealsTableProps> = ({ data }) => {
                       </td>
                     );
                   return (
-                    <td key={deal.id + key}>{(value as string) || '---'}</td>
+                    <td key={deal.id + key}>
+                      {`${key === 'value' ? '€ ' : ''} ${value as string}` ||
+                        '---'}
+                    </td>
                   );
                 }
                 return null;
