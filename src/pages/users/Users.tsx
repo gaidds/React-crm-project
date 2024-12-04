@@ -22,10 +22,10 @@ import { UsersUrl, UserUrl } from '../../services/ApiUrls';
 import { CustomToolbar } from '../../styles/CssStyled';
 import { useMyContext } from '../../context/Context';
 import DynamicModal from '../../components/modal/modal';
-import { FaFilter } from 'react-icons/fa';
 import { Label } from '../../components/label-user';
 import { HeadCell, Item } from './types';
 import Pagination from '../../components/pagination/Pagination';
+import UsersFilter from '../../components/filters/UsersFilter';
 
 const headCells: readonly HeadCell[] = [
   {
@@ -102,6 +102,8 @@ export default function Users() {
   const [inactiveTotalPages, setInactiveTotalPages] = useState<number>(0);
   const setInactiveLoading = useState(true)[1];
 
+  const [filter, setFilter] = useState<string>('');
+
   const getUsers = useCallback(async () => {
     const Header = {
       Accept: 'application/json',
@@ -119,7 +121,7 @@ export default function Users() {
           tab === 'active' ? activeOffset : inactiveOffset
         }&limit=${
           tab === 'active' ? activeRecordsPerPage : inactiveRecordsPerPage
-        }`,
+        }${filter}`,
         'GET',
         null as any,
         Header
@@ -152,6 +154,7 @@ export default function Users() {
     inactiveCurrentPage,
     inactiveRecordsPerPage,
     tab,
+    filter,
     setActiveUsersOffset,
     setInactiveUsersOffset,
     setLoading,
@@ -292,9 +295,11 @@ export default function Users() {
         }}
       >
         <Stack direction="row" spacing={2} alignItems="center">
-          <IconButton color="primary">
-            <FaFilter style={{ color: '#333F49' }} />
-          </IconButton>
+          <UsersFilter
+            onApplyFilters={(filterString) => {
+              setFilter(filterString);
+            }}
+          />
           {showAddButton && (
             <>
               <DynamicModal
