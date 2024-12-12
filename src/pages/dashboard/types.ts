@@ -15,6 +15,14 @@ export interface Mapdeals {
   value: number;
 }
 
+
+export interface Deal1 {
+  id: string;
+  name: string;
+  value: number;
+}
+
+
 export interface DealsByCountry {
   [countryCode: string]: Mapdeals[];  // country code as key, array of deals as value
 }
@@ -22,6 +30,7 @@ export interface DealsByCountry {
 export interface DealsByCountryProps {
   dealsByCountry: DealsByCountry;  // dealsByCountry is now the object of countries with deals
 }
+
 
 export interface DashboardResponse {
   deals_count: number;
